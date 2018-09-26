@@ -1,0 +1,428 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Edmx Version="3.0" xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <Runtime>
+    <ConceptualModels>
+      <Schema Namespace="ToolkitSample.DataAccess.Context" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Person" customannotation:ClrType="ToolkitSample.Model.Person, ToolkitSample.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LastName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Birthdate" Type="DateTime" Nullable="false" />
+          <Property Name="CountryId" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="RowVersion" Type="Binary" ConcurrencyMode="Fixed" MaxLength="8" FixedLength="false" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" />
+          <Property Name="UpdatedDate" Type="DateTime" />
+          <NavigationProperty Name="Country" Relationship="Self.Person_Country" FromRole="Person_Country_Source" ToRole="Person_Country_Target" />
+        </EntityType>
+        <EntityType Name="Country" customannotation:ClrType="ToolkitSample.Model.Country, ToolkitSample.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="3" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Employee" customannotation:ClrType="ToolkitSample.Model.Employee, ToolkitSample.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" BaseType="Self.Person">
+          <Property Name="DepartmentId" Type="Int32" />
+          <Property Name="EmployementDate" Type="DateTime" />
+          <Property Name="PropertyA" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PropertyB" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Department" Relationship="Self.Employee_Department" FromRole="Employee_Department_Source" ToRole="Employee_Department_Target" />
+        </EntityType>
+        <EntityType Name="Department" customannotation:ClrType="ToolkitSample.Model.Department, ToolkitSample.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LeaderId" Type="Int32" />
+          <Property Name="RowVersion" Type="Binary" ConcurrencyMode="Fixed" MaxLength="8" FixedLength="false" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="Employees" Relationship="Self.Employee_Department" FromRole="Employee_Department_Target" ToRole="Employee_Department_Source" />
+          <NavigationProperty Name="Leader" Relationship="Self.Department_Leader" FromRole="Department_Leader_Source" ToRole="Department_Leader_Target" />
+        </EntityType>
+        <EntityType Name="Student" customannotation:ClrType="ToolkitSample.Model.Student, ToolkitSample.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" BaseType="Self.Person">
+          <Property Name="EnrollmentDate" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmployeeAudit" customannotation:ClrType="ToolkitSample.Model.Auditing.EmployeeAudit, ToolkitSample.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="AuditId" />
+          </Key>
+          <Property Name="AuditId" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="FirstName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="LastName" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AuditDate" Type="DateTime" Nullable="false" />
+          <Property Name="AuditUser" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AuditType" Type="Self.AuditEntityState" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Room" customannotation:ClrType="ToolkitSample.Model.Room, ToolkitSample.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Level" Type="Int32" Nullable="false" />
+          <Property Name="Sector" Type="String" MaxLength="900" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="CreatedDate" Type="DateTime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ApplicationSetting" customannotation:ClrType="ToolkitSample.Model.ApplicationSetting, ToolkitSample.Model, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="None" />
+          <Property Name="Path" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EnumType Name="AuditEntityState" IsFlags="true" customannotation:ClrType="EntityFramework.Toolkit.Auditing.AuditEntityState, EntityFramework.Toolkit.Core, Version=1.0.6.0, Culture=neutral, PublicKeyToken=null" UnderlyingType="Int32">
+          <Member Name="Added" Value="4" />
+          <Member Name="Deleted" Value="8" />
+          <Member Name="Modified" Value="16" />
+        </EnumType>
+        <Association Name="Person_Country">
+          <End Role="Person_Country_Source" Type="Self.Person" Multiplicity="*" />
+          <End Role="Person_Country_Target" Type="Self.Country" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Person_Country_Target">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Person_Country_Source">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Department_Leader">
+          <End Role="Department_Leader_Source" Type="Self.Department" Multiplicity="*" />
+          <End Role="Department_Leader_Target" Type="Self.Person" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Department_Leader_Target">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Department_Leader_Source">
+              <PropertyRef Name="LeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Employee_Department">
+          <End Role="Employee_Department_Source" Type="Self.Employee" Multiplicity="*" />
+          <End Role="Employee_Department_Target" Type="Self.Department" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Employee_Department_Target">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee_Department_Source">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="EmployeeContext" customannotation:UseClrTypes="true">
+          <EntitySet Name="People" EntityType="Self.Person" />
+          <EntitySet Name="Countries" EntityType="Self.Country" />
+          <EntitySet Name="Departments" EntityType="Self.Department" />
+          <EntitySet Name="EmployeeAudits" EntityType="Self.EmployeeAudit" />
+          <EntitySet Name="Rooms" EntityType="Self.Room" />
+          <EntitySet Name="ApplicationSettings" EntityType="Self.ApplicationSetting" />
+          <AssociationSet Name="Person_Country" Association="Self.Person_Country">
+            <End Role="Person_Country_Source" EntitySet="People" />
+            <End Role="Person_Country_Target" EntitySet="Countries" />
+          </AssociationSet>
+          <AssociationSet Name="Department_Leader" Association="Self.Department_Leader">
+            <End Role="Department_Leader_Source" EntitySet="Departments" />
+            <End Role="Department_Leader_Target" EntitySet="People" />
+          </AssociationSet>
+          <AssociationSet Name="Employee_Department" Association="Self.Employee_Department">
+            <End Role="Employee_Department_Source" EntitySet="People" />
+            <End Role="Employee_Department_Target" EntitySet="Departments" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </ConceptualModels>
+    <Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="CodeFirstDatabase" CdmEntityContainer="EmployeeContext">
+          <EntitySetMapping Name="People">
+            <EntityTypeMapping TypeName="IsTypeOf(ToolkitSample.DataAccess.Context.Person)">
+              <MappingFragment StoreEntitySet="Person">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="Birthdate" ColumnName="Birthdate" />
+                <ScalarProperty Name="CountryId" ColumnName="CountryId" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+                <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="ToolkitSample.DataAccess.Context.Employee">
+              <MappingFragment StoreEntitySet="Employee">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="DepartmentId" ColumnName="DepartmentId" />
+                <ScalarProperty Name="EmployementDate" ColumnName="EmployementDate" />
+                <ScalarProperty Name="PropertyA" ColumnName="PropertyA" />
+                <ScalarProperty Name="PropertyB" ColumnName="PropertyB" />
+              </MappingFragment>
+            </EntityTypeMapping>
+            <EntityTypeMapping TypeName="ToolkitSample.DataAccess.Context.Student">
+              <MappingFragment StoreEntitySet="Student">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="EnrollmentDate" ColumnName="EnrollmentDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Countries">
+            <EntityTypeMapping TypeName="ToolkitSample.DataAccess.Context.Country">
+              <MappingFragment StoreEntitySet="Country">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Departments">
+            <EntityTypeMapping TypeName="ToolkitSample.DataAccess.Context.Department">
+              <MappingFragment StoreEntitySet="Department">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="LeaderId" ColumnName="LeaderId" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EmployeeAudits">
+            <EntityTypeMapping TypeName="ToolkitSample.DataAccess.Context.EmployeeAudit">
+              <MappingFragment StoreEntitySet="EmployeeAudit">
+                <ScalarProperty Name="AuditId" ColumnName="AuditId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="AuditDate" ColumnName="AuditDate" />
+                <ScalarProperty Name="AuditUser" ColumnName="AuditUser" />
+                <ScalarProperty Name="AuditType" ColumnName="AuditType" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Rooms">
+            <EntityTypeMapping TypeName="ToolkitSample.DataAccess.Context.Room">
+              <MappingFragment StoreEntitySet="Room">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="Sector" ColumnName="Sector" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ApplicationSettings">
+            <EntityTypeMapping TypeName="ToolkitSample.DataAccess.Context.ApplicationSetting">
+              <MappingFragment StoreEntitySet="ApplicationSetting">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Path" ColumnName="Path" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </Mappings>
+    <StorageModels>
+      <Schema Namespace="CodeFirstDatabaseSchema" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Person">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="Birthdate" Type="datetime" Nullable="false" />
+          <Property Name="CountryId" Type="nvarchar" customannotation:Index="{ Name: IX_CountryId, Order: 0 }" MaxLength="3" Nullable="true" />
+          <Property Name="RowVersion" Type="rowversion" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+          <Property Name="UpdatedDate" Type="datetime" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Country">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="3" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" customannotation:Index="{ Name: UQ_Default, Order: 0, IsUnique: True }" MaxLength="255" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Department">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" customannotation:Index="{ Name: UQ_Default, Order: 0, IsUnique: True }" MaxLength="255" Nullable="false" />
+          <Property Name="LeaderId" Type="int" customannotation:Index="{ Name: IX_LeaderId, Order: 0 }" Nullable="true" />
+          <Property Name="RowVersion" Type="rowversion" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EmployeeAudit">
+          <Key>
+            <PropertyRef Name="AuditId" />
+          </Key>
+          <Property Name="AuditId" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="FirstName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="LastName" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AuditDate" Type="datetime" Nullable="false" />
+          <Property Name="AuditUser" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AuditType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Room">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Level" Type="int" customannotation:Index="{ Name: UQ_Level_Sector, Order: 1, IsUnique: True }" Nullable="false" />
+          <Property Name="Sector" Type="nvarchar" customannotation:Index="{ Name: UQ_Level_Sector, Order: 2, IsUnique: True }" MaxLength="900" Nullable="true" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" Nullable="true" />
+          <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ApplicationSetting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Path" Type="nvarchar" MaxLength="255" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Employee">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" customannotation:Index="{ Name: IX_Id, Order: 0 }" Nullable="false" />
+          <Property Name="DepartmentId" Type="int" customannotation:Index="{ Name: IX_DepartmentId, Order: 0 }" Nullable="true" />
+          <Property Name="EmployementDate" Type="datetime" Nullable="true" />
+          <Property Name="PropertyA" Type="nvarchar(max)" Nullable="true" />
+          <Property Name="PropertyB" Type="nvarchar(max)" Nullable="true" />
+        </EntityType>
+        <EntityType Name="Student">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" customannotation:Index="{ Name: IX_Id, Order: 0 }" Nullable="false" />
+          <Property Name="EnrollmentDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Association Name="Person_Country">
+          <End Role="Country" Type="Self.Country" Multiplicity="0..1" />
+          <End Role="Person" Type="Self.Person" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Country">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Person">
+              <PropertyRef Name="CountryId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Department_Leader">
+          <End Role="Person" Type="Self.Person" Multiplicity="0..1" />
+          <End Role="Department" Type="Self.Department" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Department">
+              <PropertyRef Name="LeaderId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Employee_TypeConstraint_From_Person_To_Employee">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Employee_Department">
+          <End Role="Department" Type="Self.Department" Multiplicity="0..1" />
+          <End Role="Employee" Type="Self.Employee" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Department">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Employee">
+              <PropertyRef Name="DepartmentId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Student_TypeConstraint_From_Person_To_Student">
+          <End Role="Person" Type="Self.Person" Multiplicity="1" />
+          <End Role="Student" Type="Self.Student" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Person">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Student">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CodeFirstDatabase">
+          <EntitySet Name="Person" EntityType="Self.Person" Schema="dbo" Table="Person" />
+          <EntitySet Name="Country" EntityType="Self.Country" Schema="dbo" Table="Countries" />
+          <EntitySet Name="Department" EntityType="Self.Department" Schema="dbo" Table="Departments" />
+          <EntitySet Name="EmployeeAudit" EntityType="Self.EmployeeAudit" Schema="dbo" Table="EmployeeAudit" />
+          <EntitySet Name="Room" EntityType="Self.Room" Schema="dbo" Table="Room" />
+          <EntitySet Name="ApplicationSetting" EntityType="Self.ApplicationSetting" Schema="dbo" Table="ApplicationSettings" />
+          <EntitySet Name="Employee" EntityType="Self.Employee" Schema="dbo" Table="Employee" />
+          <EntitySet Name="Student" EntityType="Self.Student" Schema="dbo" Table="Student" />
+          <AssociationSet Name="Person_Country" Association="Self.Person_Country">
+            <End Role="Country" EntitySet="Country" />
+            <End Role="Person" EntitySet="Person" />
+          </AssociationSet>
+          <AssociationSet Name="Department_Leader" Association="Self.Department_Leader">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Department" EntitySet="Department" />
+          </AssociationSet>
+          <AssociationSet Name="Employee_TypeConstraint_From_Person_To_Employee" Association="Self.Employee_TypeConstraint_From_Person_To_Employee">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="Employee_Department" Association="Self.Employee_Department">
+            <End Role="Department" EntitySet="Department" />
+            <End Role="Employee" EntitySet="Employee" />
+          </AssociationSet>
+          <AssociationSet Name="Student_TypeConstraint_From_Person_To_Student" Association="Self.Student_TypeConstraint_From_Person_To_Student">
+            <End Role="Person" EntitySet="Person" />
+            <End Role="Student" EntitySet="Student" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </StorageModels>
+  </Runtime>
+  <Designer>
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="False" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="ProcessDependentTemplatesOnSave" Value="False" />
+        <DesignerProperty Name="UseLegacyProvider" Value="False" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <Diagrams>
+      <Diagram DiagramId="1a1683503ac8493497af80d1cc40fd7d" Name="Diagram1" ZoomLevel="73">
+        <EntityTypeShape EntityType="ToolkitSample.DataAccess.Context.Employee" Width="1.5" PointX="3.375" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ToolkitSample.DataAccess.Context.Country" Width="1.5" PointX="6.125" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ToolkitSample.DataAccess.Context.Department" Width="1.5" PointX="6.25" PointY="2.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ToolkitSample.DataAccess.Context.ApplicationSetting" Width="1.5" PointX="10.625" PointY="0.625" IsExpanded="true" />
+        <AssociationConnector Association="ToolkitSample.DataAccess.Context.Employee_Country" ManuallyRouted="false" />
+        <AssociationConnector Association="ToolkitSample.DataAccess.Context.Department_Leader" ManuallyRouted="false" />
+        <AssociationConnector Association="ToolkitSample.DataAccess.Context.Employee_Department" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="ToolkitSample.DataAccess.Context.Person" Width="1.5" PointX="2.375" PointY="0.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ToolkitSample.DataAccess.Context.Student" Width="1.5" PointX="0.875" PointY="4.375" IsExpanded="true" />
+        <AssociationConnector Association="ToolkitSample.DataAccess.Context.Person_Country" ManuallyRouted="false" />
+        <InheritanceConnector EntityType="ToolkitSample.DataAccess.Context.Employee" />
+        <InheritanceConnector EntityType="ToolkitSample.DataAccess.Context.Student" />
+        <EntityTypeShape EntityType="ToolkitSample.DataAccess.Context.Room" Width="1.5" PointX="0" PointY="0" IsExpanded="true" />
+        <EntityTypeShape EntityType="ToolkitSample.DataAccess.Context.EmployeeAudit" Width="1.5" PointX="0" PointY="0" IsExpanded="true" />
+      </Diagram>
+    </Diagrams>
+  </Designer>
+</Edmx>
