@@ -21,6 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EntityFramework.Toolkit.EFC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{74445271-DF27-4206-8B26-1203CB23FCD6}"
 	ProjectSection(SolutionItems) = preProject
+		build.yml = build.yml
 		logo.png = logo.png
 		README.md = README.md
 	EndProjectSection
