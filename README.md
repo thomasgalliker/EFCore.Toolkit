@@ -1,4 +1,4 @@
-# EntityFramework.Toolkit.EFCore
+# EntityFramework.Toolkit.EFCore (Work in progress!)
 [![Version](https://img.shields.io/nuget/v/EntityFramework.Toolkit.EFCore.svg)](https://www.nuget.org/packages/EntityFramework.Toolkit.EFCore)  [![Downloads](https://img.shields.io/nuget/dt/EntityFramework.Toolkit.EFCore.svg)](https://www.nuget.org/packages/EntityFramework.Toolkit.EFCore)
 
 <img src="https://raw.githubusercontent.com/thomasgalliker/EntityFramework.Toolkit.EFCore/master/logo.png" width="100" height="100" alt="EntityFramework.Toolkit.EFCore" align="right">
