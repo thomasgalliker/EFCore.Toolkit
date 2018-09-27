@@ -69,7 +69,7 @@ namespace EntityFramework.Toolkit.EFCore
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseLoggerFactory(new Consol)
+            //optionsBuilder.UseLoggerFactory(new Consol)
         }
 
         private void EnsureLog(Action<string> log = null)
