@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Core.Metadata.Edm;
-using System.Data.Entity.Core.Objects;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.ModelConfiguration;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using EntityFramework.Toolkit.EFCore.Contracts;
 using EntityFramework.Toolkit.EFCore.Utils;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EntityFramework.Toolkit.EFCore.Extensions
 {
@@ -340,35 +337,6 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
             //set the value of the primary key (may error if wrong type)
             property.SetValue(entity, id, null);
             return entity;
-        }
-
-        /// <summary>
-        /// Scans the assembly in which the given <paramref name="context"/> lives for all
-        /// implementations of <see cref="EntityTypeConfiguration{TEntityType}"/> and 
-        /// configures them using the given <paramref name="modelBuilder"/>.
-        /// </summary>
-        /// <param name="context">The context.</param>
-        /// <param name="modelBuilder">The model builder used to configure the EntityTypeConfigurations.</param>
-        /// <param name="targetAssembly">The assembly which contains the EntityTypeConfigurations.</param>
-        public static void AutoConfigure(this DbContext context, DbModelBuilder modelBuilder, Assembly targetAssembly = null)
-        {
-            if (targetAssembly == null)
-            {
-                targetAssembly = Assembly.GetAssembly(context.GetType());
-            }
-
-            var types = targetAssembly.TryGetTypes();
-
-            var entityConfigurationTypes = types.Where(type =>
-                type.BaseType != null &&
-                type.BaseType.IsGenericType &&
-                type.BaseType.GetGenericTypeDefinition() == typeof(EntityTypeConfiguration<>));
-
-            foreach (var entityConfigurationType in entityConfigurationTypes)
-            {
-                dynamic entityConfiguration = Activator.CreateInstance(entityConfigurationType);
-                modelBuilder.Configurations.Add(entityConfiguration);
-            }
         }
 
         private static EntityType GetElementType(this DbContext context, Type entityType)

@@ -21,6 +21,7 @@ namespace EntityFramework.Toolkit.EFCore
         private static readonly IList<TContext> InitializerLock = new List<TContext>();
 
         private readonly string contextName = typeof(TContext).GetFormattedName();
+        private IDatabaseInitializer<TContext> databaseInitializer;
 
         /// <summary>
         ///     Empty constructor is used for 'update-database' command-line command.
@@ -30,20 +31,21 @@ namespace EntityFramework.Toolkit.EFCore
             //TryInitializeDatabase(this, null);
         }
 
-        protected DbContextBase(string nameOrConnectionString, IDatabaseInitializer<TContext> databaseInitializer)
-            : this(nameOrConnectionString, databaseInitializer, log: null)
+        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer)
+            : this(dbContextOptions, databaseInitializer, log: null)
         {
         }
 
-        protected DbContextBase(string nameOrConnectionString, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
-            : base(nameOrConnectionString)
+        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
+            : base(dbContextOptions)
         {
             this.EnsureLog(log);
             this.Name = this.contextName;
 
-            this.Database.Log($"Initializing DbContext '{this.contextName}' with NameOrConnectionString = \"{nameOrConnectionString}\" and IDatabaseInitializer =\"{databaseInitializer?.GetType().GetFormattedName()}\"");
+            this.log($"Initializing DbContext '{this.contextName}' with NameOrConnectionString = \"{this.Database.GetDbConnection().ConnectionString}\" and IDatabaseInitializer =\"{databaseInitializer?.GetType().GetFormattedName()}\"");
 
-            TryInitializeDatabase(this, databaseInitializer, log);
+            this.databaseInitializer = databaseInitializer;
+            this.TryInitializeDatabase();
         }
 
         protected DbContextBase(IDbConnection dbConnection, IDatabaseInitializer<TContext> databaseInitializer)
@@ -55,16 +57,16 @@ namespace EntityFramework.Toolkit.EFCore
             : this()
         {
             this.EnsureLog(log);
+            this.Name = dbConnection.Name ?? this.contextName;
 
-            this.Database.Connection.ConnectionString = dbConnection.ConnectionString;
-            this.Configuration.LazyLoadingEnabled = dbConnection.LazyLoadingEnabled;
-            this.Configuration.ProxyCreationEnabled = dbConnection.ProxyCreationEnabled;
-            this.Name = dbConnection.Name ?? this.GetType().GetFormattedName();
+            this.Database.GetDbConnection().ConnectionString = dbConnection.ConnectionString;
+            //this.Configuration.LazyLoadingEnabled = dbConnection.LazyLoadingEnabled;
+            //this.Configuration.ProxyCreationEnabled = dbConnection.ProxyCreationEnabled;
 
-            this.Database.Log(
-                $"Initializing DbContext '{this.contextName}' with ConnectionString = \"{dbConnection.ConnectionString}\" and IDatabaseInitializer=\"{databaseInitializer?.GetType().GetFormattedName()}\"");
+            this.log($"Initializing DbContext '{this.contextName}' with ConnectionString = \"{dbConnection.ConnectionString}\" and IDatabaseInitializer=\"{databaseInitializer?.GetType().GetFormattedName()}\"");
 
-            TryInitializeDatabase(this, databaseInitializer, log);
+            this.databaseInitializer = databaseInitializer;
+            this.TryInitializeDatabase();
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -79,38 +81,39 @@ namespace EntityFramework.Toolkit.EFCore
                 log = s => Debug.WriteLine(s);
             }
 
-            this.Database.Log = message => log(message);
+            this.log = message => log(message);
         }
+
+        private Action<string> log { get; set; }
 
         /// <inheritdoc />
         public string Name { get; private set; }
 
-        private static void TryInitializeDatabase(DbContext dbContext, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
+        private void TryInitializeDatabase(bool force = false)
         {
             try
             {
                 lock (InitializerLock)
                 {
-                    Database.SetInitializer(databaseInitializer);
-                    dbContext.Database.Initialize(force: false);
+                    this.databaseInitializer.Initialize(this.Database, force);
                 }
             }
             catch (Exception ex)
             {
-                log(ex.ToString());
+                this.log(ex.ToString());
             }
         }
 
         /// <inheritdoc />
-        public IDbSet<TEntity> DbSet<TEntity>() where TEntity : class
-        {
-            return base.Set<TEntity>();
-        }
+        ////public IDbSet<TEntity> DbSet<TEntity>() where TEntity : class
+        ////{
+        ////    return base.Set<TEntity>();
+        ////}
 
         /// <inheritdoc />
         public void ResetDatabase()
         {
-            this.Database.Log($"ResetDatabase of DbContext '{this.contextName}' with ConnectionString = \"{this.Database.Connection.ConnectionString}\"");
+            this.log($"ResetDatabase of DbContext '{this.contextName}' with ConnectionString = \"{this.Database.GetDbConnection().ConnectionString}\"");
 
             this.InternalResetDatabase();
         }
@@ -119,13 +122,13 @@ namespace EntityFramework.Toolkit.EFCore
         {
             this.InternalDropDatabase();
 
-            this.Database.Initialize(force: true);
+            this.TryInitializeDatabase(force: true);
         }
 
         /// <inheritdoc />
         public void DropDatabase()
         {
-            this.Database.Log($"DropDatabase of DbContext '{this.contextName}' with ConnectionString = \"{this.Database.Connection.ConnectionString}\"");
+            this.log($"DropDatabase of DbContext '{this.contextName}' with ConnectionString = \"{this.Database.GetDbConnection().ConnectionString}\"");
 
             this.InternalDropDatabase();
         }
@@ -133,7 +136,7 @@ namespace EntityFramework.Toolkit.EFCore
         private void InternalDropDatabase()
         {
             this.Database.KillConnectionsToTheDatabase();
-            this.Database.Delete();
+            this.Database.EnsureDeleted();
         }
 
         /// <inheritdoc />
@@ -209,11 +212,11 @@ namespace EntityFramework.Toolkit.EFCore
             {
                 base.SaveChanges();
             }
-            catch (DbEntityValidationException validationException)
-            {
-                string errorMessage = validationException.GetFormattedErrorMessage();
-                throw new DbEntityValidationException(errorMessage, validationException);
-            }
+            ////catch (DbEntityValidationException validationException)
+            ////{
+            ////    string errorMessage = validationException.GetFormattedErrorMessage();
+            ////    throw new DbEntityValidationException(errorMessage, validationException);
+            ////}
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 this.HandleDbUpdateConcurrencyException(dbUpdateConcurrencyException);
@@ -242,11 +245,11 @@ namespace EntityFramework.Toolkit.EFCore
             {
                 await base.SaveChangesAsync();
             }
-            catch (DbEntityValidationException validationException)
-            {
-                string errorMessage = validationException.GetFormattedErrorMessage();
-                throw new DbEntityValidationException(errorMessage, validationException);
-            }
+            ////catch (DbEntityValidationException validationException)
+            ////{
+            ////    string errorMessage = validationException.GetFormattedErrorMessage();
+            ////    throw new DbEntityValidationException(errorMessage, validationException);
+            ////}
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 this.HandleDbUpdateConcurrencyException(dbUpdateConcurrencyException);
@@ -295,9 +298,9 @@ namespace EntityFramework.Toolkit.EFCore
         }
 
         /// <inheritdoc />
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
+            ////modelBuilder.Remove<PluralizingTableNameConvention>();
         }
 
         /// <summary>
@@ -312,7 +315,7 @@ namespace EntityFramework.Toolkit.EFCore
             foreach (var dbEntityEntry in updatedEntries)
             {
                 IList<PropertyChangeInfo> changes = new List<PropertyChangeInfo>();
-                foreach (var propertyName in dbEntityEntry.CurrentValues.PropertyNames)
+                foreach (var propertyName in dbEntityEntry.CurrentValues.Properties.Select(p => p.Name))
                 {
                     var property = dbEntityEntry.Property(propertyName);
                     if (property.IsModified)
@@ -338,14 +341,14 @@ namespace EntityFramework.Toolkit.EFCore
 
         /// <inheritdoc />
         /// :
-        protected override void Dispose(bool disposing)
+        public virtual void Dispose(bool disposing)
         {
             if (this.IsDisposed)
             {
                 return;
             }
 
-            base.Dispose(disposing);
+            //base.Dispose(disposing);
 
             this.IsDisposed = true;
         }

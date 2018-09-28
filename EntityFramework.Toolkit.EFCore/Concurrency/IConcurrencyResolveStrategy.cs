@@ -1,5 +1,3 @@
-using System.Data.Entity.Infrastructure;
-
 namespace EntityFramework.Toolkit.EFCore.Concurrency
 {
     public interface IConcurrencyResolveStrategy

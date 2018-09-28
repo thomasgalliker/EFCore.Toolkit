@@ -1,10 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.Infrastructure.Annotations;
-using System.Data.Entity.ModelConfiguration;
-using System.Data.Entity.ModelConfiguration.Configuration;
-using System.Data.Entity.Spatial;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -15,8 +10,6 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
     public static class MappingExtensions
     {
         private static readonly Type[] TypeConfigurationNonGenericTypes = {
-            typeof(DbGeometry),
-            typeof(DbGeography),
             typeof(string),
             typeof(byte[]),
             typeof(decimal),

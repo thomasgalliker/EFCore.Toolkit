@@ -1,14 +1,17 @@
 ﻿using System;
-using Microsoft.EntityFrameworkCore.Storage;
+using System.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace EntityFramework.Toolkit.EFCore.Extensions
 {
     public static class DatabaseExtensions
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities")]
-        public static void KillConnectionsToTheDatabase(this Database database)
+        public static void KillConnectionsToTheDatabase(this DatabaseFacade database)
         {
-            var databaseName = database.Connection.Database;
+            var dbConnection = database.GetDbConnection();
+            var databaseName = dbConnection.Database;
             const string sqlFormat = @"
              USE master; 
 
@@ -26,7 +29,7 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
 
             try
             {
-                using (var command = database.Connection.CreateCommand())
+                using (var command = dbConnection.CreateCommand())
                 {
                     command.CommandText = sql;
                     command.CommandType = CommandType.Text;

@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EntityFramework.Toolkit.EFCore.Extensions
 {
@@ -11,7 +11,7 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
         /// <summary>
         ///     Gets the raw entity type without dynamic proxy type.
         /// </summary>
-        public static Type GetEntityType(this DbEntityEntry entry)
+        public static Type GetEntityType(this EntityEntry entry)
         {
             var entityType = entry.Entity.GetType();
             if (entityType.Namespace == "System.Data.Entity.DynamicProxies")

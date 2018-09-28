@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Principal;
+using System.Reflection;
+//using System.Security.Principal;
 using EntityFramework.Toolkit.EFCore.Auditing.Extensions;
 using EntityFramework.Toolkit.EFCore.Contracts;
 using EntityFramework.Toolkit.EFCore.Contracts.Auditing;
 using EntityFramework.Toolkit.EFCore.Contracts.Extensions;
 using EntityFramework.Toolkit.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 #if !NET40
 using System.Threading.Tasks;
 #endif
@@ -31,6 +33,7 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
         private bool auditEnabled = true;
         private DateTimeKind auditDateTimeKind;
 
+#if NET45
         static AuditDbContextBase()
         {
             lock (ConfigFileLock)
@@ -38,6 +41,7 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
                 AuditDbContextConfiguration = AuditDbContextConfigurationManager.GetAuditDbContextConfigurationFromXml();
             }
         }
+#endif
 
         /// <summary>
         ///     Empty constructor is used for 'update-database' command-line command.
@@ -120,20 +124,20 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
         /// <summary>
         ///     Gets a value indicating whether this context is using proxies.
         /// </summary>
-        public bool Proxies
-        {
-            get
-            {
-                if (this.auditTypes.Count > 0)
-                {
-                    var f = this.auditTypes.First();
-                    var e = this.Set(f.Value.AuditableEntityType).Create();
-                    return e.GetType().Namespace != f.Value.AuditableEntityType.Namespace;
-                }
+        ////public bool Proxies
+        ////{
+        ////    get
+        ////    {
+        ////        if (this.auditTypes.Count > 0)
+        ////        {
+        ////            var f = this.auditTypes.First();
+        ////            var e = this.Set(f.Value.AuditableEntityType).Create();
+        ////            return e.GetType().Namespace != f.Value.AuditableEntityType.Namespace;
+        ////        }
 
-                return this.Configuration.ProxyCreationEnabled;
-            }
-        }
+        ////        return this.Database.Configuration.ProxyCreationEnabled;
+        ////    }
+        ////}
 
         /// <summary>
         ///     Registers and type for auditing.
@@ -150,10 +154,10 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
 
                 // Extract the list of propeties to audit.
                 var auditEntityType = auditTypeInfo.AuditEntityType;
-                var auditEntityProperties = auditEntityType.GetProperties();
+                var auditEntityProperties = auditEntityType.GetRuntimeProperties();
 
                 var auditableEntityType = auditTypeInfo.AuditableEntityType;
-                var auditableEntityProperties = auditableEntityType.GetProperties().ToDictionary(x => x.Name);
+                var auditableEntityProperties = auditableEntityType.GetRuntimeProperties().ToDictionary(x => x.Name);
 
                 if (this.auditTypes.ContainsKey(auditableEntityType))
                 {
@@ -192,7 +196,9 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
         /// <returns>The number of objects written to the underlying database.</returns>
         public override ChangeSet SaveChanges()
         {
-            var username = WindowsIdentity.GetCurrent().Name;
+            // TODO Add Windows user here
+            var username = "TODO";
+            //var username = WindowsIdentity.GetCurrent().Name;
             return this.SaveChanges(username);
         }
 
@@ -216,11 +222,11 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
             }
             catch
             {
-                // Updated failed so remove the audit entities.
-                foreach (var item in audits)
-                {
-                    this.Set(item.GetType()).Remove(item);
-                }
+                // TODO: Updated failed so remove the audit entities.
+                //foreach (var item in audits)
+                //{
+                //    this.Set(item.GetType()).Remove(item);
+                //}
 
                 throw;
             }
@@ -230,7 +236,9 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
         /// <inheritdoc />
         public override Task<ChangeSet> SaveChangesAsync()
         {
-            var username = WindowsIdentity.GetCurrent().Name;
+            // TODO Add Windows user here
+            var username = "TODO";
+            //var username = WindowsIdentity.GetCurrent().Name;
             return this.SaveChangesAsync(username);
         }
 
@@ -254,11 +262,11 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
             }
             catch
             {
-                // Updated failed so remove the audit entities.
-                foreach (var item in audits)
-                {
-                    this.Set(item.GetType()).Remove(item);
-                }
+                //TODO: Updated failed so remove the audit entities.
+                //foreach (var item in audits)
+                //{
+                //    this.Set(item.GetType()).Remove(item);
+                //}
 
                 throw;
             }
@@ -315,7 +323,7 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
             return audits;
         }
 
-        private IAuditEntity AuditEntity(DbEntityEntry entityEntry, AuditTypeInfo auditTypeInfo, DateTime auditDateTime, string user)
+        private IAuditEntity AuditEntity(EntityEntry entityEntry, AuditTypeInfo auditTypeInfo, DateTime auditDateTime, string user)
         {
             // Create audit entity.
             var dbSet = this.Set(auditTypeInfo.AuditEntityType);
