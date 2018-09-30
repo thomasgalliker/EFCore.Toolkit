@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
-using System.Data.Entity.Migrations;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +6,7 @@ using EntityFramework.Toolkit.EFCore.Auditing;
 using EntityFramework.Toolkit.EFCore.Contracts.Auditing;
 using EntityFramework.Toolkit.EFCore.Testing;
 using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context.Auditing;
 using ToolkitSample.Model;
 using ToolkitSample.Model.Auditing;
@@ -73,7 +72,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
             {
                 var updateEmployee = auditDbContext.Set<Employee>().Find(initialEmployee.Id);
                 updateEmployee.CreatedDate = DateTime.MinValue;
-                auditDbContext.Set<Employee>().AddOrUpdate(updateEmployee);
+                auditDbContext.Set<Employee>().Update(updateEmployee);
                 auditDbContext.SaveChanges();
             }
 
@@ -103,7 +102,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
             {
                 var updateRoom = auditDbContext.Set<Room>().Find(initialRoom.Id);
                 updateRoom.CreatedDate = manipulatedCreatedDate;
-                auditDbContext.Set<Room>().AddOrUpdate(updateRoom);
+                auditDbContext.Set<Room>().Update(updateRoom);
                 auditDbContext.SaveChanges();
             }
 
@@ -179,19 +178,6 @@ namespace EntityFramework.Toolkit.Tests.Auditing
                 employeeAudits.Where(a => a.AuditType == AuditEntityState.Added).Should().HaveCount(1);
                 employeeAudits.Where(a => a.AuditType == AuditEntityState.Deleted).Should().HaveCount(1);
             }
-        }
-
-        [Fact]
-        public void ProxiesTrueTest()
-        {
-            // Arrange
-            var testAuditDbContext = this.CreateContext();
-
-            // Act
-            testAuditDbContext.Configuration.ProxyCreationEnabled = true;
-
-            // Assert
-            testAuditDbContext.Proxies.Should().BeTrue();
         }
 
         [Fact]

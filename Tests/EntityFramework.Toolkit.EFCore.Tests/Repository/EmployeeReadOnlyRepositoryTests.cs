@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
+using EntityFramework.Toolkit.EFCore;
 using EntityFramework.Toolkit.EFCore.Contracts;
 using EntityFramework.Toolkit.EFCore.Contracts.Extensions;
 using EntityFramework.Toolkit.EFCore.Testing;

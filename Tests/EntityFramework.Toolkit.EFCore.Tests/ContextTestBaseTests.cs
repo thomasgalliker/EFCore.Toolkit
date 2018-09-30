@@ -1,9 +1,8 @@
-﻿using System.Data.Entity;
-using EntityFramework.Toolkit.EFCore;
+﻿using EntityFramework.Toolkit.EFCore;
 using EntityFramework.Toolkit.EFCore.Contracts;
 using EntityFramework.Toolkit.EFCore.Testing;
 using FluentAssertions;
-
+using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace EntityFramework.Toolkit.Tests
@@ -29,8 +28,8 @@ namespace EntityFramework.Toolkit.Tests
 
         public class TestContext : DbContextBase<TestContext>
         {
-            public TestContext(string nameOrConnectionString, IDatabaseInitializer<TestContext> databaseInitializer)
-                : base(nameOrConnectionString, databaseInitializer)
+            public TestContext(DbContextOptions dbContextOptions, IDatabaseInitializer<TestContext> databaseInitializer)
+                : base(dbContextOptions, databaseInitializer)
             {
             }
         }

@@ -21,9 +21,9 @@ namespace EntityFramework.Toolkit.Tests.Extensions
         public void ShouldDropDatabaseUsingDbConnection()
         {
             // Arrange
-            using (var context = CreateContext())
+            using (var context = this.CreateContext())
             {
-                context.Database.CreateIfNotExists();
+                context.Database.EnsureCreated();
             }
 
             // Act
@@ -36,9 +36,9 @@ namespace EntityFramework.Toolkit.Tests.Extensions
         public void ShouldGetDatabaseName()
         {
             // Arrange
-            using (var context = CreateContext())
+            using (var context = this.CreateContext())
             {
-                context.Database.CreateIfNotExists();
+                context.Database.EnsureCreated();
             }
 
             // Act

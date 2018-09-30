@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using EntityFramework.Toolkit.EFCore;
 using EntityFramework.Toolkit.EFCore.Extensions;
 using EntityFramework.Toolkit.EFCore.Testing;
 using EntityFramework.Toolkit.Tests.Stubs;
 
 using FluentAssertions;
-
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
 

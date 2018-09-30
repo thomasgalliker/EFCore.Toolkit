@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
 using EntityFramework.Toolkit.EFCore.Concurrency;
 using EntityFramework.Toolkit.EFCore.Contracts;
@@ -7,7 +6,7 @@ using EntityFramework.Toolkit.EFCore.Testing;
 using EntityFramework.Toolkit.Tests.Stubs;
 
 using FluentAssertions;
-
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
 

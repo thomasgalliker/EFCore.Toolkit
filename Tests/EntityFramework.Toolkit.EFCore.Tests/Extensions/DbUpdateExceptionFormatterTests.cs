@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using EntityFramework.Toolkit.EFCore;
 using EntityFramework.Toolkit.EFCore.Contracts;
 using EntityFramework.Toolkit.EFCore.Testing;
 using EntityFramework.Toolkit.Tests.Stubs;
 
 using FluentAssertions;
-
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
 

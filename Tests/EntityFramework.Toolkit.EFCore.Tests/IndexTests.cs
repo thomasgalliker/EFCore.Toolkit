@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Data.Entity.Infrastructure;
 using System.Linq;
+using EntityFramework.Toolkit.EFCore;
 using EntityFramework.Toolkit.EFCore.Contracts;
 using EntityFramework.Toolkit.EFCore.Testing;
 using EntityFramework.Toolkit.Tests.Extensions;
 
 using FluentAssertions;
-
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
 
@@ -20,8 +19,8 @@ namespace EntityFramework.Toolkit.Tests
     public class IndexTests : ContextTestBase<EmployeeContext>
     {
         public IndexTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(), 
-                  databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(), 
+            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+                  databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
                   log: testOutputHelper.WriteLine)
         {
         }

@@ -6,7 +6,6 @@ using FluentAssertions;
 
 using ToolkitSample.DataAccess;
 using ToolkitSample.DataAccess.Context;
-using ToolkitSample.DataAccess.Migrations;
 using ToolkitSample.DataAccess.Seed;
 using ToolkitSample.Model;
 
@@ -29,7 +28,7 @@ namespace EntityFramework.Toolkit.Tests
         {
             // Arrange
             var dataSeed = new IDataSeed[] { };
-            var databaseInitializer = new EmployeeContextDatabaseInitializer(new EmployeeContextMigrationConfiguration(dataSeed));
+            var databaseInitializer = new EmployeeContextDatabaseInitializer(dataSeed);
 
             // Act
             var context = this.CreateContext(databaseInitializer);
@@ -44,7 +43,7 @@ namespace EntityFramework.Toolkit.Tests
         {
             // Arrange
             var dataSeed = new IDataSeed[] { new DepartmentDataSeed() };
-            var databaseInitializer = new EmployeeContextDatabaseInitializer(new EmployeeContextMigrationConfiguration(dataSeed));
+            var databaseInitializer = new EmployeeContextDatabaseInitializer(dataSeed);
 
             // Act
             var context = this.CreateContext(databaseInitializer);
@@ -59,7 +58,7 @@ namespace EntityFramework.Toolkit.Tests
         {
             // Arrange
             var dataSeed = new IDataSeed[] { new ApplicationSettingDataSeed(), };
-            var databaseInitializer = new EmployeeContextDatabaseInitializer(new EmployeeContextMigrationConfiguration(dataSeed));
+            var databaseInitializer = new EmployeeContextDatabaseInitializer(dataSeed);
 
             // Act
             var context = this.CreateContext(databaseInitializer);
@@ -74,7 +73,7 @@ namespace EntityFramework.Toolkit.Tests
         {
             // Arrange
             var dataSeed = new IDataSeed[] { new DepartmentDataSeed() };
-            var databaseInitializer = new EmployeeContextDatabaseInitializer(new EmployeeContextMigrationConfiguration(dataSeed));
+            var databaseInitializer = new EmployeeContextDatabaseInitializer(dataSeed);
 
             // Act
             List<Department> allDepartmentsFirst;
@@ -99,7 +98,7 @@ namespace EntityFramework.Toolkit.Tests
         {
             // Arrange
             var dataSeed = new IDataSeed[] { new ApplicationSettingDataSeed() };
-            var databaseInitializer = new EmployeeContextDatabaseInitializer(new EmployeeContextMigrationConfiguration(dataSeed));
+            var databaseInitializer = new EmployeeContextDatabaseInitializer(dataSeed);
 
             // Act
             List<ApplicationSetting> allDepartmentsFirst;

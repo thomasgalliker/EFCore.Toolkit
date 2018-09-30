@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using EntityFramework.Toolkit.EFCore;
 using EntityFramework.Toolkit.EFCore.Contracts;

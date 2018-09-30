@@ -1,5 +1,7 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using EntityFramework.Toolkit.EFCore;
+using EntityFramework.Toolkit.EFCore.Contracts;
 using EntityFramework.Toolkit.EFCore.Extensions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
@@ -9,14 +11,20 @@ namespace ToolkitSample.DataAccess
 {
     public class EmployeeContextDatabaseInitializer : IDatabaseInitializer<EmployeeContext>
     {
-        //public void Initialize(DatabaseFacade database, bool force)
+        private readonly IEnumerable<IDataSeed> dataSeeds;
+
+        public EmployeeContextDatabaseInitializer(IEnumerable<IDataSeed> dataSeeds)
+        {
+            this.dataSeeds = dataSeeds;
+        }
+
         public void Initialize(DbContext context, bool force)
         {
             if (context.AllMigrationsApplied())
             {
                 if (!context.Set<Employee>().Any())
                 {
-                    //TODO Perform seeds
+                    context.Seed(this.dataSeeds);
                 }
             }
         }
