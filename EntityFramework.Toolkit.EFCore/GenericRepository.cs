@@ -55,13 +55,6 @@ namespace EntityFramework.Toolkit.EFCore
         }
 
         /// <inheritdoc />
-        public IQueryableIncluding<T> Query()
-        {
-            IQueryable<T> query = this.DbSet;
-            return new QueryableIncluding<T>(query, (DbContext)this.context);
-        }
-
-        /// <inheritdoc />
         public virtual IEnumerable<T> GetAll()
         {
             return this.DbSet.AsEnumerable();
@@ -88,19 +81,20 @@ namespace EntityFramework.Toolkit.EFCore
         /// <inheritdoc />
         public virtual T Add(T entity)
         {
-            return this.DbSet.Add(entity);
+            return this.DbSet.Add(entity).Entity;
         }
 
         /// <inheritdoc />
         public virtual TDerived Add<TDerived>(TDerived entity) where TDerived : class, T
         {
-            return this.context.Set<TDerived>().Add(entity);
+            return this.context.Set<TDerived>().Add(entity).Entity;
         }
 
         /// <inheritdoc />
-        public virtual IEnumerable<T> AddRange(IEnumerable<T> entity)
+        public virtual IEnumerable<T> AddRange(IEnumerable<T> entities)
         {
-            return this.DbSet.AddRange(entity);
+            this.DbSet.AddRange(entities);
+            return entities;
         }
 
         /// <inheritdoc />

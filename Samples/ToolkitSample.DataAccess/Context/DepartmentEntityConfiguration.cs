@@ -1,34 +1,43 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
-using EntityFramework.Toolkit.EFCore.Extensions;
+﻿using EntityFramework.Toolkit.EFCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
     public class DepartmentEntityConfiguration : EntityTypeConfiguration<Model.Department>
     {
-        public DepartmentEntityConfiguration()
+
+        public override void Configure(EntityTypeBuilder<Department> entity)
         {
-            this.HasKey(d => d.Id);
+            entity.HasKey(d => d.Id);
 
-            this.Property(d => d.Name).IsRequired();
-            this.Property(d => d.Name).HasMaxLength(255);
-            this.Property(d => d.Name).IsUnique();
+            entity.Property(d => d.Name).IsRequired();
+            entity.Property(d => d.Name).HasMaxLength(255);
+            entity.Property(d => d.Name)
+                //TODO .IsUnique()
+                ;
 
-            ////this.HasMany(d => d.Employees)
+            ////entity.HasMany(d => d.Employees)
             ////    .WithOptional(e => e.Department);
 
-            this.HasRequired(d => d.Leader)
+            entity.HasOne(d => d.Leader)
                 .WithMany()
                 .HasForeignKey(d => d.LeaderId);
 
-            this.HasOptional(d => d.Leader);
+            //entity.HasRequired(d => d.Leader)
+            //    .WithMany()
+            //    .HasForeignKey(d => d.LeaderId);
 
-            this.Property(e => e.RowVersion)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed)
+            //entity.HasOptional(d => d.Leader);
+
+            entity.Property(e => e.RowVersion)
+                .ValueGeneratedOnAddOrUpdate()
+                //.HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed)
                 .HasMaxLength(8)
                 .IsRowVersion()
                 .IsRequired();
 
         }
+
     }
 }

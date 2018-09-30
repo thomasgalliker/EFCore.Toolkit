@@ -95,7 +95,7 @@ namespace EntityFramework.Toolkit.EFCore
             {
                 lock (InitializerLock)
                 {
-                    this.databaseInitializer.Initialize(this.Database, force);
+                    this.databaseInitializer.Initialize(this, force);
                 }
             }
             catch (Exception ex)

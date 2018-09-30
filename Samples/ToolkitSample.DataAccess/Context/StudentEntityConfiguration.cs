@@ -1,14 +1,16 @@
-﻿using ToolkitSample.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
     public class StudentEntityConfiguration : PersonEntityConfiguration<Student>
     {
-        public StudentEntityConfiguration()
+        public override void Configure(EntityTypeBuilder<Student> entity)
         {
-            this.Property(e => e.EnrollmentDate).IsRequired();
+            entity.Property(e => e.EnrollmentDate).IsRequired();
 
-            this.ToTable(nameof(Student));
+            entity.ToTable(nameof(Student));
         }
     }
 }

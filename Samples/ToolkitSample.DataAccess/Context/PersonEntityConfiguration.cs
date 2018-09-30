@@ -1,36 +1,37 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
-
+﻿using EntityFramework.Toolkit.EFCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
     public class PersonEntityConfiguration<TPerson> : EntityTypeConfiguration<TPerson> where TPerson : Person
     {
-        public PersonEntityConfiguration()
+        public override void Configure(EntityTypeBuilder<TPerson> entity)
         {
-            this.HasKey(d => d.Id);
+            entity.HasKey(d => d.Id);
 
-            this.Property(e => e.LastName).IsRequired().HasMaxLength(255);
+            entity.Property(e => e.LastName).IsRequired().HasMaxLength(255);
 
-            this.Property(e => e.FirstName).IsRequired().HasMaxLength(255);
+            entity.Property(e => e.FirstName).IsRequired().HasMaxLength(255);
 
-            this.Property(e => e.Birthdate).IsRequired();
+            entity.Property(e => e.Birthdate).IsRequired();
 
-            this.Property(e => e.CreatedDate).IsRequired();
-            this.Property(e => e.UpdatedDate).IsOptional();
-            
-            this.HasOptional(t => t.Country)
+            entity.Property(e => e.CreatedDate).IsRequired();
+            entity.Property(e => e.UpdatedDate).IsRequired(false);
+
+            entity.HasOne(t => t.Country)
                 .WithMany()
-                .HasForeignKey(d => d.CountryId);
+                .HasForeignKey(d => d.CountryId)
+                .IsRequired(false);
 
-            this.Property(e => e.RowVersion)
-                .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Computed)
+            entity.Property(e => e.RowVersion)
+                .ValueGeneratedOnAddOrUpdate()
                 .HasMaxLength(8)
                 .IsRowVersion()
                 .IsRequired();
 
-            this.ToTable(nameof(Person));
+            entity.ToTable(nameof(Person));
         }
     }
 }

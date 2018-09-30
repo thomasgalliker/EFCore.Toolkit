@@ -1,20 +1,24 @@
-﻿using System.Data.Entity;
-
+﻿using System.Linq;
+using EntityFramework.Toolkit.EFCore;
+using EntityFramework.Toolkit.EFCore.Extensions;
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
-using ToolkitSample.DataAccess.Migrations;
+using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess
 {
-    internal sealed class EmployeeContextDatabaseInitializer : MigrateDatabaseToLatestVersion<EmployeeContext, EmployeeContextMigrationConfiguration>
+    public class EmployeeContextDatabaseInitializer : IDatabaseInitializer<EmployeeContext>
     {
-        public EmployeeContextDatabaseInitializer()
+        //public void Initialize(DatabaseFacade database, bool force)
+        public void Initialize(DbContext context, bool force)
         {
-        }
-
-        public EmployeeContextDatabaseInitializer(EmployeeContextMigrationConfiguration migrationConfiguration) 
-            : base(useSuppliedContext: true, 
-                configuration: migrationConfiguration)
-        {
+            if (context.AllMigrationsApplied())
+            {
+                if (!context.Set<Employee>().Any())
+                {
+                    //TODO Perform seeds
+                }
+            }
         }
     }
 }

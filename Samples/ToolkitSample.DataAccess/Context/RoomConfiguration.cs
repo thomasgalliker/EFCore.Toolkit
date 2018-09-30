@@ -1,24 +1,26 @@
-﻿
-using System.Data.Entity.ModelConfiguration;
-using EntityFramework.Toolkit.EFCore.Extensions;
+﻿using EntityFramework.Toolkit.EFCore;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
     public class RoomConfiguration : EntityTypeConfiguration<Room>
     {
-        public RoomConfiguration()
+        public override void Configure(EntityTypeBuilder<Room> entity)
         {
-            this.HasKey(d => d.Id);
+            entity.HasKey(e => e.Id);
 
-            this.Property(e => e.Description).IsOptional().HasMaxLength(255);
+            entity.Property(e => e.Description).IsRequired(false)
+                // TODO PropertyBuilderExtensions with .IsOptional()
+                .HasMaxLength(255);
 
-            this.Property(e => e.Level);
-            this.Property(e => e.Sector).HasMaxLength(900);
+            entity.Property(e => e.Level);
+            entity.Property(e => e.Sector).HasMaxLength(900);
 
-            this.Unique(e => e.Level, e => e.Sector);
+            //TODO entity.Unique(e => e.Level, e => e.Sector);
 
-            this.ToTable(nameof(Room));
+            entity.ToTable(nameof(Room));
         }
     }
 }

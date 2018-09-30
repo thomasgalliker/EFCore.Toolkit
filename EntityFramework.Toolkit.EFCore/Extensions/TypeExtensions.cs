@@ -16,7 +16,7 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
             var entityType = entry.Entity.GetType();
             if (entityType.Namespace == "System.Data.Entity.DynamicProxies")
             {
-                entityType = entityType.BaseType;
+                entityType = entityType.GetTypeInfo().BaseType;
             }
 
             return entityType;
@@ -50,7 +50,7 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
                 return type.Name;
             }
 
-            return $"{type.Name.Substring(0, type.Name.IndexOf('`'))}<{string.Join(", ", type.GetGenericArguments().Select(t => t.GetFormattedName()))}>";
+            return $"{type.Name.Substring(0, type.Name.IndexOf('`'))}<{string.Join(", ", type.GenericTypeArguments.Select(t => t.GetFormattedName()))}>";
         }
 
         internal static string GetFormattedFullname(this Type type)
@@ -65,7 +65,7 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
                 return type.ToString();
             }
 
-            return $"{type.Namespace}.{type.Name.Substring(0, type.Name.IndexOf('`'))}<{string.Join(", ", type.GetGenericArguments().Select(t => t.GetFormattedFullname()))}>";
+            return $"{type.Namespace}.{type.Name.Substring(0, type.Name.IndexOf('`'))}<{string.Join(", ", type.GenericTypeArguments.Select(t => t.GetFormattedFullname()))}>";
         }
 
         private static bool HasDefaultValue(this ParameterInfo parameterInfo)
@@ -88,7 +88,7 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
                 throw new ArgumentNullException(nameof(type));
             }
 
-            var constructors = type.GetConstructors();
+            var constructors = type.GetTypeInfo().DeclaredConstructors.ToList();
             foreach (var constructor in constructors)
             {
                 var allMatched = false;
@@ -108,13 +108,13 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
                         var arg = args[ctorParameterIndex];
                         if (arg != null)
                         {
-                            var argType = arg.GetType();
-                            var isEqualType = argType == ctorParameter.ParameterType;
+                            var argType = arg.GetType().GetTypeInfo();
+                            var isEqualType = argType == ctorParameter.ParameterType.GetTypeInfo();
 
 
-                            var interfaces = ctorParameter.ParameterType.GetInterfaces();
-                            var isAnyAssignable = interfaces.Any(i => i.IsAssignableFrom(argType));
-                            var isInstanceOfType = ctorParameter.ParameterType.IsInstanceOfType(arg);
+                            var interfaces = ctorParameter.ParameterType.GetTypeInfo().ImplementedInterfaces;
+                            var isAnyAssignable = interfaces.Any(i => i.GetTypeInfo().IsAssignableFrom(argType));
+                            var isInstanceOfType = ctorParameter.ParameterType.GetTypeInfo().IsAssignableFrom(argType);
                             if (isEqualType || isAnyAssignable || isInstanceOfType)
                             {
                                 allMatched = true;
@@ -127,7 +127,7 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
                         }
                         else
                         {
-                            if (!ctorParameter.ParameterType.IsValueType)
+                            if (!ctorParameter.ParameterType.GetTypeInfo().IsValueType)
                             {
                                 allMatched = true;
                             }

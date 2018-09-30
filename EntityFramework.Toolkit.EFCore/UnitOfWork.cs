@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETSTANDARD1_3
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Transactions;
@@ -10,7 +11,7 @@ using System.Threading.Tasks;
 #endif
 
 namespace EntityFramework.Toolkit.EFCore
-{
+{ 
     public sealed class UnitOfWork : IUnitOfWork
     {
         private readonly Dictionary<Type, IContext> contexts;
@@ -123,3 +124,4 @@ namespace EntityFramework.Toolkit.EFCore
         }
     }
 }
+#endif

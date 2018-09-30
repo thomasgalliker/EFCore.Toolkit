@@ -25,7 +25,7 @@ namespace EntityFramework.Toolkit.EFCore.Contracts
 
         TDerived Add<TDerived>(TDerived entity) where TDerived : class, T;
 
-        IEnumerable<T> AddRange(IEnumerable<T> entity);
+        IEnumerable<T> AddRange(IEnumerable<T> entities);
 
         /// <summary>
         ///     Adds or updates the given entity. If the entity is existing, it's going to be updated with the new values.

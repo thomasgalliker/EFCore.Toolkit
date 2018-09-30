@@ -1,8 +1,10 @@
 ﻿using System;
-using System.Data.Entity;
+using EntityFramework.Toolkit.EFCore;
 using EntityFramework.Toolkit.EFCore.Auditing;
+using EntityFramework.Toolkit.EFCore.Auditing.Extensions;
 using EntityFramework.Toolkit.EFCore.Contracts;
 using EntityFramework.Toolkit.EFCore.Extensions;
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
@@ -36,18 +38,18 @@ namespace ToolkitSample.DataAccess.Context
             this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             this.Database.KillConnectionsToTheDatabase();
 
-            modelBuilder.Configurations.Add(new PersonEntityConfiguration<Person>());
-            modelBuilder.Configurations.Add(new EmployeeEntityTypeConfiguration());
-            modelBuilder.Configurations.Add(new EmployeeAuditEntityTypeConfiguration());
-            modelBuilder.Configurations.Add(new StudentEntityConfiguration());
-            modelBuilder.Configurations.Add(new DepartmentEntityConfiguration());
-            modelBuilder.Configurations.Add(new RoomConfiguration());
-            modelBuilder.Configurations.Add(new CountryEntityConfiguration());
-            modelBuilder.Configurations.Add(new ApplicationSettingEntityTypeConfiguration());
+            modelBuilder.AddConfiguration(new PersonEntityConfiguration<Person>());
+            modelBuilder.AddConfiguration(new EmployeeEntityTypeConfiguration());
+            modelBuilder.AddConfiguration(new EmployeeAuditEntityTypeConfiguration());
+            modelBuilder.AddConfiguration(new StudentEntityConfiguration());
+            modelBuilder.AddConfiguration(new DepartmentEntityConfiguration());
+            modelBuilder.AddConfiguration(new RoomConfiguration());
+            modelBuilder.AddConfiguration(new CountryEntityConfiguration());
+            modelBuilder.AddConfiguration(new ApplicationSettingEntityTypeConfiguration());
 
             //this.AutoConfigure(modelBuilder);
             //modelBuilder.Configurations.AddFromAssembly(this.GetType().Assembly);

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
 
@@ -25,10 +27,10 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
                 {
                     stringBuilder.AppendLine();
                     stringBuilder.AppendLine("Modified properties:");
-                    foreach (var property in entry.GetProperties())
+                    foreach (var property in entry.Properties)
                     {
                         stringBuilder.AppendLine(
-                            $"- ({(property.IsModified ? "X" : " ")}) {property.Name}: OriginalValue =\"{property.OriginalValue}\", CurrentValue=\"{property.CurrentValue}\"");
+                            $"- ({(property.IsModified ? "X" : " ")}) {property.Metadata.Name}: OriginalValue =\"{property.OriginalValue}\", CurrentValue=\"{property.CurrentValue}\"");
                     }
                 }
 
@@ -50,9 +52,9 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
                         {
                             case 242:
                                 stringBuilder.AppendLine("   Following properties may have cause the implications:");
-                                foreach (string propertyName in entry.CurrentValues.PropertyNames)
+                                foreach (string propertyName in entry.CurrentValues.Properties.Select(p => p.Name))
                                 {
-                                    var propertyInfo = entry.Entity.GetType().GetProperty(propertyName);
+                                    var propertyInfo = entry.Entity.GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
                                     var propertyType = propertyInfo.PropertyType;
                                     DateTime? propertyValue = null;
                                     if (propertyType == typeof(DateTime?))
@@ -73,9 +75,9 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
                             case 547:
                                 var relationshipSourceColumnName = GetSourceColumnName(sqlExceptionError.Message);
                                 stringBuilder.AppendLine("   Following properties may have cause the implications:");
-                                foreach (string propertyName in entry.CurrentValues.PropertyNames)
+                                foreach (string propertyName in entry.CurrentValues.Properties.Select(p => p.Name))
                                 {
-                                    var propertyInfo = entry.Entity.GetType().GetProperty(propertyName);
+                                    var propertyInfo = entry.Entity.GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
                                     var propertyType = propertyInfo.PropertyType;
                                     var propertyValue = entry.CurrentValues.GetValue<object>(propertyName);
 

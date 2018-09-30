@@ -1,23 +1,29 @@
-﻿using ToolkitSample.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
     public class EmployeeEntityTypeConfiguration : PersonEntityConfiguration<Employee>
     {
-        public EmployeeEntityTypeConfiguration()
+        public override void Configure(EntityTypeBuilder<Employee> entity)
         {
-            this.Property(e => e.EmployementDate).IsOptional();
+            base.Configure(entity);
 
-            this.HasOptional(e => e.Department)
+            entity.Property(e => e.EmployementDate)
+                .IsRequired(false);
+
+            entity.HasOne(e => e.Department)
                 .WithMany(d => d.Employees)
-                .HasForeignKey(e => e.DepartmentId);
+                .HasForeignKey(e => e.DepartmentId)
+                .IsRequired(false);
 
-            this.Property(e => e.PropertyA);
-            this.Property(e => e.PropertyB);
+            entity.Property(e => e.PropertyA);
+            entity.Property(e => e.PropertyB);
 
             //this.Unique(e => e.PropertyA, e => e.PropertyB);
 
-            this.ToTable(nameof(Employee));
+            entity.ToTable(nameof(Employee));
         }
     }
 }

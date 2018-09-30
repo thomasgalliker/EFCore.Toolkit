@@ -15,12 +15,6 @@ namespace EntityFramework.Toolkit.EFCore.Contracts
 
         /// <summary>
         ///     Returns a collection of all entities in the context, or that can be queried from the
-        ///     database, of given type <typeparamref name="T" />.  IQueryableIncluding enables database-spezific filtering with extended include options.
-        /// </summary>
-        IQueryableIncluding<T> Query();
-
-        /// <summary>
-        ///     Returns a collection of all entities in the context, or that can be queried from the
         ///     database, of given type <typeparamref name="T" />.
         /// </summary>
         IEnumerable<T> GetAll();

@@ -6,12 +6,27 @@ using System.Reflection;
 using EntityFramework.Toolkit.EFCore.Contracts;
 using EntityFramework.Toolkit.EFCore.Utils;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EntityFramework.Toolkit.EFCore.Extensions
 {
     public static class DbContextExtensions
     {
+        public static bool AllMigrationsApplied(this DbContext context)
+        {
+            var applied = context.GetService<IHistoryRepository>()
+                .GetAppliedMigrations()
+                .Select(m => m.MigrationId);
+
+            var total = context.GetService<IMigrationsAssembly>()
+                .Migrations
+                .Select(m => m.Key);
+
+            return !total.Except(applied).Any();
+        }
+
         public static void Seed(this DbContext context, IEnumerable<IDataSeed> dataSeeds)
         {
             foreach (var dataSeed in dataSeeds)
@@ -122,7 +137,7 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
             var primaryKey = GetPrimaryKeyFor<T>(context);
             var propertyType = primaryKey.PropertyInfo.PropertyType;
             //what's the default value for the type?
-            var transientValue = propertyType.IsValueType ? Activator.CreateInstance(propertyType) : null;
+            var transientValue = propertyType.GetTypeInfo().IsValueType ? Activator.CreateInstance(propertyType) : null;
             //is the pk the same as the default value (int == 0, string == null ...)
             return Equals(primaryKey.PropertyInfo.GetValue(entity, null), transientValue);
         }
@@ -199,38 +214,6 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
         /// <typeparam name="T"></typeparam>
         /// <param name="context">The context.</param>
         /// <param name="entity">The entity.</param>
-        public static void MarkReferencesUnchanged<T>(DbContext context, T entity) where T : class
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
-            var elementType = GetElementType(context, typeof(T));
-            var navigationProperties = elementType.NavigationProperties;
-
-            //the references
-            var references = from navigationProperty in navigationProperties
-                             let end = navigationProperty.ToEndMember
-                             where end.RelationshipMultiplicity == RelationshipMultiplicity.ZeroOrOne || end.RelationshipMultiplicity == RelationshipMultiplicity.One
-                             select navigationProperty.Name;
-            //NB: We don't check Collections. EF wants to handle the object graph.
-
-            var parentEntityState = context.Entry(entity).State;
-            foreach (var navigationProperty in references)
-            {
-                //if it's modified but not loaded, don't need to touch it
-                if (parentEntityState == EntityState.Modified && !context.Entry(entity).Reference(navigationProperty).IsLoaded) continue;
-                var propertyInfo = typeof(T).GetProperty(navigationProperty);
-                var value = propertyInfo.GetValue(entity, null);
-                context.Entry(value).State = EntityState.Unchanged;
-            }
-        }
 
         /// <summary>
         ///     Merges a DTO into a new or existing entity attached/added to context
@@ -262,7 +245,7 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
 
             //has the id been set (existing item) or not (transient)?
             var propertyType = primaryKey.PropertyInfo.PropertyType;
-            var transientValue = propertyType.IsValueType ? Activator.CreateInstance(propertyType) : null;
+            var transientValue = propertyType.GetTypeInfo().IsValueType ? Activator.CreateInstance(propertyType) : null;
             var isTransient = Equals(primaryKey.Value, transientValue);
 
             T entity;
@@ -304,10 +287,10 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
 
             //find the primary key
             var elementType = context.GetElementType(typeof(TEntity));
-            var primaryKey = elementType.KeyMembers.First();
+            var primaryKey = elementType.FindPrimaryKey().Properties.First();
 
             //look it up on the entity
-            var propertyInfo = typeof(TEntity).GetProperty(primaryKey.Name);
+            var propertyInfo = typeof(TEntity).GetRuntimeProperty(primaryKey.Name);
             return propertyInfo == null ? null : new PrimaryKey(propertyInfo, null);
         }
 
@@ -341,15 +324,16 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
 
         private static EntityType GetElementType(this DbContext context, Type entityType)
         {
-            var type = ObjectContext.GetObjectType(entityType);
-            var objectContext = ((IObjectContextAdapter)context).ObjectContext;
+            throw new NotImplementedException();
+            //var type = ObjectContext.GetObjectType(entityType);
+            //var objectContext = ((IObjectContextAdapter)context).ObjectContext;
 
-            EntityType elementType;
-            if (objectContext.MetadataWorkspace.TryGetItem(type.FullName, DataSpace.OSpace, out elementType))
-            {
-                return elementType;
-            }
-            return null;
+            //EntityType elementType;
+            //if (objectContext.MetadataWorkspace.TryGetItem(type.FullName, DataSpace.OSpace, out elementType))
+            //{
+            //    return elementType;
+            //}
+            //return null;
         }
 
         /// <summary>
@@ -360,10 +344,11 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
         /// <returns>A list of navigation properties.</returns>
         public static List<PropertyInfo> GetNavigationProperties(this DbContext context, Type entityType)
         {
-            var elementType = context.GetElementType(entityType);
-            return elementType.NavigationProperties
-                .Select(navigationProperty => entityType.GetProperty(navigationProperty.Name))
-                .ToList();
+            throw new NotImplementedException();
+            //var elementType = context.GetElementType(entityType);
+            //return elementType.NavigationProperties
+            //    .Select(navigationProperty => entityType.GetProperty(navigationProperty.Name))
+            //    .ToList();
         }
 
         /// <summary>
@@ -382,19 +367,43 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
         /// </summary>
         public static List<TableRowCounts> GetTableRowCounts(this DbContext c)
         {
-            var rawSqlQuery = c.Database.SqlQuery<TableRowCounts>(
-                @"CREATE TABLE #counts
-                    (
-                        TableName varchar(255),
-                        TableRowCount int
-                    )
+            throw new NotImplementedException();
+            //var rawSqlQuery = c.Database.SqlQuery<TableRowCounts>(
+            //    @"CREATE TABLE #counts
+            //        (
+            //            TableName varchar(255),
+            //            TableRowCount int
+            //        )
 
-                    EXEC sp_MSForEachTable @command1='INSERT #counts (TableName, TableRowCount) SELECT ''?'', COUNT(*) FROM ?'
-                    SELECT TableName, TableRowCount FROM #counts ORDER BY TableName, TableRowCount DESC
-                    DROP TABLE #counts");
+            //        EXEC sp_MSForEachTable @command1='INSERT #counts (TableName, TableRowCount) SELECT ''?'', COUNT(*) FROM ?'
+            //        SELECT TableName, TableRowCount FROM #counts ORDER BY TableName, TableRowCount DESC
+            //        DROP TABLE #counts");
 
-            var tableCountResults = rawSqlQuery.ToList();
-            return tableCountResults;
+            //var tableCountResults = rawSqlQuery.ToList();
+            //return tableCountResults;
+        }
+
+        public static IQueryable Set(this DbContext context, Type T)
+        {
+
+            // Get the generic type definition
+            MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), null);
+
+            // Build a method with the specific type argument you're interested in
+            method = method.MakeGenericMethod(T);
+
+            return method.Invoke(context, null) as IQueryable;
+        }
+
+        public static IQueryable<T> Set<T>(this DbContext context)
+        {
+            // Get the generic type definition 
+            MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), null);
+
+            // Build a method with the specific type argument you're interested in 
+            method = method.MakeGenericMethod(typeof(T));
+
+            return method.Invoke(context, null) as IQueryable<T>;
         }
     }
 }

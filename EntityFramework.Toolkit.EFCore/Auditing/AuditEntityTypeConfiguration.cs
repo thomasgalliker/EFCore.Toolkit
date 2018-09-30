@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 namespace EntityFramework.Toolkit.EFCore.Auditing
 {
     public abstract class AuditEntityTypeConfiguration<TAuditEntity, TAuditKey> :
-        DbEntityConfiguration<TAuditEntity> where TAuditEntity : class,
+        EntityTypeConfiguration<TAuditEntity> where TAuditEntity : class,
         IAuditEntity<TAuditKey>
     {
         public override void Configure(EntityTypeBuilder<TAuditEntity> entity)

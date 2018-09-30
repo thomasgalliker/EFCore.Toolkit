@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using EntityFramework.Toolkit.EFCore.Contracts;
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Stubs;
 using ToolkitSample.Model;
 
@@ -50,9 +50,9 @@ namespace ToolkitSample.DataAccess.Context
 
         public event EventHandler<EventArgs> DisposeCalled;
 
-        public IDbSet<Model.Employee> Employees { get; private set; }
+        public DbSet<Model.Employee> Employees { get; private set; }
 
-        public IDbSet<Department> Departments { get; private set; }
+        public DbSet<Department> Departments { get; private set; }
 
         public void Dispose()
         {

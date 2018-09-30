@@ -1,13 +1,16 @@
 ﻿using EntityFramework.Toolkit.EFCore.Auditing;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model.Auditing;
 
 namespace ToolkitSample.DataAccess.Context
 {
     public class TestEntityAuditEntityTypeConfiguration : AuditEntityTypeConfiguration<TestEntityAudit, int>
     {
-        public TestEntityAuditEntityTypeConfiguration()
+        public override void Configure(EntityTypeBuilder<TestEntityAudit> entity)
         {
-            this.Property(e => e.TestEntityId).IsRequired();
+            base.Configure(entity);
+
+            entity.Property(e => e.TestEntityId).IsRequired();
         }
     }
 }

@@ -5,9 +5,4 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\ToolkitSample.DataAccess.Contracts\ToolkitSample.DataAccess.Contracts.csproj" />
-    <ProjectReference Include="..\ToolkitSample.Model\ToolkitSample.Model.csproj" />
-  </ItemGroup>
-
 </Project>

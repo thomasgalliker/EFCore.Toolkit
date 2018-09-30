@@ -1,15 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration;
+﻿using EntityFramework.Toolkit.EFCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class ApplicationSettingEntityTypeConfiguration : EntityTypeConfiguration<Model.ApplicationSetting>
+    public class ApplicationSettingEntityTypeConfiguration : EntityTypeConfiguration<ApplicationSetting>
     {
-        public ApplicationSettingEntityTypeConfiguration()
+        public override void Configure(EntityTypeBuilder<ApplicationSetting> entity)
         {
-            this.HasKey(d => d.Id);
-            this.Property(d => d.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
-            this.Property(d => d.Path).HasMaxLength(255);
+            entity.HasKey(d => d.Id);
+            entity.Property(d => d.Id).ValueGeneratedNever();
+            entity.Property(d => d.Path).HasMaxLength(255);
         }
     }
 }

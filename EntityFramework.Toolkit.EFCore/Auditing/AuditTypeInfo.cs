@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reflection;
 using EntityFramework.Toolkit.EFCore.Contracts.Auditing;
 
 namespace EntityFramework.Toolkit.EFCore.Auditing
@@ -23,7 +25,7 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
                 throw new ArgumentNullException(nameof(auditEntityType));
             }
 
-            var auditEntityInterface = auditEntityType.GetInterface(nameof(IAuditEntity));
+            var auditEntityInterface = auditEntityType.GetTypeInfo().ImplementedInterfaces.SingleOrDefault(i => i.Name == nameof(IAuditEntity));
             if (auditEntityInterface == null)
             {
                 throw new ArgumentException($"Entity of type {auditEntityType.Name} does implement {nameof(IAuditEntity)}.",

@@ -55,14 +55,14 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
         ///     using the given string as the name or connection string
         ///     for the database to which a connection will be made.
         /// </summary>
-        /// <param name="nameOrConnectionString">Either the database name or the connection string.</param>
-        protected AuditDbContextBase(string nameOrConnectionString, IDatabaseInitializer<TContext> databaseInitializer)
-            : this(nameOrConnectionString, databaseInitializer, log: null)
+        /// <param name="dbContextOptions">Either the database name or the connection string.</param>
+        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer)
+            : this(dbContextOptions, databaseInitializer, log: null)
         {
         }
 
-        protected AuditDbContextBase(string nameOrConnectionString, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
-            : base(nameOrConnectionString, databaseInitializer, log)
+        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
+            : base(dbContextOptions, databaseInitializer, log)
         {
         }
 
@@ -300,7 +300,7 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
                 {
                     if (creatableEntity != null)
                     {
-                        entry.Property<ICreatedDate>(x => x.CreatedDate).IsModified = false;
+                        entry.Property(nameof(ICreatedDate.CreatedDate)).IsModified = false;
                     }
 
                     if (updateableEntity != null)
@@ -327,8 +327,8 @@ namespace EntityFramework.Toolkit.EFCore.Auditing
         {
             // Create audit entity.
             var dbSet = this.Set(auditTypeInfo.AuditEntityType);
-            var auditEntity = (IAuditEntity)dbSet.Create();
-            dbSet.Add(auditEntity);
+            var auditEntity = (IAuditEntity)Activator.CreateInstance(auditTypeInfo.AuditEntityType);
+            //dbSet.Add(auditEntity);
 
             // Copy the properties.
             var auditEntityEntry = this.Entry(auditEntity);

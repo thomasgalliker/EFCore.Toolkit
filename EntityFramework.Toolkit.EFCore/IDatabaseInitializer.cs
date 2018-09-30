@@ -1,9 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace EntityFramework.Toolkit.EFCore
 {
     public interface IDatabaseInitializer<T>
     {
-        void Initialize(DatabaseFacade database, bool force);
+        void Initialize(DbContext context, bool force);
     }
 }

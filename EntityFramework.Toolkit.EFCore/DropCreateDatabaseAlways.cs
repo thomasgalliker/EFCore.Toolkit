@@ -1,13 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using Microsoft.EntityFrameworkCore;
 
-namespace EntityFramework.Toolkit.EFCore.Testing
+namespace EntityFramework.Toolkit.EFCore
 {
     public class DropCreateDatabaseAlways<T> : IDatabaseInitializer<T>
     {
-        public void Initialize(DatabaseFacade database, bool force)
+        public void Initialize(DbContext context, bool force)
         {
-            database.EnsureDeleted();
-            database.EnsureCreated();
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
         }
     }
 }

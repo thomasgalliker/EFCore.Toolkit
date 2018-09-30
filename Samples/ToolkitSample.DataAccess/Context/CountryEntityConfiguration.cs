@@ -1,23 +1,25 @@
-﻿using System.Data.Entity.ModelConfiguration;
-using EntityFramework.Toolkit.EFCore.Extensions;
+﻿using EntityFramework.Toolkit.EFCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
     public class CountryEntityConfiguration : EntityTypeConfiguration<Model.Country>
     {
-        public CountryEntityConfiguration()
+        public override void Configure(EntityTypeBuilder<Country> entity)
         {
-            this.HasKey(d => d.Id);
+            entity.HasKey(d => d.Id);
 
-            this.Property(t => t.Id)
-                //.HasDatabaseGeneratedOption(DatabaseGeneratedOption.None)
+            entity.Property(t => t.Id)
+                .ValueGeneratedNever()
                 .IsRequired()
                 .HasMaxLength(3);
 
-            this.Property(d => d.Name)
+            entity.Property(d => d.Name)
                 .IsRequired()
                 .HasMaxLength(255)
-                .IsUnique();
+                //TODO .IsUnique()
+                ;
         }
     }
 }

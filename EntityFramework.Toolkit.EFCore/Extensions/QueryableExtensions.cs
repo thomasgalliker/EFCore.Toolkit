@@ -27,16 +27,16 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
         /// <param name="queryable">Queryable</param>
         /// <param name="properties">A list of navigation properties to include.</param>
         /// <returns>New queryable which includes the given navigation properties.</returns>
-        public static IQueryable<T> Include<T>(this IQueryable<T> queryable, params Expression<Func<T, object>>[] properties)
+        public static IQueryable<T> Include<T>(this IQueryable<T> queryable, params Expression<Func<T, object>>[] properties) where T : class
         {
             if (queryable == null)
             {
                 throw new ArgumentNullException(nameof(queryable));
             }
 
-            foreach (Expression<Func<T, object>> property in properties)
+            foreach (var property in properties)
             {
-                queryable = queryable.Include(property);
+                queryable = QueryableExtensions.Include<T, object>(queryable, property);
             }
 
             return queryable;
@@ -50,7 +50,7 @@ namespace EntityFramework.Toolkit.EFCore.Extensions
         /// <param name="queryable">Queryable</param>
         /// <param name="pathExpression">The navigation property to include.</param>
         /// <returns>New queryable which includes the given navigation properties.</returns>
-        public static IQueryable<T> Include<T, TProperty>(this IQueryable<T> queryable, Expression<Func<T, TProperty>> pathExpression)
+        public static IQueryable<T> Include<T, TProperty>(this IQueryable<T> queryable, Expression<Func<T, TProperty>> pathExpression) where T : class
         {
             if (queryable == null)
             {

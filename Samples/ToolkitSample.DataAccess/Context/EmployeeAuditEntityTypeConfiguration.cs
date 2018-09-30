@@ -1,17 +1,19 @@
 ﻿using EntityFramework.Toolkit.EFCore.Auditing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model.Auditing;
 
 namespace ToolkitSample.DataAccess.Context
 {
     public class EmployeeAuditEntityTypeConfiguration : AuditEntityTypeConfiguration<EmployeeAudit, int>
     {
-        public EmployeeAuditEntityTypeConfiguration()
+        public override void Configure(EntityTypeBuilder<EmployeeAudit> entity)
         {
-            this.Property(e => e.Id).IsRequired();
-            this.Property(e => e.LastName).IsRequired();
-            this.Property(e => e.FirstName).IsRequired();
+            entity.Property(e => e.Id).IsRequired();
+            entity.Property(e => e.LastName).IsRequired();
+            entity.Property(e => e.FirstName).IsRequired();
 
-            this.ToTable(nameof(EmployeeAudit));
+            entity.ToTable(nameof(EmployeeAudit));
         }
     }
 }

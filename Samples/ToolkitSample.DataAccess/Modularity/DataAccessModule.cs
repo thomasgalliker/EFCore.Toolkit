@@ -1,7 +1,5 @@
-﻿
-using System.Data.Entity;
-
-using Autofac;
+﻿using Autofac;
+using EntityFramework.Toolkit.EFCore;
 using EntityFramework.Toolkit.EFCore.Contracts;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Contracts.Repository;
