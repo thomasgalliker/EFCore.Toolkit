@@ -275,7 +275,7 @@ namespace EFCore.Toolkit.Testing
                             context.Dispose();
                         }
 
-                        // If all contexts are disposed, create a new context to drop the database
+                        // If all contexts have already been disposed, create a new context in order to drop the database
                         if (dropped == false)
                         {
                             using (var context = this.CreateContext(new CreateDatabaseIfNotExists<TContext>()))

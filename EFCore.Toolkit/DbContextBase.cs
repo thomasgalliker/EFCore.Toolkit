@@ -19,8 +19,6 @@ namespace EFCore.Toolkit
         where TContext : DbContext
     {
         private static readonly IList<TContext> InitializerLock = new List<TContext>();
-
-        private readonly string contextName = typeof(TContext).GetFormattedName();
         private readonly IDatabaseInitializer<TContext> databaseInitializer;
         private readonly IDbConnection dbConnection;
 
@@ -42,7 +40,7 @@ namespace EFCore.Toolkit
         {
             this.EnsureLog(log);
 
-            this.log($"Initializing DbContext '{this.contextName}' with NameOrConnectionString = \"{this.Database.GetDbConnection().ConnectionString}\" and IDatabaseInitializer =\"{databaseInitializer?.GetType().GetFormattedName()}\"");
+            this.log($"Initializing DbContext '{this.Name}' with NameOrConnectionString = \"{this.dbConnection.ConnectionString}\" and IDatabaseInitializer =\"{databaseInitializer?.GetType().GetFormattedName()}\"");
 
             this.databaseInitializer = databaseInitializer;
             this.TryInitializeDatabase();
@@ -59,7 +57,7 @@ namespace EFCore.Toolkit
             this.EnsureLog(log);
             this.dbConnection = dbConnection;
 
-            this.log($"Initializing DbContext '{this.contextName}' with ConnectionString = \"{dbConnection.ConnectionString}\" and IDatabaseInitializer=\"{databaseInitializer?.GetType().GetFormattedName()}\"");
+            this.log($"Initializing DbContext '{this.Name}' with ConnectionString = \"{dbConnection.ConnectionString}\" and IDatabaseInitializer=\"{databaseInitializer?.GetType().GetFormattedName()}\"");
 
             this.databaseInitializer = databaseInitializer;
             this.TryInitializeDatabase();
@@ -84,10 +82,7 @@ namespace EFCore.Toolkit
         private Action<string> log { get; set; }
 
         /// <inheritdoc />
-        public string Name
-        {
-            get { return this.contextName; }
-        }
+        public string Name { get; } = typeof(TContext).GetFormattedName();
 
         private void TryInitializeDatabase(bool force = false)
         {
@@ -113,7 +108,7 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public void ResetDatabase()
         {
-            this.log($"ResetDatabase of DbContext '{this.contextName}' with ConnectionString = \"{this.Database.GetDbConnection().ConnectionString}\"");
+            this.log($"ResetDatabase of DbContext '{this.Name}' with ConnectionString = \"{this.dbConnection.ConnectionString}\"");
 
             this.InternalResetDatabase();
         }
@@ -128,7 +123,7 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public void DropDatabase()
         {
-            this.log($"DropDatabase of DbContext '{this.contextName}' with ConnectionString = \"{this.Database.GetDbConnection().ConnectionString}\"");
+            this.log($"DropDatabase of DbContext '{this.Name}' with ConnectionString = \"{this.dbConnection.ConnectionString}\"");
 
             this.InternalDropDatabase();
         }
@@ -340,7 +335,12 @@ namespace EFCore.Toolkit
         public bool IsDisposed { get; private set; }
 
         /// <inheritdoc />
-        /// :
+        public override void Dispose()
+        {
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         public virtual void Dispose(bool disposing)
         {
             if (this.IsDisposed)
@@ -348,7 +348,10 @@ namespace EFCore.Toolkit
                 return;
             }
 
-            //base.Dispose(disposing);
+            if (disposing)
+            {
+                base.Dispose();
+            }
 
             this.IsDisposed = true;
         }
