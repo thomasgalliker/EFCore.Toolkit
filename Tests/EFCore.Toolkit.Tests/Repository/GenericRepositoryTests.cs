@@ -7,8 +7,8 @@ using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Contracts.Extensions;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Testing;
-using EntityFramework.Toolkit.Tests.Extensions;
-using EntityFramework.Toolkit.Tests.Stubs;
+using EFCore.Toolkit.Tests.Extensions;
+using EFCore.Toolkit.Tests.Stubs;
 
 using FluentAssertions;
 using ToolkitSample.DataAccess.Context;
@@ -19,9 +19,9 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-using static EntityFramework.Toolkit.Tests.Stubs.Testdata.Employees;
+using static EFCore.Toolkit.Tests.Stubs.Testdata.Employees;
 
-namespace EntityFramework.Toolkit.Tests.Repository
+namespace EFCore.Toolkit.Tests.Repository
 {
     /// <summary>
     ///     Repository tests using <see cref="EmployeeContextTestDbConnection" /> as database connection.

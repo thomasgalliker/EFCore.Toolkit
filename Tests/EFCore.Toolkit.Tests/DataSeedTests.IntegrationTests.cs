@@ -12,7 +12,7 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     public class DataSeedIntegrationTests : ContextTestBase<EmployeeContext>
     {

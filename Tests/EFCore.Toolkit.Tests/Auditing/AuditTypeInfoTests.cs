@@ -6,7 +6,7 @@ using ToolkitSample.Model.Auditing;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests.Auditing
+namespace EFCore.Toolkit.Tests.Auditing
 {
     public class AuditTypeInfoTests
     {

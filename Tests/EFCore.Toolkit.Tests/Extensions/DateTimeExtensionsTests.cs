@@ -4,7 +4,7 @@ using FluentAssertions;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests.Extensions
+namespace EFCore.Toolkit.Tests.Extensions
 {
     public class DateTimeExtensionsTests
     {

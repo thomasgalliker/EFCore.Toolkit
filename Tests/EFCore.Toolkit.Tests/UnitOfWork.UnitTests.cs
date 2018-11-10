@@ -11,7 +11,7 @@ using ToolkitSample.DataAccess.Context;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     public class UnitOfWorkUnitTests
     {

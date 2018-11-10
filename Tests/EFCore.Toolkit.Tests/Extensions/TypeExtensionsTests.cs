@@ -10,7 +10,7 @@ using ToolkitSample.DataAccess.Context.Auditing;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests.Extensions
+namespace EFCore.Toolkit.Tests.Extensions
 {
     public class TypeExtensionsTests
     {

@@ -3,7 +3,7 @@ using System.Linq;
 using EFCore.Toolkit.Concurrency;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Testing;
-using EntityFramework.Toolkit.Tests.Stubs;
+using EFCore.Toolkit.Tests.Stubs;
 
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +12,7 @@ using ToolkitSample.Model;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     public class DbContextBaseTests : ContextTestBase<EmployeeContext>
     {

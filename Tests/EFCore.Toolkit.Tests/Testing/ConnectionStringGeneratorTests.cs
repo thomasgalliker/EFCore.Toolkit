@@ -5,7 +5,7 @@ using FluentAssertions;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests.Testing
+namespace EFCore.Toolkit.Tests.Testing
 {
     public class ConnectionStringGeneratorTests
     {

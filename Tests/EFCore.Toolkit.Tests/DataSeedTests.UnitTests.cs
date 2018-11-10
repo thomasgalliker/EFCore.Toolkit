@@ -7,7 +7,7 @@ using ToolkitSample.Model;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     public class DataSeedUnitTests
     {

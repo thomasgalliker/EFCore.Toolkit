@@ -4,7 +4,7 @@ using System.Reflection;
 using EFCore.Toolkit;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
-using EntityFramework.Toolkit.Tests.Stubs;
+using EFCore.Toolkit.Tests.Stubs;
 
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     public class DbContextExtensionsTests : ContextTestBase<EmployeeContext>
     {

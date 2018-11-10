@@ -4,7 +4,7 @@ using EFCore.Toolkit;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Testing;
-using EntityFramework.Toolkit.Tests.Stubs;
+using EFCore.Toolkit.Tests.Stubs;
 
 using FluentAssertions;
 
@@ -16,7 +16,7 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     public class UnitOfWorkIntegrationTests : ContextTestBase<EmployeeContext>
     {

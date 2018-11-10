@@ -1,7 +1,7 @@
 ﻿using FluentAssertions;
 using ToolkitSample.Model;
 
-namespace EntityFramework.Toolkit.Tests.Extensions
+namespace EFCore.Toolkit.Tests.Extensions
 {
     internal static class AssertionExtensions
     {

@@ -4,7 +4,7 @@ using System.Text;
 using EFCore.Toolkit.Contracts;
 using FluentAssertions.Execution;
 
-namespace EntityFramework.Toolkit.Tests.Extensions
+namespace EFCore.Toolkit.Tests.Extensions
 {
     internal static class ChangeSetExtensions
     {

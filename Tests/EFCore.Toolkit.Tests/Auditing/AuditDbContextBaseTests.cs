@@ -13,7 +13,7 @@ using ToolkitSample.Model.Auditing;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EntityFramework.Toolkit.Tests.Auditing
+namespace EFCore.Toolkit.Tests.Auditing
 {
     public class AuditDbContextBaseTests : ContextTestBase<TestAuditDbContext>
     {

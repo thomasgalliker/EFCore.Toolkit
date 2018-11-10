@@ -9,7 +9,7 @@ using ToolkitSample.DataAccess.Repository;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests.Modularity
+namespace EFCore.Toolkit.Tests.Modularity
 {
     public class DataAccessModuleTests
     {

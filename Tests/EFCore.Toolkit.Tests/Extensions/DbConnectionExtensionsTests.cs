@@ -6,7 +6,7 @@ using ToolkitSample.DataAccess.Context;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EntityFramework.Toolkit.Tests.Extensions
+namespace EFCore.Toolkit.Tests.Extensions
 {
     public class DbConnectionExtensionsTests : ContextTestBase<EmployeeContext>
     {

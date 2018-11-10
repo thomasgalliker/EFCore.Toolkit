@@ -4,7 +4,7 @@ using System.Linq;
 using EFCore.Toolkit;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Testing;
-using EntityFramework.Toolkit.Tests.Extensions;
+using EFCore.Toolkit.Tests.Extensions;
 
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +14,7 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     public class IndexTests : ContextTestBase<EmployeeContext>
     {

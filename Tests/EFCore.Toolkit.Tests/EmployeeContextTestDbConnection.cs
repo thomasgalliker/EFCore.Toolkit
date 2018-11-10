@@ -2,7 +2,7 @@
 using EFCore.Toolkit;
 using EFCore.Toolkit.Testing;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     /// <summary>
     /// This DbConnection implementation provides a ConnectionString for testing purposes.
@@ -10,7 +10,7 @@ namespace EntityFramework.Toolkit.Tests
     public class EmployeeContextTestDbConnection : DbConnection
     {
         public EmployeeContextTestDbConnection()
-            : base(name: "EntityFramework.Toolkit.Tests",
+            : base(name: "EFCore.Toolkit.Tests",
                    connectionString: @"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\EF.Toolkit.Tests.mdf; Integrated Security=True;".RandomizeDatabaseName())
         {
             AppDomain.CurrentDomain.SetData("DataDirectory", System.IO.Directory.GetCurrentDirectory());
