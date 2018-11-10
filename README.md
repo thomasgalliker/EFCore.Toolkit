@@ -17,7 +17,7 @@ Use the following command to install EFCore.Toolkit using NuGet package manager 
 	
 For contract assemblies you may only want to use the abstractions of EFCore.Toolkit. For this reason, you can install EFCore.Toolkit.Core which comes as a dedicated NuGet package and is absolutely free of any dependencies.
 
-	PM> Install-Package EFCore.Toolkit.Core
+	PM> Install-Package EFCore.Toolkit.Contracts
 
 ### API Usage
 #### Repository pattern and GenericRepository
