@@ -11,10 +11,8 @@ namespace EFCore.Toolkit.Tests
     {
         public EmployeeContextTestDbConnection()
             : base(name: "EFCore.Toolkit.Tests",
-                   connectionString: @"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\EF.Toolkit.Tests.mdf; Integrated Security=True;".RandomizeDatabaseName())
+                   connectionString: @"Server=(localdb)\MSSQLLocalDB;Database=EF.Toolkit.Tests;Trusted_Connection=True;MultipleActiveResultSets=true;".RandomizeDatabaseName())
         {
-            AppDomain.CurrentDomain.SetData("DataDirectory", System.IO.Directory.GetCurrentDirectory());
-
             this.LazyLoadingEnabled = false;
             this.ProxyCreationEnabled = false;
         }

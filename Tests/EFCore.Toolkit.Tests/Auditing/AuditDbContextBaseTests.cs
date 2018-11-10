@@ -21,12 +21,9 @@ namespace EFCore.Toolkit.Tests.Auditing
 
         public AuditDbContextBaseTests(ITestOutputHelper testOutputHelper)
             : base(
-                dbConnectionString: () => "Data Source=(localdb)\\MSSQLLocalDB; AttachDbFilename=|DataDirectory|\\AuditingTestDb.mdf; Integrated Security=True;".RandomizeDatabaseName(),
+                dbConnectionString: () => @"Server=(localdb)\MSSQLLocalDB;Database=EF.Toolkit.AuditDbContextBaseTests;Trusted_Connection=True;MultipleActiveResultSets=true;".RandomizeDatabaseName(),
                 log: testOutputHelper.WriteLine)
         {
-            // Set variable 'DataDirectory' to the currentDirectory
-            var currentDirectory = Directory.GetCurrentDirectory();
-            AppDomain.CurrentDomain.SetData("DataDirectory", currentDirectory);
         }
 
         [Fact]

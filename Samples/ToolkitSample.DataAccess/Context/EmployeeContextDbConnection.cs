@@ -10,11 +10,8 @@ namespace ToolkitSample.DataAccess.Context
     {
         public EmployeeContextDbConnection()
             : base(name: "EntityFramework.Toolkit",
-                   //connectionString: @"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\EntityFramework.Toolkit.mdf; Integrated Security=True;")
                    connectionString: $@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename={System.IO.Directory.GetCurrentDirectory()}\EntityFramework.Toolkit.mdf; Integrated Security=True;")
         {
-            //AppDomain.CurrentDomain.SetData("DataDirectory", System.IO.Directory.GetCurrentDirectory());
-
             this.LazyLoadingEnabled = false;
             this.ProxyCreationEnabled = false;
         }

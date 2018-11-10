@@ -10,7 +10,7 @@ namespace EFCore.Toolkit.Tests
     public class ContextTestBaseTests_DbConnectionStringOnly : ContextTestBase<ContextTestBaseTests_DbConnectionStringOnly.TestContext>
     {
         public ContextTestBaseTests_DbConnectionStringOnly()
-            : base(dbConnectionString: () => @"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\EF.Toolkit.ContextTestBaseTests.mdf; Integrated Security=True;".RandomizeDatabaseName())
+            : base(dbConnectionString: () => @"Server=(localdb)\MSSQLLocalDB;Database=EF.Toolkit.ContextTestBaseTests;Trusted_Connection=True;MultipleActiveResultSets=true;".RandomizeDatabaseName())
         {
         }
 
@@ -38,7 +38,7 @@ namespace EFCore.Toolkit.Tests
     public class ContextTestBaseTests_DbConnectionOnly : ContextTestBase<ContextTestBaseTests_DbConnectionOnly.TestContext>
     {
         public ContextTestBaseTests_DbConnectionOnly()
-            : base(dbConnection: () => new DbConnection(@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\EF.Toolkit.ContextTestBaseTests.mdf; Integrated Security=True;".RandomizeDatabaseName()))
+            : base(dbConnection: () => new DbConnection(@"Server=(localdb)\MSSQLLocalDB;Database=EF.Toolkit.ContextTestBaseTests;Trusted_Connection=True;MultipleActiveResultSets=true;".RandomizeDatabaseName()))
         {
         }
 
