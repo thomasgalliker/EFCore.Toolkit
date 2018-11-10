@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using EntityFramework.Toolkit.EFCore.Contracts;
+using EFCore.Toolkit.Contracts;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Stubs;
 using ToolkitSample.Model;

@@ -1,4 +1,4 @@
-﻿using EntityFramework.Toolkit.EFCore.Contracts;
+﻿using EFCore.Toolkit.Contracts;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Contracts.Repository

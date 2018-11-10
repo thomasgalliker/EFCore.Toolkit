@@ -1,13 +1,13 @@
-﻿using EntityFramework.Toolkit.EFCore;
+﻿using EFCore.Toolkit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class PersonEntityConfiguration<TPerson> : EntityTypeConfiguration<TPerson> where TPerson : Person
+    public class PersonEntityConfiguration : EntityTypeConfiguration<Person>
     {
-        public override void Configure(EntityTypeBuilder<TPerson> entity)
+        public override void Configure(EntityTypeBuilder<Person> entity)
         {
             entity.HasKey(d => d.Id);
 

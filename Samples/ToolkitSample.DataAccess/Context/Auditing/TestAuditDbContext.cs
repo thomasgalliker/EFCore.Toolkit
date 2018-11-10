@@ -1,8 +1,8 @@
 ﻿using System;
-using EntityFramework.Toolkit.EFCore;
-using EntityFramework.Toolkit.EFCore.Auditing;
-using EntityFramework.Toolkit.EFCore.Auditing.Extensions;
-using EntityFramework.Toolkit.EFCore.Contracts;
+using EFCore.Toolkit;
+using EFCore.Toolkit.Auditing;
+using EFCore.Toolkit.Auditing.Extensions;
+using EFCore.Toolkit.Contracts;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.Model;
 using ToolkitSample.Model.Auditing;
@@ -46,7 +46,7 @@ namespace ToolkitSample.DataAccess.Context.Auditing
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.AddConfiguration(new PersonEntityConfiguration<Person>());
+            modelBuilder.AddConfiguration(new PersonEntityConfiguration());
             modelBuilder.AddConfiguration(new EmployeeEntityTypeConfiguration());
             modelBuilder.AddConfiguration(new EmployeeAuditEntityTypeConfiguration());
             modelBuilder.AddConfiguration(new TestEntityEntityTypeConfiguration());

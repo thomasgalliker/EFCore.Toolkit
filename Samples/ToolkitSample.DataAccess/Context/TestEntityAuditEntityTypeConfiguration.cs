@@ -1,4 +1,4 @@
-﻿using EntityFramework.Toolkit.EFCore.Auditing;
+﻿using EFCore.Toolkit.Auditing;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model.Auditing;
 

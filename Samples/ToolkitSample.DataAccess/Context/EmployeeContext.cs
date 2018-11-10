@@ -1,11 +1,10 @@
 ﻿using System;
-using EntityFramework.Toolkit.EFCore;
-using EntityFramework.Toolkit.EFCore.Auditing;
-using EntityFramework.Toolkit.EFCore.Auditing.Extensions;
-using EntityFramework.Toolkit.EFCore.Contracts;
-using EntityFramework.Toolkit.EFCore.Extensions;
+using EFCore.Toolkit;
+using EFCore.Toolkit.Auditing;
+using EFCore.Toolkit.Auditing.Extensions;
+using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
-using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
@@ -38,11 +37,15 @@ namespace ToolkitSample.DataAccess.Context
             this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             this.Database.KillConnectionsToTheDatabase();
 
-            modelBuilder.AddConfiguration(new PersonEntityConfiguration<Person>());
+            modelBuilder.AddConfiguration(new PersonEntityConfiguration());
             modelBuilder.AddConfiguration(new EmployeeEntityTypeConfiguration());
             modelBuilder.AddConfiguration(new EmployeeAuditEntityTypeConfiguration());
             modelBuilder.AddConfiguration(new StudentEntityConfiguration());

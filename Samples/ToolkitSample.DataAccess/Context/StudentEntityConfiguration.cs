@@ -1,10 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.Toolkit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class StudentEntityConfiguration : PersonEntityConfiguration<Student>
+    public class StudentEntityConfiguration : EntityTypeConfiguration<Student>
     {
         public override void Configure(EntityTypeBuilder<Student> entity)
         {

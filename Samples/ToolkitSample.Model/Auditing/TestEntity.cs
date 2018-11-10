@@ -1,5 +1,5 @@
 ﻿using System;
-using EntityFramework.Toolkit.EFCore.Contracts.Auditing;
+using EFCore.Toolkit.Contracts.Auditing;
 
 namespace ToolkitSample.Model.Auditing
 {

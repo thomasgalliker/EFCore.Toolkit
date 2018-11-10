@@ -1,5 +1,5 @@
 ﻿using System;
-using EntityFramework.Toolkit.EFCore.Concurrency;
+using EFCore.Toolkit.Concurrency;
 
 namespace ToolkitSample.DataAccess.Concurrency
 {

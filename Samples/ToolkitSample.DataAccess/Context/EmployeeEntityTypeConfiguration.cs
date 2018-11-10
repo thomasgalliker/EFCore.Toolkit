@@ -1,15 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.Toolkit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class EmployeeEntityTypeConfiguration : PersonEntityConfiguration<Employee>
+    public class EmployeeEntityTypeConfiguration : EntityTypeConfiguration<Employee>
     {
         public override void Configure(EntityTypeBuilder<Employee> entity)
         {
-            base.Configure(entity);
-
             entity.Property(e => e.EmployementDate)
                 .IsRequired(false);
 

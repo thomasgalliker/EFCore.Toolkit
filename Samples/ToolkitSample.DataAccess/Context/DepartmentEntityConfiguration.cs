@@ -1,4 +1,4 @@
-﻿using EntityFramework.Toolkit.EFCore;
+﻿using EFCore.Toolkit;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 

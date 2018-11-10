@@ -5,4 +5,15 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ToolkitSample.DataAccess.Contracts\ToolkitSample.DataAccess.Contracts.csproj" />
+    <ProjectReference Include="..\ToolkitSample.DataAccess\ToolkitSample.DataAccess.csproj" />
+    <ProjectReference Include="..\ToolkitSample.Model\ToolkitSample.Model.csproj" />
+  </ItemGroup>
+
 </Project>
