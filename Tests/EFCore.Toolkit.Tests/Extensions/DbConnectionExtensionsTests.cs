@@ -46,7 +46,6 @@ namespace EFCore.Toolkit.Tests.Extensions
 
             // Assert
             databaseName.Should().StartWith("EF.Toolkit.Tests_");
-            databaseName.Should().EndWith(".mdf");
         }
     }
 }
