@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net451</TargetFrameworks>
+    <TargetFrameworks>netcoreapp2.0;net452</TargetFrameworks>
     <AssemblyName>EFCore.Toolkit.Tests</AssemblyName>
     <PackageId>EFCore.Toolkit.Tests</PackageId>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
