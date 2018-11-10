@@ -383,14 +383,13 @@ namespace EFCore.Toolkit.Extensions
             //return tableCountResults;
         }
 
-        public static IQueryable Set(this DbContext context, Type T)
+        public static IQueryable Set(this DbContext context, Type entityType)
         {
-
             // Get the generic type definition
-            MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), null);
+            MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), new Type[] { });
 
             // Build a method with the specific type argument you're interested in
-            method = method.MakeGenericMethod(T);
+            method = method.MakeGenericMethod(entityType);
 
             return method.Invoke(context, null) as IQueryable;
         }

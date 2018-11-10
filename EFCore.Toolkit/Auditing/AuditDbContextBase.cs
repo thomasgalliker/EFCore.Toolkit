@@ -33,7 +33,7 @@ namespace EFCore.Toolkit.Auditing
         private bool auditEnabled = true;
         private DateTimeKind auditDateTimeKind;
 
-#if NET45
+#if !NETSTANDARD1_3
         static AuditDbContextBase()
         {
             lock (ConfigFileLock)
@@ -282,7 +282,8 @@ namespace EFCore.Toolkit.Auditing
             DateTime? dateTimeNow = null;
 
             // Process any auditable objects.
-            foreach (var entry in this.ChangeTracker.Entries())
+            var trackedEntries = this.ChangeTracker.Entries().ToList();
+            foreach (var entry in trackedEntries)
             {
                 if (dateTimeNow.HasValue == false)
                 {
@@ -326,9 +327,9 @@ namespace EFCore.Toolkit.Auditing
         private IAuditEntity AuditEntity(EntityEntry entityEntry, AuditTypeInfo auditTypeInfo, DateTime auditDateTime, string user)
         {
             // Create audit entity.
-            var dbSet = this.Set(auditTypeInfo.AuditEntityType);
-            var auditEntity = (IAuditEntity)Activator.CreateInstance(auditTypeInfo.AuditEntityType);
-            //dbSet.Add(auditEntity);
+            dynamic dbSet = this.Set(auditTypeInfo.AuditEntityType);
+            dynamic auditEntity = (IAuditEntity)Activator.CreateInstance(auditTypeInfo.AuditEntityType);
+            dbSet.Add(auditEntity);
 
             // Copy the properties.
             var auditEntityEntry = this.Entry(auditEntity);

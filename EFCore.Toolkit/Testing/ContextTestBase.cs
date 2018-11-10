@@ -41,30 +41,6 @@ namespace EFCore.Toolkit.Testing
         protected ContextTestBase(IDatabaseInitializer<TContext> databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose) : base(() => new TDbConnection(), databaseInitializer, log, deleteDatabaseOnDispose)
         {
         }
-
-        protected ContextTestBase(Func<string> dbConnectionString) : base(dbConnectionString)
-        {
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString, bool deleteDatabaseOnDispose) : base(dbConnectionString, deleteDatabaseOnDispose)
-        {
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString, Action<string> log) : base(dbConnectionString, log)
-        {
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString, Action<string> log, bool deleteDatabaseOnDispose) : base(dbConnectionString, log, deleteDatabaseOnDispose)
-        {
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString, IDatabaseInitializer<TContext> databaseInitializer) : base(dbConnectionString, databaseInitializer)
-        {
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose) : base(dbConnectionString, databaseInitializer, log, deleteDatabaseOnDispose)
-        {
-        }
     }
 
     public abstract class ContextTestBase<TContext> : IDisposable
@@ -119,39 +95,6 @@ namespace EFCore.Toolkit.Testing
         protected ContextTestBase(Func<IDbConnection> dbConnection, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose)
         {
             this.dbConnection = dbConnection();
-            this.Log = log;
-            this.DeleteDatabaseOnDispose = deleteDatabaseOnDispose;
-            this.databaseInitializer = databaseInitializer;
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString)
-            : this(dbConnectionString: dbConnectionString, databaseInitializer: null)
-        {
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString, bool deleteDatabaseOnDispose)
-            : this(dbConnectionString: dbConnectionString, databaseInitializer: null, log: null, deleteDatabaseOnDispose: deleteDatabaseOnDispose)
-        {
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString, Action<string> log)
-            : this(dbConnectionString: dbConnectionString, databaseInitializer: null, log: log, deleteDatabaseOnDispose: true)
-        {
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString, Action<string> log, bool deleteDatabaseOnDispose)
-            : this(dbConnectionString: dbConnectionString, databaseInitializer: null, log: log, deleteDatabaseOnDispose: deleteDatabaseOnDispose)
-        {
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString, IDatabaseInitializer<TContext> databaseInitializer)
-            : this(dbConnectionString: dbConnectionString, databaseInitializer: databaseInitializer, log: null, deleteDatabaseOnDispose: true)
-        {
-        }
-
-        protected ContextTestBase(Func<string> dbConnectionString, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose)
-        {
-            this.dbConnectionString = dbConnectionString();
             this.Log = log;
             this.DeleteDatabaseOnDispose = deleteDatabaseOnDispose;
             this.databaseInitializer = databaseInitializer;

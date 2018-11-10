@@ -10,7 +10,7 @@ namespace EFCore.Toolkit.Tests
     public class ContextTestBaseTests_DbConnectionStringOnly : ContextTestBase<ContextTestBaseTests_DbConnectionStringOnly.TestContext>
     {
         public ContextTestBaseTests_DbConnectionStringOnly()
-            : base(dbConnectionString: () => @"Server=(localdb)\MSSQLLocalDB;Database=EF.Toolkit.ContextTestBaseTests;Trusted_Connection=True;MultipleActiveResultSets=true;".RandomizeDatabaseName())
+            : base(dbConnection: () => new EmployeeContextTestDbConnection())
         {
         }
 

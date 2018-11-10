@@ -1,12 +1,13 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EFCore.Toolkit.Auditing;
 using EFCore.Toolkit.Contracts.Auditing;
 using EFCore.Toolkit.Testing;
+using EFCore.Toolkit.Tests.Stubs;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Context.Auditing;
 using ToolkitSample.Model;
 using ToolkitSample.Model.Auditing;
@@ -20,8 +21,8 @@ namespace EFCore.Toolkit.Tests.Auditing
         private const string TestAuditUser = "TestAuditUser";
 
         public AuditDbContextBaseTests(ITestOutputHelper testOutputHelper)
-            : base(
-                dbConnectionString: () => @"Server=(localdb)\MSSQLLocalDB;Database=EF.Toolkit.AuditDbContextBaseTests;Trusted_Connection=True;MultipleActiveResultSets=true;".RandomizeDatabaseName(),
+            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+                databaseInitializer: new CreateDatabaseIfNotExists<TestAuditDbContext>(),
                 log: testOutputHelper.WriteLine)
         {
         }
@@ -30,7 +31,7 @@ namespace EFCore.Toolkit.Tests.Auditing
         public async void ShouldAuditCreatedAndUpdatedDate()
         {
             // Arrange
-            var initialEmployee = Stubs.Testdata.Employees.CreateEmployee1();
+            var initialEmployee = Testdata.Employees.CreateEmployee1();
 
             // Act
             using (var auditDbContext = this.CreateContext())
@@ -57,7 +58,7 @@ namespace EFCore.Toolkit.Tests.Auditing
         public void ShouldNotUpdateAuditCreatedDate_ICreatedDateAndIUpdatedDate()
         {
             // Arrange
-            var initialEmployee = Stubs.Testdata.Employees.CreateEmployee1();
+            var initialEmployee = Testdata.Employees.CreateEmployee1();
             using (var auditDbContext = this.CreateContext())
             {
                 auditDbContext.Set<Employee>().Add(initialEmployee);
@@ -86,7 +87,7 @@ namespace EFCore.Toolkit.Tests.Auditing
         public void ShouldNotUpdateAuditCreatedDate_ICreatedDate()
         {
             // Arrange
-            var initialRoom = Stubs.Testdata.Rooms.GetRoom1B();
+            var initialRoom = Testdata.Rooms.GetRoom1B();
             using (var auditDbContext = this.CreateContext())
             {
                 auditDbContext.Set<Room>().Add(initialRoom);
@@ -118,7 +119,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             // Arrange
             using (var context = this.CreateContext())
             {
-                context.Employees.Add(Stubs.Testdata.Employees.CreateEmployee1());
+                context.Employees.Add(Testdata.Employees.CreateEmployee1());
                 context.SaveChanges();
             }
 
@@ -152,7 +153,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             // Arrange
             using (var context = this.CreateContext())
             {
-                context.Employees.Add(Stubs.Testdata.Employees.CreateEmployee1());
+                context.Employees.Add(Testdata.Employees.CreateEmployee1());
                 context.SaveChanges();
             }
 
@@ -181,7 +182,7 @@ namespace EFCore.Toolkit.Tests.Auditing
         public void ShouldRollbackAuditIfSaveChangesFails()
         {
             // Arrange
-            var initialEmployee = Stubs.Testdata.Employees.CreateEmployee1();
+            var initialEmployee = Testdata.Employees.CreateEmployee1();
 
             string firstNameChange1 = initialEmployee.FirstName + " from employeeContext1";
             string firstNameChange2 = initialEmployee.FirstName + " from employeeContext2";
@@ -233,7 +234,6 @@ namespace EFCore.Toolkit.Tests.Auditing
             }
 
             // Assert
-
         }
 
         ////[Fact]

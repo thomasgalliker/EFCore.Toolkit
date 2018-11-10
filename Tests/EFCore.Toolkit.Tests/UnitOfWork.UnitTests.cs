@@ -161,7 +161,6 @@ namespace EFCore.Toolkit.Tests
             sampleContextMock.Verify(x => x.Dispose(), Times.Once);
         }
 
-#if NET45
         [Fact]
         public async void ShouldCommitAsync()
         {
@@ -180,7 +179,6 @@ namespace EFCore.Toolkit.Tests
             sampleContextMock.Verify(x => x.SaveChangesAsync(), Times.Once);
             sampleContextMock.Verify(x => x.Dispose(), Times.Once);
         }
-#endif
 
         //TODO Write test to save + check summary of changes
         //TODO Write test to saveasync + check summary of changes

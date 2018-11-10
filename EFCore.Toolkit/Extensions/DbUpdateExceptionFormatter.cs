@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Data.SqlTypes;
 using System.Linq;
@@ -12,11 +13,24 @@ namespace EFCore.Toolkit.Extensions
     {
         private static readonly int SqlStatementTerminationNumber = 3621;
 
+        public static IEnumerable<TSource> FromHierarchy<TSource>(
+            this TSource source,
+            Func<TSource, TSource> nextItem,
+            Func<TSource, bool> canContinue)
+        {
+            for (var current = source; canContinue(current); current = nextItem(current))
+            {
+                yield return current;
+            }
+        }
+
         internal static string GetFormattedErrorMessage(this DbUpdateException dbUpdateException)
         {
             var stringBuilder = new StringBuilder();
 
-            var sqlException = dbUpdateException.InnerException?.InnerException as SqlException;
+            var sqlExceptions = dbUpdateException.FromHierarchy<Exception>(e => e.InnerException, e => e.InnerException is SqlException)
+                .OfType<SqlException>()
+                .ToList();
 
             foreach (var entry in dbUpdateException.Entries)
             {
@@ -34,65 +48,71 @@ namespace EFCore.Toolkit.Extensions
                     }
                 }
 
-                if (sqlException != null)
+                if (sqlExceptions.Any())
                 {
                     stringBuilder.AppendLine();
                     stringBuilder.AppendLine("SqlException Errors:");
 
-                    foreach (SqlError sqlExceptionError in sqlException.Errors)
+                    foreach (var sqlException in sqlExceptions)
                     {
-                        if (sqlExceptionError.Number == SqlStatementTerminationNumber)
+                        foreach (SqlError sqlExceptionError in sqlException.Errors)
                         {
-                            continue;
-                        }
+                            if (sqlExceptionError.Number == SqlStatementTerminationNumber)
+                            {
+                                continue;
+                            }
 
-                        stringBuilder.AppendLine($"-> Number  {sqlExceptionError.Number}: {sqlExceptionError.Message}");
+                            stringBuilder.AppendLine($"-> Number  {sqlExceptionError.Number}: {sqlExceptionError.Message}");
 
-                        switch (sqlExceptionError.Number)
-                        {
-                            case 242:
-                                stringBuilder.AppendLine("   Following properties may have cause the implications:");
-                                foreach (string propertyName in entry.CurrentValues.Properties.Select(p => p.Name))
-                                {
-                                    var propertyInfo = entry.Entity.GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
-                                    var propertyType = propertyInfo.PropertyType;
-                                    DateTime? propertyValue = null;
-                                    if (propertyType == typeof(DateTime?))
+                            switch (sqlExceptionError.Number)
+                            {
+                                case 242:
+                                    stringBuilder.AppendLine("   Following properties may have cause the implications:");
+                                    foreach (string propertyName in entry.CurrentValues.Properties.Select(p => p.Name))
                                     {
-                                        propertyValue = entry.CurrentValues.GetValue<DateTime?>(propertyName);
+                                        var propertyInfo = entry.Entity.GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
+                                        var propertyType = propertyInfo.PropertyType;
+                                        DateTime? propertyValue = null;
+                                        if (propertyType == typeof(DateTime?))
+                                        {
+                                            propertyValue = entry.CurrentValues.GetValue<DateTime?>(propertyName);
+                                        }
+
+                                        if (propertyType == typeof(DateTime))
+                                        {
+                                            propertyValue = entry.CurrentValues.GetValue<DateTime>(propertyName);
+                                        }
+
+                                        if (propertyValue.HasValue && !IsValidSqlServerDatetime(propertyValue.Value))
+                                        {
+                                            stringBuilder.AppendLine($"   - Property: \"{propertyName}\", Type: {propertyType.GetFormattedName()}, Value: \"{propertyValue.Value}\"");
+                                        }
                                     }
-                                    if (propertyType == typeof(DateTime))
+
+                                    break;
+
+                                case 547:
+                                    var relationshipSourceColumnName = GetSourceColumnName(sqlExceptionError.Message);
+                                    stringBuilder.AppendLine("   Following properties may have cause the implications:");
+                                    foreach (string propertyName in entry.CurrentValues.Properties.Select(p => p.Name))
                                     {
-                                        propertyValue = entry.CurrentValues.GetValue<DateTime>(propertyName);
+                                        var propertyInfo = entry.Entity.GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
+                                        var propertyType = propertyInfo.PropertyType;
+                                        var propertyValue = entry.CurrentValues.GetValue<object>(propertyName);
+
+                                        var isColumnPossiblyAffected = propertyName.Contains(relationshipSourceColumnName);
+
+                                        stringBuilder.AppendLine(
+                                            $"   - ({(isColumnPossiblyAffected ? "X" : " ")}) {propertyName}: Type: {propertyType.GetFormattedName()}, Value: \"{propertyValue}\"");
                                     }
-                                    if (propertyValue.HasValue && !IsValidSqlServerDatetime(propertyValue.Value))
-                                    {
-                                        stringBuilder.AppendLine($"   - Property: \"{propertyName}\", Type: {propertyType.GetFormattedName()}, Value: \"{propertyValue.Value}\"");
-                                    }
-                                }
-                                break;
 
-                            case 547:
-                                var relationshipSourceColumnName = GetSourceColumnName(sqlExceptionError.Message);
-                                stringBuilder.AppendLine("   Following properties may have cause the implications:");
-                                foreach (string propertyName in entry.CurrentValues.Properties.Select(p => p.Name))
-                                {
-                                    var propertyInfo = entry.Entity.GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
-                                    var propertyType = propertyInfo.PropertyType;
-                                    var propertyValue = entry.CurrentValues.GetValue<object>(propertyName);
+                                    stringBuilder.AppendLine("   This operation failed because another data entry uses this entry.");
+                                    break;
 
-                                    var isColumnPossiblyAffected = propertyName.Contains(relationshipSourceColumnName);
-
-                                    stringBuilder.AppendLine(
-                                        $"   - ({(isColumnPossiblyAffected ? "X" : " ")}) {propertyName}: Type: {propertyType.GetFormattedName()}, Value: \"{propertyValue}\"");
-                                }
-
-                                stringBuilder.AppendLine("   This operation failed because another data entry uses this entry.");
-                                break;
-
-                            case 2601:
-                                stringBuilder.AppendLine("   One of the properties is marked as Unique index and there is already an entry with that value.");
-                                break;
+                                case 2601:
+                                    stringBuilder.AppendLine("   One of the properties is marked as Unique index and there is already an entry with that value.");
+                                    break;
+                            }
                         }
                     }
                 }

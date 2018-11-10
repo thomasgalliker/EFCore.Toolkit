@@ -1,4 +1,4 @@
-﻿#if NET45
+﻿#if !NETSTANDARD1_3
 using System;
 using System.Configuration;
 

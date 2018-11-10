@@ -1,4 +1,4 @@
-﻿#if NET45
+﻿#if !NETSTANDARD1_3
 using System.Configuration;
 
 namespace EFCore.Toolkit.Auditing.ConfigFile
