@@ -41,7 +41,7 @@ Providing databases with predefined data is an essential feature. IDataSeed is t
 ### EFCore.Toolkit and IoC
 EFCore.Toolkit is ready to be used with an IoC framework. You may intend to create a data access module which contains your EF context, the repositories, the entity type configurations, etc. On top of that, you want to promote the CRUD-style repositories to whoever want to consume your data access layer. So, simply create a seperate data access abstraction assembly which contains an interface definition for your repositories. Have a look at the ToolkitSample provided in this project. This sample project adds modularity using the well-known Autofac IoC framework. Have a look at the module configuration ```DataAccessModule``` to get an impression of how to set-up the dependencies.
 
-```
+```C#
 // Register all data seeds:
 builder.RegisterType<DepartmentDataSeed>().As<IDataSeed>().SingleInstance();
 
