@@ -10,7 +10,7 @@ namespace ToolkitSample.DataAccess.Context
         {
             base.Configure(entity);
 
-            entity.Property(e => e.TestEntityId).IsRequired();
+            entity.HasKey(e => e.TestEntityId);
         }
     }
 }
