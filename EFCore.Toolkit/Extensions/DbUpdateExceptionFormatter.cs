@@ -27,6 +27,7 @@ namespace EFCore.Toolkit.Extensions
         internal static string GetFormattedErrorMessage(this DbUpdateException dbUpdateException)
         {
             var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine(dbUpdateException.ToString());
 
             var sqlExceptions = dbUpdateException.FromHierarchy<Exception>(e => e.InnerException, e => e.InnerException is SqlException)
                 .OfType<SqlException>()
@@ -118,7 +119,7 @@ namespace EFCore.Toolkit.Extensions
                 }
             }
 
-            string errorMessage = stringBuilder.ToString();
+            var errorMessage = stringBuilder.ToString();
             return errorMessage;
         }
 

@@ -10,6 +10,7 @@ namespace EFCore.Toolkit.Auditing
         public override void Configure(EntityTypeBuilder<TAuditEntity> entity)
         {
             entity.HasKey(e => e.AuditId);
+            //entity.Property(e => e.AuditId).IsRequired().ValueGeneratedOnAdd();
             entity.Property(e => e.AuditDate).IsRequired();
             entity.Property(e => e.AuditUser).IsRequired();
             entity.Property(e => e.AuditType).IsRequired();

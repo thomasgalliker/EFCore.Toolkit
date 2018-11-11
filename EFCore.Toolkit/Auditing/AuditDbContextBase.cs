@@ -204,7 +204,7 @@ namespace EFCore.Toolkit.Auditing
 
         /// <summary>
         ///     Saves all changes made in this context to the underlying database
-        ///     using the user paramater passed for auditing.
+        ///     using the user parameter passed for auditing.
         /// </summary>
         /// <param name="username">User name for auditing.</param>
         /// <returns>The number of objects written to the underlying database.</returns>
@@ -215,18 +215,24 @@ namespace EFCore.Toolkit.Auditing
                 return base.SaveChanges();
             }
 
-            var audits = this.AuditChanges(username);
+            var auditEntities = this.AuditChanges(username).ToList();
             try
             {
                 return base.SaveChanges();
             }
             catch
             {
-                // TODO: Updated failed so remove the audit entities.
-                //foreach (var item in audits)
-                //{
-                //    this.Set(item.GetType()).Remove(item);
-                //}
+                // Updated failed so remove the audit entities.
+                var firstOrDefault = auditEntities.FirstOrDefault();
+                if (firstOrDefault != null)
+                {
+                    dynamic dbSet = this.Set(firstOrDefault.GetType());
+
+                    foreach (dynamic auditEntity in auditEntities)
+                    {
+                        dbSet.Remove(auditEntity);
+                    }
+                }
 
                 throw;
             }
@@ -244,7 +250,7 @@ namespace EFCore.Toolkit.Auditing
 
         /// <summary>
         ///     Saves all changes made in this context to the underlying database
-        ///     using the user paramater passed for auditing.
+        ///     using the user parameter passed for auditing.
         /// </summary>
         /// <param name="username">User name for auditing.</param>
         /// <returns>The number of objects written to the underlying database.</returns>
@@ -255,18 +261,24 @@ namespace EFCore.Toolkit.Auditing
                 return base.SaveChangesAsync();
             }
 
-            var audits = this.AuditChanges(username);
+            var auditEntities = this.AuditChanges(username).ToList();
             try
             {
                 return base.SaveChangesAsync();
             }
             catch
             {
-                //TODO: Updated failed so remove the audit entities.
-                //foreach (var item in audits)
-                //{
-                //    this.Set(item.GetType()).Remove(item);
-                //}
+                // Updated failed so remove the audit entities.
+                var firstOrDefault = auditEntities.FirstOrDefault();
+                if (firstOrDefault != null)
+                {
+                    dynamic dbSet = this.Set(firstOrDefault.GetType());
+
+                    foreach (dynamic auditEntity in auditEntities)
+                    {
+                        dbSet.Remove(auditEntity);
+                    }
+                }
 
                 throw;
             }

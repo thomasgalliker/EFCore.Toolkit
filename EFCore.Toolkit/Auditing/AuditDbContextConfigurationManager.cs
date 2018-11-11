@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Reflection;
 using EFCore.Toolkit.Auditing.ConfigFile;
 
 namespace EFCore.Toolkit.Auditing
@@ -10,8 +11,25 @@ namespace EFCore.Toolkit.Auditing
     {
         internal static AuditDbContextConfiguration GetAuditDbContextConfigurationFromXml()
         {
-            var auditConfigurationSection = ConfigurationManager.GetSection("entityFramework.Audit") as AuditConfigurationSection ??
-                         new AuditConfigurationSection();
+            string configPath;
+            var entryAssemblyLocation = Assembly.GetEntryAssembly().Location;
+            if (entryAssemblyLocation.EndsWith("testhost.dll", StringComparison.InvariantCultureIgnoreCase))
+            {
+                configPath = "EFCore.Toolkit.Tests.dll";
+            }
+            else
+            {
+                configPath = Assembly.GetExecutingAssembly().Location;
+            }
+
+            return GetAuditDbContextConfigurationFromXml(configPath);
+        }
+
+        internal static AuditDbContextConfiguration GetAuditDbContextConfigurationFromXml(string configPath)
+        {
+            var configuration = ConfigurationManager.OpenExeConfiguration(configPath);
+            var auditConfigurationSection = configuration.Sections["entityFramework.Audit"] as AuditConfigurationSection;
+            auditConfigurationSection = auditConfigurationSection ?? new AuditConfigurationSection();
 
             var entityMapping = new List<AuditTypeInfo>();
 

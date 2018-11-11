@@ -23,7 +23,7 @@ namespace EFCore.Toolkit.Auditing.ConfigFile
         /// <summary>
         ///     Turns auditing on (=<code>true</code>) or off (=<code>false</code>). Default=<code>true</code>.
         /// </summary>
-        [ConfigurationProperty(AuditEnabledElementName, IsRequired = false, DefaultValue = true)]
+        [ConfigurationProperty(AuditEnabledElementName, IsRequired = false, DefaultValue = false)]
         internal bool AuditEnabled
         {
             get
@@ -40,7 +40,7 @@ namespace EFCore.Toolkit.Auditing.ConfigFile
         /// <summary>
         ///     Defines the <code>DateTimeKind</code> used for auditing.
         /// </summary>
-        [ConfigurationProperty(AuditDateTimeKindElementName, IsRequired = false, DefaultValue = DateTimeKind.Utc)]
+        [ConfigurationProperty(AuditDateTimeKindElementName, IsRequired = false, DefaultValue = DateTimeKind.Unspecified)]
         internal DateTimeKind AuditDateTimeKind
         {
             get
