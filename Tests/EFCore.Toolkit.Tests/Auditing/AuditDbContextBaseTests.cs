@@ -5,9 +5,9 @@ using EFCore.Toolkit.Auditing;
 using EFCore.Toolkit.Contracts.Auditing;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
-using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Context.Auditing;
 using ToolkitSample.Model;
 using ToolkitSample.Model.Auditing;
@@ -25,6 +25,7 @@ namespace EFCore.Toolkit.Tests.Auditing
                 databaseInitializer: new CreateDatabaseIfNotExists<TestAuditDbContext>(),
                 log: testOutputHelper.WriteLine)
         {
+            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]

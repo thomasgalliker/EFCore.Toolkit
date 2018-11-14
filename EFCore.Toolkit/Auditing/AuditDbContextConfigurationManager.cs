@@ -2,8 +2,8 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Reflection;
 using EFCore.Toolkit.Auditing.ConfigFile;
+using EFCore.Toolkit.Utils;
 
 namespace EFCore.Toolkit.Auditing
 {
@@ -11,17 +11,9 @@ namespace EFCore.Toolkit.Auditing
     {
         internal static AuditDbContextConfiguration GetAuditDbContextConfigurationFromXml()
         {
-            string configPath;
-            var entryAssemblyLocation = Assembly.GetEntryAssembly().Location;
-            if (entryAssemblyLocation.EndsWith("testhost.dll", StringComparison.InvariantCultureIgnoreCase))
-            {
-                configPath = "EFCore.Toolkit.Tests.dll";
-            }
-            else
-            {
-                configPath = Assembly.GetExecutingAssembly().Location;
-            }
-
+            var assemblyLoader = AssemblyLoader.Current;
+            var entryAssembly = assemblyLoader.GetEntryAssembly();
+            var configPath = entryAssembly.Location;
             return GetAuditDbContextConfigurationFromXml(configPath);
         }
 

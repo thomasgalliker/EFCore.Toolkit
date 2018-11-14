@@ -30,8 +30,6 @@ namespace EFCore.Toolkit.Auditing
         private static readonly AuditDbContextConfiguration AuditDbContextConfiguration;
 
         private readonly Dictionary<Type, AuditTypeInfo> auditTypes = new Dictionary<Type, AuditTypeInfo>();
-        private bool auditEnabled = true;
-        private DateTimeKind auditDateTimeKind;
 
 #if !NETSTANDARD1_3
         static AuditDbContextBase()
@@ -96,30 +94,10 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <inheritdoc />
-        public bool AuditEnabled
-        {
-            get
-            {
-                return this.auditEnabled;
-            }
-            protected set
-            {
-                this.auditEnabled = value;
-            }
-        }
+        public bool AuditEnabled { get; protected set; } = true;
 
         /// <inheritdoc />
-        public DateTimeKind AuditDateTimeKind
-        {
-            get
-            {
-                return this.auditDateTimeKind;
-            }
-            protected set
-            {
-                this.auditDateTimeKind = value;
-            }
-        }
+        public DateTimeKind AuditDateTimeKind { get; protected set; }
 
         /// <summary>
         ///     Gets a value indicating whether this context is using proxies.

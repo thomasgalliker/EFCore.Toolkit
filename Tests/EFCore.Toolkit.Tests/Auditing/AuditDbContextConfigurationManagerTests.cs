@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using EFCore.Toolkit.Auditing;
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using ToolkitSample.Model;
 using ToolkitSample.Model.Auditing;
@@ -11,6 +12,11 @@ namespace EFCore.Toolkit.Tests.Auditing
 {
     public class AuditDbContextConfigurationManagerTests
     {
+        public AuditDbContextConfigurationManagerTests()
+        {
+            AssemblyLoader.Current = new TestAssemblyLoader();
+        }
+
         [Fact]
         public void ShouldGetAuditDbContextConfigurationFromXml()
         {
@@ -40,8 +46,8 @@ namespace EFCore.Toolkit.Tests.Auditing
 
             // Assert
             auditDbContextConfiguration.Should().NotBeNull();
-            auditDbContextConfiguration.AuditEnabled.Should().BeFalse();
-            auditDbContextConfiguration.AuditDateTimeKind.Should().Be(DateTimeKind.Unspecified);
+            auditDbContextConfiguration.AuditEnabled.Should().BeTrue();
+            auditDbContextConfiguration.AuditDateTimeKind.Should().Be(DateTimeKind.Utc);
             auditDbContextConfiguration.AuditTypeInfos.Should().HaveCount(0);
         }
     }
