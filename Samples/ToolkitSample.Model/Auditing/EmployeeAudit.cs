@@ -4,7 +4,13 @@ namespace ToolkitSample.Model.Auditing
 {
     public class EmployeeAudit : AuditEntity
     {
-        public virtual int Id { get; set; }
+        private int id;
+
+        public int Id
+        {
+            get => this.id;
+            set => this.id = value;
+        }
 
         public virtual string FirstName { get; set; }
 

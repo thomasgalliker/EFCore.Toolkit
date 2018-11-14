@@ -3,7 +3,7 @@
 namespace EFCore.Toolkit.Contracts.Auditing
 {
     /// <summary>
-    ///     Any class used for auditing an entity must implement this inteface.
+    ///     Any class used for auditing an entity must implement this interface.
     /// </summary>
     public interface IAuditEntity<TKey> : IAuditEntity
     {
