@@ -223,7 +223,7 @@ namespace EFCore.Toolkit.Tests.Auditing
                     employeeAudits.Where(a => a.AuditType == AuditEntityState.Modified).Should().HaveCount(1);
 
                     var employeeAuditAdded = employeeAudits.Single(a => a.AuditType == AuditEntityState.Added);
-                    employeeAuditAdded.Id.Should().Be(0);
+                    employeeAuditAdded.Id.Should().Be(1);
                     employeeAuditAdded.FirstName.Should().Be(initialEmployee.FirstName);
                     employeeAuditAdded.LastName.Should().Be(initialEmployee.LastName);
 

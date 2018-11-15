@@ -8,10 +8,12 @@ using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Contracts.Auditing;
 using EFCore.Toolkit.Contracts.Extensions;
 using EFCore.Toolkit.Extensions;
+using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 #if !NET40
 using System.Threading.Tasks;
+
 #endif
 
 namespace EFCore.Toolkit.Auditing
@@ -193,25 +195,18 @@ namespace EFCore.Toolkit.Auditing
                 return base.SaveChanges();
             }
 
-            var auditEntities = this.AuditChanges(username).ToList();
+            var auditedEntities = this.AuditChanges(username).ToList();
             try
             {
-                return base.SaveChanges();
+                var changeSet = base.SaveChanges();
+                this.OnAfterAuditChanges(auditedEntities);
+                base.SaveChanges();
+
+                return changeSet;
             }
             catch
             {
-                // Updated failed so remove the audit entities.
-                var firstOrDefault = auditEntities.FirstOrDefault();
-                if (firstOrDefault != null)
-                {
-                    dynamic dbSet = this.Set(firstOrDefault.GetType());
-
-                    foreach (dynamic auditEntity in auditEntities)
-                    {
-                        dbSet.Remove(auditEntity);
-                    }
-                }
-
+                this.RemoveAuditEntities(auditedEntities);
                 throw;
             }
         }
@@ -232,42 +227,50 @@ namespace EFCore.Toolkit.Auditing
         /// </summary>
         /// <param name="username">User name for auditing.</param>
         /// <returns>The number of objects written to the underlying database.</returns>
-        public Task<ChangeSet> SaveChangesAsync(string username)
+        public async Task<ChangeSet> SaveChangesAsync(string username)
         {
             if (!this.AuditEnabled)
             {
-                return base.SaveChangesAsync();
+                return await base.SaveChangesAsync();
             }
 
-            var auditEntities = this.AuditChanges(username).ToList();
+            var auditedEntities = this.AuditChanges(username).ToList();
             try
             {
-                return base.SaveChangesAsync();
+                var changeSet = await base.SaveChangesAsync();
+                this.OnAfterAuditChanges(auditedEntities);
+                await base.SaveChangesAsync();
+
+                return changeSet;
             }
             catch
             {
-                // Updated failed so remove the audit entities.
-                var firstOrDefault = auditEntities.FirstOrDefault();
-                if (firstOrDefault != null)
-                {
-                    dynamic dbSet = this.Set(firstOrDefault.GetType());
-
-                    foreach (dynamic auditEntity in auditEntities)
-                    {
-                        dbSet.Remove(auditEntity);
-                    }
-                }
-
+                this.RemoveAuditEntities(auditedEntities);
                 throw;
             }
         }
 #endif
 
-        private IEnumerable<IAuditEntity> AuditChanges(string username)
+        /// <summary>
+        /// Update failed so remove the audit entities.
+        /// </summary>
+        private void RemoveAuditEntities(IReadOnlyCollection<AuditedEntity> auditedEntities)
         {
-            // Track all audit entities created in this transaction, will be removed from context on exception.
-            var audits = new List<IAuditEntity>();
+            var firstOrDefault = auditedEntities.FirstOrDefault();
+            if (firstOrDefault != null)
+            {
+                dynamic dbSet = this.Set(firstOrDefault.AuditEntity.GetType());
 
+                foreach (dynamic auditEntity in auditedEntities.Select(a => a.AuditEntity))
+                {
+                    dbSet.Remove(auditEntity);
+                }
+            }
+        }
+
+        // Track all audit entities created in this transaction, will be removed from context on exception.
+        private IEnumerable<AuditedEntity> AuditChanges(string username)
+        {
             // Use the same datetime for all updates in this transaction, retrieved from server when first used.
             DateTime? dateTimeNow = null;
 
@@ -275,6 +278,11 @@ namespace EFCore.Toolkit.Auditing
             var trackedEntries = this.ChangeTracker.Entries().ToList();
             foreach (var entry in trackedEntries)
             {
+                if (entry.Entity is IAuditEntity || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
+                {
+                    continue;
+                }
+
                 if (dateTimeNow.HasValue == false)
                 {
                     dateTimeNow = DateTime.UtcNow.ToKind(this.AuditDateTimeKind);
@@ -300,39 +308,51 @@ namespace EFCore.Toolkit.Auditing
                     }
                 }
 
-                lock (this.auditTypes)
+                var entityType = entry.GetEntityType();
+                var auditTypeInfo = this.GetAuditTypeInfo(entityType);
+                if (auditTypeInfo != null)
                 {
-                    var entityType = entry.GetEntityType();
-                    if (this.auditTypes.ContainsKey(entityType) && this.auditTypes[entityType].AuditEntityType != null)
-                    {
-                        var auditEntity = this.AuditEntity(entry, this.auditTypes[entityType], dateTimeNow.Value, username);
-                        audits.Add(auditEntity);
-                    }
+                    var auditEntity = this.AuditEntity(entry, auditTypeInfo, dateTimeNow.Value, username);
+                    yield return auditEntity;
+                }
+            }
+        }
+
+        private AuditTypeInfo GetAuditTypeInfo(Type entityType)
+        {
+            lock (this.auditTypes)
+            {
+                if (this.auditTypes.ContainsKey(entityType) && this.auditTypes[entityType].AuditEntityType != null)
+                {
+                    return this.auditTypes[entityType];
                 }
             }
 
-            return audits;
+            return null;
         }
 
-        private IAuditEntity AuditEntity(EntityEntry entityEntry, AuditTypeInfo auditTypeInfo, DateTime auditDateTime, string user)
+        private AuditedEntity AuditEntity(EntityEntry entityEntry, AuditTypeInfo auditTypeInfo, DateTime auditDateTime, string user)
         {
             // Create audit entity.
             dynamic dbSet = this.Set(auditTypeInfo.AuditEntityType);
             dynamic auditEntity = (IAuditEntity)Activator.CreateInstance(auditTypeInfo.AuditEntityType);
             dbSet.Add(auditEntity);
 
+            // Store all temporary values (e.g. not-yet generated primary keys) for later update
+            var temporaryProperties = entityEntry.Properties.Where(p => p.IsTemporary).ToList();
+
             // Copy the properties.
             var auditEntityEntry = this.Entry(auditEntity);
             if (entityEntry.State == EntityState.Added)
             {
-                foreach (string propertyName in auditTypeInfo.AuditProperties)
+                foreach (var propertyName in auditTypeInfo.AuditProperties)
                 {
                     auditEntityEntry.Property(propertyName).CurrentValue = entityEntry.Property(propertyName).CurrentValue;
                 }
             }
             else
             {
-                foreach (string propertyName in auditTypeInfo.AuditProperties)
+                foreach (var propertyName in auditTypeInfo.AuditProperties)
                 {
                     auditEntityEntry.Property(propertyName).CurrentValue = entityEntry.Property(propertyName).OriginalValue;
                 }
@@ -343,7 +363,36 @@ namespace EFCore.Toolkit.Auditing
             auditEntityEntry.Property(AuditUserColumnName).CurrentValue = user;
             auditEntityEntry.Property(AuditTypeColumnName).CurrentValue = entityEntry.State.ToAuditEntityState();
 
-            return auditEntity;
+            return new AuditedEntity(auditEntity, temporaryProperties);
+        }
+
+        private class AuditedEntity
+        {
+            public IAuditEntity AuditEntity { get; }
+            public IEnumerable<PropertyEntry> TemporaryProperties { get; }
+
+            public AuditedEntity(IAuditEntity auditEntity, IEnumerable<PropertyEntry> temporaryProperties)
+            {
+                this.AuditEntity = auditEntity;
+                this.TemporaryProperties = temporaryProperties;
+            }
+        }
+
+        private void OnAfterAuditChanges(IReadOnlyCollection<AuditedEntity> auditedEntities)
+        {
+            if (auditedEntities == null || auditedEntities.Count == 0)
+            {
+                return;
+            }
+
+            foreach (var auditedEntity in auditedEntities)
+            {
+                // Get the final value of the temporary properties
+                foreach (var prop in auditedEntity.TemporaryProperties)
+                {
+                    auditedEntity.AuditEntity.SetPropertyValue(prop.Metadata.Name, prop.CurrentValue);
+                }
+            }
         }
     }
 }
