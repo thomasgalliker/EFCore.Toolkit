@@ -13,6 +13,11 @@ namespace EFCore.Toolkit.Auditing
         {
             var assemblyLoader = AssemblyLoader.Current;
             var entryAssembly = assemblyLoader.GetEntryAssembly();
+            if (entryAssembly == null)
+            {
+                throw new InvalidOperationException("AssemblyLoader did not provide a valid value for GetEntryAssembly");
+            }
+
             var configPath = entryAssembly.Location;
             return GetAuditDbContextConfigurationFromXml(configPath);
         }

@@ -299,12 +299,14 @@ namespace EFCore.Toolkit
         }
 
         /// <summary>
-        ///     Determins the changes that are transfered to the persistence layer.
+        ///     Determines the changes that are transferred to the persistence layer.
         /// </summary>
         /// <returns>ChangeSet.</returns>
         private ChangeSet GetChangeSet()
         {
-            var updatedEntries = this.ChangeTracker.Entries().Where(e => e.State == EntityState.Modified && e.Entity != null);
+            var updatedEntries = this.ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Modified && e.Entity != null);
+
             var updateChanges = new List<IChange>();
 
             foreach (var dbEntityEntry in updatedEntries)
@@ -313,6 +315,12 @@ namespace EFCore.Toolkit
                 foreach (var propertyName in dbEntityEntry.CurrentValues.Properties.Select(p => p.Name))
                 {
                     var property = dbEntityEntry.Property(propertyName);
+                    if (property.Metadata.IsShadowProperty)
+                    {
+                        // BUG: Workaround for resetting IsModified of Discriminator property
+                        property.IsModified = false;
+                    }
+
                     if (property.IsModified)
                     {
                         changes.Add(new PropertyChangeInfo(propertyName, property.CurrentValue));
@@ -321,8 +329,13 @@ namespace EFCore.Toolkit
                 updateChanges.Add(Change.CreateUpdateChange(dbEntityEntry.Entity, changes));
             }
 
-            var addChanges = this.ChangeTracker.Entries().Where(e => e.State == EntityState.Added && e.Entity != null).Select(e => Change.CreateAddedChange(e.Entity));
-            var deleteChanges = this.ChangeTracker.Entries().Where(e => e.State == EntityState.Deleted && e.Entity != null).Select(n => Change.CreateDeleteChange(n.Entity));
+            var addChanges = this.ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Added && e.Entity != null)
+                .Select(e => Change.CreateAddedChange(e.Entity));
+
+            var deleteChanges = this.ChangeTracker.Entries()
+                .Where(e => e.State == EntityState.Deleted && e.Entity != null)
+                .Select(n => Change.CreateDeleteChange(n.Entity));
 
             var allChanges = new List<IChange>(addChanges);
             allChanges.AddRange(deleteChanges);

@@ -4,8 +4,9 @@ using EFCore.Toolkit;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Contracts.Extensions;
 using EFCore.Toolkit.Testing;
+using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Stubs;
-
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Contracts.Repository;
@@ -24,6 +25,7 @@ namespace EFCore.Toolkit.Tests.Repository
                   databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
                   log: testOutputHelper.WriteLine)
         {
+            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
