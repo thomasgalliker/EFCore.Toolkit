@@ -87,16 +87,25 @@ namespace EFCore.Toolkit
             Type lastContextType = null;
             try
             {
-                using (var transactionScope = new TransactionScope(TransactionScopeOption.Required))
+                var firstContext = this.contexts.FirstOrDefault();
+                if (firstContext.Value != null)
                 {
+                    var transaction = firstContext.Value.BeginTransaction();
                     foreach (var context in this.contexts)
                     {
+                        if (context.Value != firstContext.Value)
+                        {
+                            context.Value.UseTransaction(transaction);
+                        }
+
                         lastContextType = context.Key;
-                        var changeSet = await context.Value.SaveChangesAsync();
-                        changeSets.Add(changeSet);
+                        var changes = await context.Value.SaveChangesAsync();
+                        changeSets.Add(changes);
                     }
 
-                    transactionScope.Complete();
+                    // Commit transaction if all commands succeed, transaction will auto-rollback
+                    // when disposed if either commands fails
+                    transaction.Commit();
                 }
             }
             catch (Exception ex)
