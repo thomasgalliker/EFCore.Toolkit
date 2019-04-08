@@ -9,7 +9,7 @@ namespace EFCore.Toolkit.Contracts
 {
     public interface IUnitOfWork : IDisposable
     {
-        void RegisterContext<TContext>(TContext contextFactory) where TContext : IContext;
+        void RegisterContext<TContext>(TContext context) where TContext : IContext;
 
         /// <summary>
         /// Saves pending changes to all registered contexts.

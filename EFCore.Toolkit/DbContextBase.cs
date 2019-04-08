@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
@@ -8,6 +10,8 @@ using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage;
+using IDbConnection = EFCore.Toolkit.Contracts.IDbConnection;
 #if !NET40
 using System.Threading.Tasks;
 
@@ -266,6 +270,19 @@ namespace EFCore.Toolkit
 
             return changeSet;
         }
+
+        public ITransaction BeginTransaction()
+        {
+            var dbContextTransaction = this.Database.BeginTransaction();
+            return new InternalDbContextTransaction(dbContextTransaction);
+        }
+
+        public void UseTransaction(ITransaction transaction)
+        {
+            var internalDbContextTransaction = (InternalDbContextTransaction)transaction;
+            var dbTransaction = internalDbContextTransaction.GetDbTransaction();
+            this.Database.UseTransaction(dbTransaction);
+        }
 #endif
 
         private void HandleDbUpdateConcurrencyException(DbUpdateConcurrencyException dbUpdateConcurrencyException)
@@ -373,6 +390,36 @@ namespace EFCore.Toolkit
             }
 
             this.IsDisposed = true;
+        }
+    }
+
+    public class InternalDbContextTransaction : ITransaction
+    {
+        private readonly IDbContextTransaction dbContextTransaction;
+
+        public InternalDbContextTransaction(IDbContextTransaction dbContextTransaction)
+        {
+            this.dbContextTransaction = dbContextTransaction;
+        }
+
+        public void Dispose()
+        {
+            this.dbContextTransaction?.Dispose();
+        }
+
+        public void Commit()
+        {
+            this.dbContextTransaction.Commit();
+        }
+
+        public void Rollback()
+        {
+            this.dbContextTransaction.Rollback();
+        }
+
+        public DbTransaction GetDbTransaction()
+        {
+            return this.dbContextTransaction.GetDbTransaction();
         }
     }
 }

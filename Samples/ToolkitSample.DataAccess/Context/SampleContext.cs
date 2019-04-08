@@ -160,6 +160,16 @@ namespace ToolkitSample.DataAccess.Context
             return Task.Factory.StartNew(() => new ChangeSet(typeof(SampleContext), new List<IChange>()));
         }
 
+        public ITransaction BeginTransaction()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UseTransaction(ITransaction transaction)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<ChangeSet> SaveChangesAsync(string username)
         {
             this.OnSaveCalled(EventArgs.Empty);

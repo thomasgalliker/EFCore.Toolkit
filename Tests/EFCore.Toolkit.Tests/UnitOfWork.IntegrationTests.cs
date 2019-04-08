@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Exceptions;
@@ -18,13 +19,48 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests
 {
-    public class UnitOfWorkIntegrationTests : ContextTestBase<EmployeeContext>
+    public class UnitOfWorkIntegrationTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection>
     {
+        //public UnitOfWorkIntegrationTests(ITestOutputHelper testOutputHelper)
+        //    : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+        //           log: testOutputHelper.WriteLine)
+        //{
+        //    AssemblyLoader.Current = new TestAssemblyLoader();
+        //}
+
         public UnitOfWorkIntegrationTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
-                   log: testOutputHelper.WriteLine)
+            : base(databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+                log: testOutputHelper.WriteLine)
         {
             AssemblyLoader.Current = new TestAssemblyLoader();
+        }
+
+        [Fact]
+        public void ShouldCommitToMultipleContexts()
+        {
+            // Arrange
+            ICollection<ChangeSet> changeSets;
+            using (IUnitOfWork unitOfWork = new UnitOfWork())
+            {
+                var context1 = this.CreateContext();
+                var contextMock2 = new Mock<ISampleContextTwo>();
+                contextMock2.Setup(m => m.SaveChanges()).Returns(new ChangeSet(typeof(ISampleContextTwo), new List<IChange> { Change.CreateAddedChange(new Person()) }));
+                var context2 = contextMock2.Object;
+
+                context1.Set<Employee>().Add(Testdata.Employees.CreateEmployee1());
+
+                unitOfWork.RegisterContext(context1);
+                unitOfWork.RegisterContext(context2);
+
+                // Act
+                changeSets = unitOfWork.Commit();
+            }
+
+            // Assert
+            changeSets.Should().HaveCount(2);
+
+            var assertContext1 = this.CreateContext();
+            assertContext1.Set<Employee>().ToList().Should().HaveCount(1);
         }
 
         [Fact]

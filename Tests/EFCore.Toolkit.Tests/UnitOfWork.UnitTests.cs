@@ -19,7 +19,9 @@ namespace EFCore.Toolkit.Tests
         {
             // Arrange
             var unitOfWork = new UnitOfWork();
+            var transactionMock = new Mock<ITransaction>();
             var sampleContextMock = new Mock<ISampleContext>();
+            sampleContextMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
 
             unitOfWork.RegisterContext(sampleContextMock.Object);
 
@@ -28,6 +30,7 @@ namespace EFCore.Toolkit.Tests
 
             // Assert
             sampleContextMock.Verify(x => x.SaveChanges(), Times.Once);
+            transactionMock.Verify(t => t.Commit(), Times.Once);
         }
 
         [Fact]
@@ -35,7 +38,9 @@ namespace EFCore.Toolkit.Tests
         {
             // Arrange
             var unitOfWork = new UnitOfWork();
+            var transactionMock = new Mock<ITransaction>();
             var sampleContextOneMock = new Mock<ISampleContext>();
+            sampleContextOneMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
             var sampleContextTwoMock = new Mock<ISampleContextTwo>();
 
             unitOfWork.RegisterContext(sampleContextOneMock.Object);
@@ -47,6 +52,7 @@ namespace EFCore.Toolkit.Tests
             // Assert
             sampleContextOneMock.Verify(x => x.SaveChanges(), Times.Once);
             sampleContextTwoMock.Verify(x => x.SaveChanges(), Times.Once);
+            transactionMock.Verify(t => t.Commit(), Times.Once);
         }
 
         [Fact]
@@ -54,7 +60,9 @@ namespace EFCore.Toolkit.Tests
         {
             // Arrange
             var unitOfWork = new UnitOfWork();
+            var transactionMock = new Mock<ITransaction>();
             var sampleContextOneMock = new Mock<ISampleContext>();
+            sampleContextOneMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
             var sampleContextTwoMock = new Mock<ISampleContextTwo>();
             sampleContextTwoMock.Setup(m => m.SaveChanges()).Throws(new InvalidOperationException("SampleContextTwo failed to SaveChanges."));
 
@@ -72,6 +80,7 @@ namespace EFCore.Toolkit.Tests
 
             sampleContextOneMock.Verify(x => x.SaveChanges(), Times.Once);
             sampleContextTwoMock.Verify(x => x.SaveChanges(), Times.Once);
+            //transactionMock.Verify(t => t.Rollback(), Times.Once); // Rollback is done automatically
         }
 
         [Fact]
@@ -94,7 +103,9 @@ namespace EFCore.Toolkit.Tests
             // Arrange
             IUnitOfWork unitOfWork = new UnitOfWork();
 
+            var transactionMock = new Mock<ITransaction>();
             var contextMock = new Mock<IContext>();
+            contextMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
             var changeSet = new ChangeSet(contextMock.GetType(), new List<IChange> { Change.CreateAddedChange(new object()) });
             contextMock.Setup(c => c.SaveChanges()).Returns(changeSet);
 
@@ -105,6 +116,7 @@ namespace EFCore.Toolkit.Tests
 
             // Assert
             numberOfChanges.Should().HaveCount(1);
+            transactionMock.Verify(t => t.Commit(), Times.Once);
         }
 
         [Fact]

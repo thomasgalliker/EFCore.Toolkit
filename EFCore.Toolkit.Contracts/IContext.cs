@@ -60,5 +60,21 @@ namespace EFCore.Toolkit.Contracts
         /// <exception cref="System.InvalidOperationException">Thrown if the context has been disposed.</exception>
         Task<ChangeSet> SaveChangesAsync();
 #endif
+
+        ITransaction BeginTransaction();
+        void UseTransaction(ITransaction transaction);
+    }
+
+    public interface ITransaction : IDisposable
+    {
+        /// <summary>
+        ///     Commits all changes made to the database in the current transaction.
+        /// </summary>
+        void Commit();
+
+        /// <summary>
+        ///     Discards all changes made to the database in the current transaction.
+        /// </summary>
+        void Rollback();
     }
 }
