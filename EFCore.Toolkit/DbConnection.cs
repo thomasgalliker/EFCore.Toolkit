@@ -16,7 +16,6 @@ namespace EFCore.Toolkit
             this.Name = name;
             this.ConnectionString = connectionString;
             this.LazyLoadingEnabled = true;
-            this.ProxyCreationEnabled = true;
             this.ForceInitialize = false;
         }
 
@@ -25,8 +24,6 @@ namespace EFCore.Toolkit
         public string ConnectionString { get; }
 
         public bool LazyLoadingEnabled { get; set; }
-
-        public bool ProxyCreationEnabled { get; set; }
 
         public bool ForceInitialize { get; }
     }

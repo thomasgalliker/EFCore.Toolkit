@@ -14,7 +14,6 @@ namespace EFCore.Toolkit.Tests
                    connectionString: @"Server=(localdb)\MSSQLLocalDB;Database=EF.Toolkit.Tests;Trusted_Connection=True;MultipleActiveResultSets=true;".RandomizeDatabaseName())
         {
             this.LazyLoadingEnabled = false;
-            this.ProxyCreationEnabled = false;
         }
     }
 }

@@ -13,7 +13,6 @@ namespace ToolkitSample.DataAccess.Context
                    connectionString: $@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename={System.IO.Directory.GetCurrentDirectory()}\EFCore.Toolkit.mdf; Integrated Security=True;")
         {
             this.LazyLoadingEnabled = false;
-            this.ProxyCreationEnabled = false;
         }
     }
 }

@@ -41,6 +41,7 @@ namespace ToolkitSample.DataAccess.Context
         {
             base.OnConfiguring(optionsBuilder);
         }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
