@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EFCore.Toolkit;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Extensions;
 using FluentAssertions;
@@ -50,7 +49,7 @@ namespace EFCore.Toolkit.Tests.Extensions
             Action action = () => typeof(TestAuditDbContext).GetMatchingConstructor(args);
 
             // Assert
-            action.ShouldThrow<InvalidOperationException>().Which.Message.Should().Contain("TestAuditDbContext does not have a constructor with no parameters.");
+            action.Should().Throw<InvalidOperationException>().Which.Message.Should().Contain("TestAuditDbContext does not have a constructor with no parameters.");
         }
 
         [Fact]
@@ -63,7 +62,7 @@ namespace EFCore.Toolkit.Tests.Extensions
             Action action = () => typeof(TestAuditDbContext).GetMatchingConstructor(args);
 
             // Assert
-            action.ShouldThrow<InvalidOperationException>().Which.Message.Should().Contain("TestAuditDbContext does not have a constructor with parameters (Single, Decimal).");
+            action.Should().Throw<InvalidOperationException>().Which.Message.Should().Contain("TestAuditDbContext does not have a constructor with parameters (Single, Decimal).");
         }
 
         [Fact]

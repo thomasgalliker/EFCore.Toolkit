@@ -61,12 +61,12 @@ namespace EFCore.Toolkit.Tests.Testing
             // Arrange
             var randomTokenLength = 33;
             var connectionString = @"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\EF.Toolkit.ContextTestBaseTests.mdf; Integrated Security=True;";
-            
+
             // Act
             Action action = () => connectionString.RandomizeDatabaseName(randomTokenLength);
 
             // Assert
-            action.ShouldThrow<ArgumentException>().Which.ParamName.Should().Be("randomTokenLength");
+            action.Should().Throw<ArgumentException>().Which.ParamName.Should().Be("randomTokenLength");
         }
     }
 }

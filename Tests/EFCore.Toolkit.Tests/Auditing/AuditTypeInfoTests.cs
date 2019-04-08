@@ -35,7 +35,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             Action action = () => new AuditTypeInfo(auditableEntityType, auditEntityType);
 
             // Assert
-            action.ShouldThrow<ArgumentException>()
+            action.Should().Throw<ArgumentException>()
                 .Which.Message.Should()
                 .Contain("Entity of type TestInvalidAuditEntity does implement IAuditEntity.");
         }

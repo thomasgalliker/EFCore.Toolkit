@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using EFCore.Toolkit;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Exceptions;
 using FluentAssertions;
@@ -66,7 +65,7 @@ namespace EFCore.Toolkit.Tests
             Action action = () => unitOfWork.Commit();
 
             // Assert
-            var ex = action.ShouldThrow<UnitOfWorkException>();
+            var ex = action.Should().Throw<UnitOfWorkException>();
             ex.Which.Message.Should().Contain("failed to commit.");
             ex.WithInnerException<InvalidOperationException>();
             ex.Which.InnerException.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
@@ -156,7 +155,7 @@ namespace EFCore.Toolkit.Tests
             Action action = () => unitOfWork.Commit();
 
             // Assert
-            action.ShouldThrow<ObjectDisposedException>();
+            action.Should().Throw<ObjectDisposedException>();
             sampleContextMock.Verify(x => x.SaveChanges(), Times.Never);
             sampleContextMock.Verify(x => x.Dispose(), Times.Once);
         }
