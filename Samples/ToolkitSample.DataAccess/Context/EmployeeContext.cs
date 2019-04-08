@@ -43,6 +43,8 @@ namespace ToolkitSample.DataAccess.Context
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             this.Database.KillConnectionsToTheDatabase();
 
             modelBuilder.AddConfiguration(new PersonEntityConfiguration());

@@ -17,7 +17,7 @@ namespace ToolkitSample.Model
 
         public string CountryId { get; set; }
 
-        public virtual Country Country { get; set; }
+        public Country Country { get; set; }
 
         public byte[] RowVersion { get; set; }
 

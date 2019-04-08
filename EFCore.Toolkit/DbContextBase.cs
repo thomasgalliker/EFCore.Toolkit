@@ -319,6 +319,11 @@ namespace EFCore.Toolkit
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             ////modelBuilder.Remove<PluralizingTableNameConvention>();
+            ///
+
+#if !NETSTANDARD1_3 && !NETFX
+            modelBuilder.Query<TableRowCounts>();
+#endif
         }
 
         /// <summary>
