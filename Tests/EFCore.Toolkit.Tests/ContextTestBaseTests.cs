@@ -1,5 +1,4 @@
-﻿using EFCore.Toolkit;
-using EFCore.Toolkit.Contracts;
+﻿using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Testing;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;

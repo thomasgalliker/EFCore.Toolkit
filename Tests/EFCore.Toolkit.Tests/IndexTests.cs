@@ -77,8 +77,8 @@ namespace EFCore.Toolkit.Tests
 
                 // Assert
                 var ex = action.Should().Throw<DbUpdateException>();
-                ex.Which.InnerException.InnerException.InnerException.Message.Should()
-                    .Contain("Cannot insert duplicate key row in object 'dbo.Room' with unique index 'UQ_Level_Sector'. The duplicate key value is (1, A).");
+                ex.Which.InnerException.InnerException.Message.Should()
+                    .Contain("Cannot insert duplicate key row in object 'dbo.Room' with unique index 'IX_Room_Level_Sector'. The duplicate key value is (1, A).");
             }
         }
     }

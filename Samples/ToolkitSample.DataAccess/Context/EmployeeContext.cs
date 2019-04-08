@@ -50,7 +50,7 @@ namespace ToolkitSample.DataAccess.Context
             modelBuilder.AddConfiguration(new EmployeeAuditEntityTypeConfiguration());
             modelBuilder.AddConfiguration(new StudentEntityConfiguration());
             modelBuilder.AddConfiguration(new DepartmentEntityConfiguration());
-            modelBuilder.AddConfiguration(new RoomConfiguration());
+            modelBuilder.AddConfiguration(new RoomEntityTypeConfiguration());
             modelBuilder.AddConfiguration(new CountryEntityConfiguration());
             modelBuilder.AddConfiguration(new ApplicationSettingEntityTypeConfiguration());
 
