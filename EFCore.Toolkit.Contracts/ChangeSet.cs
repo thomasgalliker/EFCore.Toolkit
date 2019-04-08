@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
-namespace EFCore.Toolkit.Contracts
+namespace EFCore.Toolkit.Abstractions
 {
     [DebuggerDisplay("ChangeSet: Context='{this.Context.Name}', Changes={this.Changes.Count()}", Type = "Change")]
     public class ChangeSet

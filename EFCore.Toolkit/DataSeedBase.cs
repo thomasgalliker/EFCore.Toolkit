@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 
 namespace EFCore.Toolkit
 {

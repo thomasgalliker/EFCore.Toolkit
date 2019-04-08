@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using EFCore.Toolkit;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.DataAccess.Repository;

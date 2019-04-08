@@ -30,7 +30,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Contracts.csproj" />
+    <ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
     <ProjectReference Include="..\..\EFCore.Toolkit\EFCore.Toolkit.csproj" />
     <ProjectReference Include="..\..\Samples\ToolkitSample.DataAccess.Contracts\ToolkitSample.DataAccess.Contracts.csproj" />
     <ProjectReference Include="..\..\Samples\ToolkitSample.DataAccess\ToolkitSample.DataAccess.csproj" />

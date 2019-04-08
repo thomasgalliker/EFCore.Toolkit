@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace EFCore.Toolkit.Contracts
+namespace EFCore.Toolkit.Abstractions
 {
     /// <summary>
     ///     Abstraction of a generic repository.

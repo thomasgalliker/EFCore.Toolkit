@@ -6,12 +6,12 @@ using System.Diagnostics;
 using System.Linq;
 using System.Linq.Expressions;
 using EFCore.Toolkit.Concurrency;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using IDbConnection = EFCore.Toolkit.Contracts.IDbConnection;
+using IDbConnection = EFCore.Toolkit.Abstractions.IDbConnection;
 #if !NET40
 using System.Threading.Tasks;
 

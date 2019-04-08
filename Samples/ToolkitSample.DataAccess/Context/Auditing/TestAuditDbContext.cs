@@ -2,7 +2,7 @@
 using EFCore.Toolkit;
 using EFCore.Toolkit.Auditing;
 using EFCore.Toolkit.Auditing.Extensions;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.Model;
 using ToolkitSample.Model.Auditing;

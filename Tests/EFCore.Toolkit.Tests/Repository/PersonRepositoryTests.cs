@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
 using ToolkitSample.DataAccess;
 using ToolkitSample.DataAccess.Context;

@@ -24,7 +24,7 @@ steps:
   inputs:
     FileNames: |
      EFCore.Toolkit.csproj
-     EFCore.Toolkit.Contracts.csproj
+     EFCore.Toolkit.Abstractions.csproj
     InsertAttributes: true
     Title: 'EFCore.Toolkit'
     Description: ''

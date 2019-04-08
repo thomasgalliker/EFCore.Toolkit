@@ -1,8 +1,9 @@
 ﻿#if !NET40
 using System.Threading.Tasks;
+
 #endif
 
-namespace EFCore.Toolkit.Contracts
+namespace EFCore.Toolkit.Abstractions
 {
     public interface IWritableRepository : IRepository
     {

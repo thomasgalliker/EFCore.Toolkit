@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Auditing;

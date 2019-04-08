@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EFCore.Toolkit.Contracts.Auditing
+namespace EFCore.Toolkit.Abstractions.Auditing
 {
     /// <summary>
     ///     Any class used for auditing an entity must implement this interface.

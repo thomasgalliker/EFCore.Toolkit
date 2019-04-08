@@ -7,7 +7,7 @@
     <Version>1.0.0</Version>
     <Authors>Thomas Galliker</Authors>
     <TargetFrameworks>netstandard1.3;netstandard2.0;net451</TargetFrameworks>
-    <AssemblyName>EFCore.Toolkit.Contracts</AssemblyName>
+    <AssemblyName>EFCore.Toolkit.Abstractions</AssemblyName>
     <PackageId>EFCore.Toolkit.Contracts</PackageId>
     <PackageTags>objectdumper;dump;dumpobject;initializer;c#;objects;debug;logging;tracing</PackageTags>
     <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit.Contracts/master/EFCore.Toolkit.Contracts.png</PackageIconUrl>
@@ -30,7 +30,7 @@
     <Company>superdev GmbH</Company>
     <Product>EFCore.Toolkit.Contracts</Product>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <RootNamespace>EFCore.Toolkit.Contracts</RootNamespace>
+    <RootNamespace>EFCore.Toolkit.Abstractions</RootNamespace>
     <PackageReleaseNotes>
       1.0.0
       - Initial release

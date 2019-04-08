@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace EFCore.Toolkit.Contracts.Extensions
+namespace EFCore.Toolkit.Abstractions.Extensions
 {
     public static class ReadOnlyRepositoryExtensions
     {

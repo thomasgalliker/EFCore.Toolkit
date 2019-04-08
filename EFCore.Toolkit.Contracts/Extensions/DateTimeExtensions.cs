@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EFCore.Toolkit.Contracts.Extensions
+namespace EFCore.Toolkit.Abstractions.Extensions
 {
     public static class DateTimeExtensions
     {

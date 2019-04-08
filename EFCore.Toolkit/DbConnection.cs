@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 
 namespace EFCore.Toolkit
 {

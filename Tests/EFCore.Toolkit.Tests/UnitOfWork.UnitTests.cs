@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
 using FluentAssertions;
 

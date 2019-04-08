@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using FluentAssertions;
 
 using ToolkitSample.DataAccess.Seed;

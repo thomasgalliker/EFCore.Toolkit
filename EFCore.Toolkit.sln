@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Toolkit.Tests", "Tes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Toolkit", "EFCore.Toolkit\EFCore.Toolkit.csproj", "{BB2CFD38-0F40-4C10-AD5E-2C79F50F95F2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Toolkit.Contracts", "EFCore.Toolkit.Contracts\EFCore.Toolkit.Contracts.csproj", "{88F192BE-A2C5-4533-8376-B7838004947C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EFCore.Toolkit.Abstractions", "EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj", "{88F192BE-A2C5-4533-8376-B7838004947C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{74445271-DF27-4206-8B26-1203CB23FCD6}"
 	ProjectSection(SolutionItems) = preProject
@@ -20,11 +20,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolkitSample.DataAccess", "Samples\ToolkitSample.DataAccess\ToolkitSample.DataAccess.csproj", "{FB809EAA-A63F-457D-9662-57C0D1BE0135}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitSample.DataAccess", "Samples\ToolkitSample.DataAccess\ToolkitSample.DataAccess.csproj", "{FB809EAA-A63F-457D-9662-57C0D1BE0135}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolkitSample.Model", "Samples\ToolkitSample.Model\ToolkitSample.Model.csproj", "{C167C359-24B5-42A5-A47D-0A945BA14D08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitSample.Model", "Samples\ToolkitSample.Model\ToolkitSample.Model.csproj", "{C167C359-24B5-42A5-A47D-0A945BA14D08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ToolkitSample.Console", "Samples\ToolkitSample.Console\ToolkitSample.Console.csproj", "{9C9DD3AA-DE94-436C-A2E7-82E221E830E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitSample.Console", "Samples\ToolkitSample.Console\ToolkitSample.Console.csproj", "{9C9DD3AA-DE94-436C-A2E7-82E221E830E6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitSample.DataAccess.Contracts", "Samples\ToolkitSample.DataAccess.Contracts\ToolkitSample.DataAccess.Contracts.csproj", "{AA2A8369-7199-4F71-A96E-151324C44F1A}"
 EndProject

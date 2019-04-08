@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Contracts.csproj" />
+    <ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
     <ProjectReference Include="..\ToolkitSample.Model\ToolkitSample.Model.csproj" />
   </ItemGroup>
 

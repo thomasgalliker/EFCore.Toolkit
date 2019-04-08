@@ -73,7 +73,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Contracts.csproj" />
+    <ProjectReference Include="..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>

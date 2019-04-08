@@ -1,4 +1,4 @@
-﻿using EFCore.Toolkit.Contracts;
+﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Auditing;

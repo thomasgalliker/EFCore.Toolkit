@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EFCore.Toolkit.Contracts.Auditing
+namespace EFCore.Toolkit.Abstractions.Auditing
 {
     public interface IUpdatedDate
     {

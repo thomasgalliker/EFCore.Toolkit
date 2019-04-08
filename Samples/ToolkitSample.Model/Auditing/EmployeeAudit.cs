@@ -1,4 +1,4 @@
-﻿using EFCore.Toolkit.Contracts.Auditing;
+﻿using EFCore.Toolkit.Abstractions.Auditing;
 
 namespace ToolkitSample.Model.Auditing
 {

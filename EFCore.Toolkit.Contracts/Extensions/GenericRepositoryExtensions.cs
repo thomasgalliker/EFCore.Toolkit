@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace EFCore.Toolkit.Contracts.Extensions
+namespace EFCore.Toolkit.Abstractions.Extensions
 {
     public static class GenericRepositoryExtensions
     {

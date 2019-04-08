@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 
-namespace EFCore.Toolkit.Contracts
+namespace EFCore.Toolkit.Abstractions
 {
     [DebuggerDisplay("ChangedEntity='{ChangedEntity}', State={State}", Type = "Change")]
     public class Change : IChange

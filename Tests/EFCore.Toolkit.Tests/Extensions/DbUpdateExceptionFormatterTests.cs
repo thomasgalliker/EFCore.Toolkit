@@ -1,5 +1,5 @@
 ﻿using System;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Stubs;

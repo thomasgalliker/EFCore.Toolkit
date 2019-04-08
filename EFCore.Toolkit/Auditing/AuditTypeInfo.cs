@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using EFCore.Toolkit.Contracts.Auditing;
+using EFCore.Toolkit.Abstractions.Auditing;
 
 namespace EFCore.Toolkit.Auditing
 {

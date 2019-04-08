@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Text;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using FluentAssertions.Execution;
 
 namespace EFCore.Toolkit.Tests.Extensions

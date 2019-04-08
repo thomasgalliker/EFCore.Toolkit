@@ -1,4 +1,4 @@
-﻿using EFCore.Toolkit.Contracts;
+﻿using EFCore.Toolkit.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.Toolkit
