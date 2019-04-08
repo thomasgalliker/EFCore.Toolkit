@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EFCore.Toolkit;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Testing;
+using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Extensions;
-
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
@@ -23,6 +23,7 @@ namespace EFCore.Toolkit.Tests
                   databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
                   log: testOutputHelper.WriteLine)
         {
+            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
@@ -75,7 +76,7 @@ namespace EFCore.Toolkit.Tests
                 Action action = () => context.SaveChanges();
 
                 // Assert
-                var ex = action.ShouldThrow<DbUpdateException>();
+                var ex = action.Should().Throw<DbUpdateException>();
                 ex.Which.InnerException.InnerException.InnerException.Message.Should()
                     .Contain("Cannot insert duplicate key row in object 'dbo.Room' with unique index 'UQ_Level_Sector'. The duplicate key value is (1, A).");
             }

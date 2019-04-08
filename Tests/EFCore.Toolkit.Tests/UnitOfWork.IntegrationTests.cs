@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Linq;
-using EFCore.Toolkit;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Testing;
+using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Stubs;
-
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 
 using Moq;
@@ -24,6 +24,7 @@ namespace EFCore.Toolkit.Tests
             : base(dbConnection: () => new EmployeeContextTestDbConnection(),
                    log: testOutputHelper.WriteLine)
         {
+            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace EFCore.Toolkit.Tests
             Action action = () => unitOfWork.Commit();
 
             // Assert
-            var ex = action.ShouldThrow<UnitOfWorkException>();
+            var ex = action.Should().Throw<UnitOfWorkException>();
             ex.Which.Message.Should().Contain("failed to commit.");
             ex.WithInnerException<InvalidOperationException>();
             ex.Which.InnerException.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");

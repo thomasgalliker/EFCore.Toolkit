@@ -3,8 +3,9 @@ using System.Linq;
 using EFCore.Toolkit.Concurrency;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Testing;
+using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Stubs;
-
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
@@ -19,6 +20,7 @@ namespace EFCore.Toolkit.Tests
         public DbContextBaseTests()
             : base(dbConnection: () => new EmployeeContextTestDbConnection())
         {
+            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
 #if !NET40
@@ -77,7 +79,7 @@ namespace EFCore.Toolkit.Tests
                 Action action = () => employeeContext1.SaveChanges();
 
                 // Assert
-                action.ShouldThrow<DbUpdateConcurrencyException>();
+                action.Should().Throw<DbUpdateConcurrencyException>();
             }
         }
 

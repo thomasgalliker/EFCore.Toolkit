@@ -1,7 +1,8 @@
 ﻿using System.Reflection;
 
 using Autofac;
-
+using EFCore.Toolkit.Tests.Auditing;
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 
 using ToolkitSample.DataAccess.Contracts.Repository;
@@ -13,6 +14,11 @@ namespace EFCore.Toolkit.Tests.Modularity
 {
     public class DataAccessModuleTests
     {
+        public DataAccessModuleTests()
+        {
+            AssemblyLoader.Current = new TestAssemblyLoader();
+        }
+
         [Fact]
         public void ShouldBuildAndResolveDependencies()
         {

@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using EFCore.Toolkit;
 using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Contracts.Extensions;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Testing;
+using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Extensions;
 using EFCore.Toolkit.Tests.Stubs;
-
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Contracts.Repository;
@@ -35,6 +35,8 @@ namespace EFCore.Toolkit.Tests.Repository
                   log: testOutputHelper.WriteLine)
         {
             this.testOutputHelper = testOutputHelper;
+
+            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
@@ -573,7 +575,7 @@ namespace EFCore.Toolkit.Tests.Repository
             Action action = () => employeeRepository.Save();
 
             // Assert
-            action.ShouldThrow<UpdateConcurrencyException>();
+            action.Should().Throw<UpdateConcurrencyException>();
 
             employeeRepository = new EmployeeRepository(this.CreateContext());
             var allEmployees = employeeRepository.GetAll().ToList();

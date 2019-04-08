@@ -1,6 +1,8 @@
 ﻿using EFCore.Toolkit.Contracts;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
+using EFCore.Toolkit.Tests.Auditing;
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using ToolkitSample.DataAccess.Context;
 using Xunit;
@@ -15,6 +17,7 @@ namespace EFCore.Toolkit.Tests.Extensions
         public DbConnectionExtensionsTests(ITestOutputHelper testOutputHelper)
             : base(() => dbConnection, null, testOutputHelper.WriteLine)
         {
+            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]

@@ -191,6 +191,12 @@ namespace EFCore.Toolkit
             {
                 entry.Property(propertyName).IsModified = true;
             }
+
+            //if (property.Metadata.IsShadowProperty)
+            //{
+            //    // BUG: Workaround for resetting IsModified of Discriminator property
+            //    property.IsModified = false;
+            //}
         }
 
         /// <inheritdoc />

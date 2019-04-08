@@ -213,7 +213,7 @@ namespace EFCore.Toolkit.Tests.Auditing
                 Action action = () => employeeContext1.SaveChanges();
 
                 // Assert
-                action.ShouldThrow<DbUpdateConcurrencyException>();
+                action.Should().Throw<DbUpdateConcurrencyException>();
 
                 using (var employeeContext = this.CreateContext())
                 {
@@ -397,7 +397,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             Action action = () => context.RegisterAuditType(auditTypeInfo);
 
             // Assert
-            action.ShouldThrow<ArgumentException>().Which.Message.Should().Contain("Type TestEntity is already registered for auditing.");
+            action.Should().Throw<ArgumentException>().Which.Message.Should().Contain("Type TestEntity is already registered for auditing.");
         }
     }
 }
