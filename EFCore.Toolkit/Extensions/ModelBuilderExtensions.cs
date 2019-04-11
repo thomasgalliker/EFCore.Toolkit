@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-namespace EFCore.Toolkit.Auditing.Extensions
+namespace EFCore.Toolkit.Extensions
 {
     public static class ModelBuilderExtensions
     {
@@ -14,9 +14,22 @@ namespace EFCore.Toolkit.Auditing.Extensions
             modelBuilder.Entity<TEntity>(entityConfiguration.Configure);
         }
 
+#if !NETSTANDARD1_3 && !NETFX
+        
+
         public static void RemovePluralizingTableNameConvention(this ModelBuilder modelBuilder)
         {
-            modelBuilder.EntityTypes().Configure(et => et.Relational().TableName = et.DisplayName());
+            modelBuilder.EntityTypes().Configure(entityType =>
+            {
+                if (entityType.IsOwned() == false)
+                {
+                    var existingName = entityType.Relational().TableName;
+                    var newName = entityType.DisplayName();
+                    Console.WriteLine($"RemovePluralizingTableNameConvention: entityType '{entityType.Name}': {existingName} >>> {newName}");
+
+                    entityType.Relational().TableName = entityType.DisplayName();
+                }
+            });
         }
 
         public static void RemoveCascadeDeleteConvention(this ModelBuilder modelBuilder)
@@ -29,6 +42,7 @@ namespace EFCore.Toolkit.Auditing.Extensions
                     .ForEach(fk => fk.DeleteBehavior = DeleteBehavior.Restrict);
             }
         }
+#endif
 
         public static IEnumerable<IMutableEntityType> EntityTypes(this ModelBuilder builder)
         {
