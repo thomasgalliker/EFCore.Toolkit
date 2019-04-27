@@ -112,17 +112,14 @@ namespace EFCore.Toolkit.Extensions
                     (includeEntityTypeFilter == null || includeEntityTypeFilter(p.DeclaringEntityType)) &&
                     p.IsConcurrencyToken == false)
                 {
-                    var columnTypeInternal = "nvarchar";
                     var maxLengthInternal = maxLength;
                     if (string.Equals(p.Relational().ColumnType, "nvarchar(MAX)", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        columnTypeInternal = "nvarchar(MAX)";
                         maxLengthInternal = null;
                     }
 
                     Console.WriteLine($"SetMaxLength({(maxLengthInternal == null ? "null" : $"{maxLengthInternal}")}): {p.DeclaringEntityType.Name}.{p.Name}");
                     p.SetMaxLength(maxLengthInternal);
-                    p.Relational().ColumnType = columnTypeInternal;
                 }
             }
         }
