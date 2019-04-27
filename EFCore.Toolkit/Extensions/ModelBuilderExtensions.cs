@@ -51,12 +51,12 @@ namespace EFCore.Toolkit.Extensions
 
         public static IEnumerable<IMutableProperty> Properties(this ModelBuilder builder)
         {
-            return builder.EntityTypes().SelectMany(entityType => entityType.GetProperties());
+            return builder.EntityTypes().SelectMany(entityType => entityType.GetProperties().Where(p => p.IsConcurrencyToken == false));
         }
 
         public static IEnumerable<IMutableProperty> Properties<T>(this ModelBuilder builder)
         {
-            return builder.EntityTypes().SelectMany(entityType => entityType.GetProperties().Where(x => x.ClrType == typeof(T)));
+            return builder.EntityTypes().SelectMany(entityType => entityType.GetProperties().Where(p => p.ClrType == typeof(T) && p.IsConcurrencyToken == false));
         }
 
         public static void Configure(this IEnumerable<IMutableEntityType> entityTypes, Action<IMutableEntityType> convention)
