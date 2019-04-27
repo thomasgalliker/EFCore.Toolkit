@@ -81,7 +81,10 @@ namespace EFCore.Toolkit.Extensions
         {
             foreach (var p in propertyTypes)
             {
-                if (p.GetMaxLength() == null && (includeEntityTypeFilter == null || includeEntityTypeFilter(p.DeclaringEntityType)) && p.IsConcurrencyToken == false && string.Equals(p.Relational().ColumnType, "nvarchar(MAX)", StringComparison.OrdinalIgnoreCase))
+                if (p.GetMaxLength() == null &&
+                    (includeEntityTypeFilter == null || includeEntityTypeFilter(p.DeclaringEntityType)) &&
+                    p.IsConcurrencyToken == false &&
+                    string.Equals(p.Relational().ColumnType, "nvarchar(MAX)", StringComparison.OrdinalIgnoreCase) == false)
                 {
                     Console.WriteLine($"SetMaxLength({maxLength}): {p.DeclaringEntityType.Name}.{p.Name}");
                     p.SetMaxLength(maxLength);
