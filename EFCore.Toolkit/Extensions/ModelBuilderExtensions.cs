@@ -51,13 +51,15 @@ namespace EFCore.Toolkit.Extensions
 
         public static IEnumerable<IMutableProperty> Properties(this ModelBuilder builder)
         {
-            return builder.EntityTypes().SelectMany(entityType => entityType.GetProperties().Where(p => p.IsConcurrencyToken == false));
+            return builder.EntityTypes().SelectMany(entityType => entityType.GetProperties());
         }
 
         public static IEnumerable<IMutableProperty> Properties<T>(this ModelBuilder builder)
         {
-            return builder.EntityTypes().SelectMany(entityType => entityType.GetProperties().Where(p => p.ClrType == typeof(T) && p.IsConcurrencyToken == false));
+            return builder.EntityTypes().SelectMany(entityType => entityType.GetProperties().Where(p => p.ClrType == typeof(T)));
         }
+
+
 
         public static void Configure(this IEnumerable<IMutableEntityType> entityTypes, Action<IMutableEntityType> convention)
         {
@@ -72,6 +74,21 @@ namespace EFCore.Toolkit.Extensions
             foreach (var propertyType in propertyTypes)
             {
                 convention(propertyType);
+            }
+        }
+
+        public static void SetDefaultStringMaxLength(this IEnumerable<IMutableProperty> propertyTypes, int maxLength = 4000, Func<IMutableEntityType, bool> includeEntityTypeFilter = null)
+        {
+            foreach (var p in propertyTypes)
+            {
+                if (p.GetMaxLength() == null && (includeEntityTypeFilter == null || includeEntityTypeFilter(p.DeclaringEntityType)) && p.IsConcurrencyToken == false && string.Equals(p.Relational().ColumnType, "nvarchar(MAX)", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine($"SetMaxLength({maxLength}): {p.DeclaringEntityType.Name}.{p.Name}");
+                    p.SetMaxLength(maxLength);
+
+                    p.Relational().ColumnType = "nvarchar";
+                }
+
             }
         }
     }
