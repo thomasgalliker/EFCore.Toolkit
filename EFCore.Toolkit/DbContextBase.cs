@@ -243,7 +243,7 @@ namespace EFCore.Toolkit
 
 #if !NET40
         /// <inheritdoc />
-        public new virtual async Task<ChangeSet> SaveChangesAsync()
+        public virtual async Task<ChangeSet> SaveChangesAsync()
         {
             var changeSet = this.GetChangeSet();
             try
