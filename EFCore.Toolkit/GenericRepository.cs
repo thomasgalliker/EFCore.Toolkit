@@ -16,17 +16,32 @@ namespace EFCore.Toolkit
     {
         private readonly IUserContext<TUserKey> userContext;
         /// <summary>
-        ///     Initializes a new instance of the <see cref="GenericRepository{T}" /> class.
+        ///     Initializes a new instance of the <see cref="GenericRepository{TEntity, TUserKey}" /> class.
         /// </summary>
         public GenericRepository(IDbContext context, IUserContext<TUserKey> userContext) : base(context)
         {
             this.userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
         }
 
+        /// <inheritdoc />
         public override IQueryable<TEntity> Get()
         {
-            var currentUserId = this.userContext.GetCurrentUserId();
-            return base.Get().Where(i => Equals(i.CreatedBy, currentUserId));
+            return this.Get(filterByCurrentUser: true);
+        }
+
+        /// <summary>
+        /// Returns <see cref="IQueryable{TEntity}"/> which allows to control whether or not to filter entities by current user.
+        /// </summary>
+        /// <param name="filterByCurrentUser">Returns current user's entities if <c>true</c>. No filter applied if <c>false</c>.</param>
+        public IQueryable<TEntity> Get(bool filterByCurrentUser)
+        {
+            if (filterByCurrentUser)
+            {
+                var currentUserId = this.userContext.GetCurrentUserId();
+                return base.Get().Where(i => Equals(i.CreatedBy, currentUserId));
+            }
+
+            return base.Get();
         }
     }
 
