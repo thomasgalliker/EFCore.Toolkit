@@ -49,7 +49,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public IQueryable<T> Get()
+        public virtual IQueryable<T> Get()
         {
             return this.DbSet;
         }
