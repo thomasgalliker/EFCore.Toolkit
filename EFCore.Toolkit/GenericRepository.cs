@@ -12,6 +12,24 @@ using System.Threading.Tasks;
 
 namespace EFCore.Toolkit
 {
+    public class GenericRepository<TEntity, TUserKey> : GenericRepository<TEntity> where TEntity : class, ICreatedBy<TUserKey>
+    {
+        private readonly IUserContext<TUserKey> userContext;
+        /// <summary>
+        ///     Initializes a new instance of the <see cref="GenericRepository{T}" /> class.
+        /// </summary>
+        public GenericRepository(IDbContext context, IUserContext<TUserKey> userContext) : base(context)
+        {
+            this.userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
+        }
+
+        public override IQueryable<TEntity> Get()
+        {
+            var currentUserId = this.userContext.GetCurrentUserId();
+            return base.Get().Where(i => Equals(i.CreatedBy, currentUserId));
+        }
+    }
+
     /// <summary>
     ///     Implementation of a generic repository.
     /// </summary>
@@ -21,32 +39,22 @@ namespace EFCore.Toolkit
     {
         protected readonly DbSet<T> DbSet;
         private readonly IDbContext context;
+
         private bool isDisposed;
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="GenericRepository{T}" /> class.
         /// </summary>
-        // ReSharper disable once PublicConstructorInAbstractClass
         public GenericRepository(IDbContext context)
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            this.context = context;
+            this.context = context ?? throw new ArgumentNullException(nameof(context));
 
             this.DbSet = this.context.Set<T>();
         }
 
+
         /// <inheritdoc />
-        public IContext Context
-        {
-            get
-            {
-                return this.context;
-            }
-        }
+        public IContext Context => this.context;
 
         /// <inheritdoc />
         public virtual IQueryable<T> Get()
@@ -57,7 +65,7 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public virtual IEnumerable<T> GetAll()
         {
-            return this.DbSet.AsEnumerable();
+            return this.Get().AsEnumerable();
         }
 
         /// <inheritdoc />
@@ -69,13 +77,13 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate)
         {
-            IEnumerable<T> query = this.DbSet.Where(predicate).AsEnumerable();
+            IEnumerable<T> query = this.Get().Where(predicate).AsEnumerable();
             return query;
         }
 
         public bool Any(Expression<Func<T, bool>> predicate)
         {
-            return this.DbSet.Any(predicate);
+            return this.Get().Any(predicate);
         }
 
         /// <inheritdoc />
