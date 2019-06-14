@@ -12,9 +12,10 @@ using System.Threading.Tasks;
 
 namespace EFCore.Toolkit
 {
-    public class GenericRepository<TEntity, TUserKey> : GenericRepository<TEntity> where TEntity : class, ICreatedBy<TUserKey>
+    public class GenericRepository<TEntity, TUserKey> : GenericRepository<TEntity>, IUserContextAwareRepository<TEntity> where TEntity : class, ICreatedBy<TUserKey>
     {
         private readonly IUserContext<TUserKey> userContext;
+
         /// <summary>
         ///     Initializes a new instance of the <see cref="GenericRepository{TEntity, TUserKey}" /> class.
         /// </summary>
@@ -23,7 +24,9 @@ namespace EFCore.Toolkit
             this.userContext = userContext ?? throw new ArgumentNullException(nameof(userContext));
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// Returns <see cref="IQueryable{TEntity}"/> which filters entities by current user.
+        /// </summary>
         public override IQueryable<TEntity> Get()
         {
             return this.Get(filterByCurrentUser: true);
