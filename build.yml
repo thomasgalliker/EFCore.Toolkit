@@ -68,13 +68,13 @@ steps:
     platform: '$(BuildPlatform)'
     configuration: '$(BuildConfiguration)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Run UnitTests'
-  continueOnError: true # TODO: Activate test step
-  inputs:
-    command: test
-    projects: '**/*.Tests.csproj'
-    arguments: ''
+#- task: DotNetCoreCLI@2
+#  displayName: 'Run UnitTests'
+#  continueOnError: true # TODO: Activate test step
+#  inputs:
+#    command: test
+#    projects: '**/*.Tests.csproj'
+#    arguments: ''
 
 - task: DotNetCoreCLI@2
   displayName: 'Pack NuGet PreRelease'
