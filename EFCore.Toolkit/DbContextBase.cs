@@ -44,10 +44,15 @@ namespace EFCore.Toolkit
         {
             this.EnsureLog(log);
 
-            this.log($"Initializing DbContext '{this.Name}' with NameOrConnectionString = \"{this.dbConnection.ConnectionString}\" and IDatabaseInitializer =\"{databaseInitializer?.GetType().GetFormattedName()}\"");
+            this.log($"Initializing DbContext '{this.Name}' with NameOrConnectionString = \"{this.GetConnectionString()}\" and IDatabaseInitializer =\"{databaseInitializer?.GetType().GetFormattedName()}\"");
 
             this.databaseInitializer = databaseInitializer;
             this.TryInitializeDatabase();
+        }
+
+        private string GetConnectionString()
+        {
+            return this.dbConnection?.ConnectionString ?? null;
         }
 
         protected DbContextBase(IDbConnection dbConnection, IDatabaseInitializer<TContext> databaseInitializer)
@@ -61,7 +66,7 @@ namespace EFCore.Toolkit
             this.EnsureLog(log);
             this.dbConnection = dbConnection;
 
-            this.log($"Initializing DbContext '{this.Name}' with ConnectionString = \"{dbConnection.ConnectionString}\" and IDatabaseInitializer=\"{databaseInitializer?.GetType().GetFormattedName()}\"");
+            this.log($"Initializing DbContext '{this.Name}' with ConnectionString = \"{this.GetConnectionString()}\" and IDatabaseInitializer=\"{databaseInitializer?.GetType().GetFormattedName()}\"");
 
             this.databaseInitializer = databaseInitializer;
             this.TryInitializeDatabase();
@@ -69,7 +74,11 @@ namespace EFCore.Toolkit
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(this.dbConnection.ConnectionString);
+            if (this.GetConnectionString() is string connectionString && connectionString != null)
+            {
+                optionsBuilder.UseSqlServer(connectionString);
+            }
+
             //optionsBuilder.UseLoggerFactory(new Consol)
         }
 
@@ -112,7 +121,7 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public void ResetDatabase()
         {
-            this.log($"ResetDatabase of DbContext '{this.Name}' with ConnectionString = \"{this.dbConnection.ConnectionString}\"");
+            this.log($"ResetDatabase of DbContext '{this.Name}' with ConnectionString = \"{this.GetConnectionString()}\"");
 
             this.InternalResetDatabase();
         }
@@ -127,7 +136,7 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public void DropDatabase()
         {
-            this.log($"DropDatabase of DbContext '{this.Name}' with ConnectionString = \"{this.dbConnection.ConnectionString}\"");
+            this.log($"DropDatabase of DbContext '{this.Name}' with ConnectionString = \"{this.GetConnectionString()}\"");
 
             this.InternalDropDatabase();
         }
