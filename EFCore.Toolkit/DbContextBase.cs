@@ -34,6 +34,11 @@ namespace EFCore.Toolkit
             //TryInitializeDatabase(this, null);
         }
 
+        protected DbContextBase(DbContextOptions dbContextOptions)
+            : this(dbContextOptions, databaseInitializer: null, log: null)
+        {
+        }
+
         protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer)
             : this(dbContextOptions, databaseInitializer, log: null)
         {
@@ -79,6 +84,11 @@ namespace EFCore.Toolkit
                 optionsBuilder.UseSqlServer(connectionString);
             }
 
+            //if (!optionsBuilder.Options.Extensions.Any(extension => extension.GetType().Name == "InMemoryOptionsExtension"))
+            //{
+            //    optionsBuilder.UseSqlServer(connectionString);
+            //}
+
             //optionsBuilder.UseLoggerFactory(new Consol)
         }
 
@@ -99,16 +109,22 @@ namespace EFCore.Toolkit
 
         private void TryInitializeDatabase(bool force = false)
         {
+            if (this.databaseInitializer == null)
+            {
+                return;
+            }
+
             try
             {
                 lock (InitializerLock)
                 {
+                    this.log($"TryInitializeDatabase: this.databaseInitializer={this.databaseInitializer.GetType().GetFormattedName()}, force={force}");
                     this.databaseInitializer.Initialize(this, force);
                 }
             }
             catch (Exception ex)
             {
-                this.log(ex.ToString());
+                this.log($"TryInitializeDatabase failed with exception: {ex}");
             }
         }
 

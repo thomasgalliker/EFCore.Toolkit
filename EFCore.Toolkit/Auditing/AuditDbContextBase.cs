@@ -50,12 +50,11 @@ namespace EFCore.Toolkit.Auditing
         {
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the AuditDbContext class
-        ///     using the given string as the name or connection string
-        ///     for the database to which a connection will be made.
-        /// </summary>
-        /// <param name="dbContextOptions">Either the database name or the connection string.</param>
+        protected AuditDbContextBase(DbContextOptions dbContextOptions)
+            : this(dbContextOptions, databaseInitializer: null, log: null)
+        {
+        }
+
         protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer)
             : this(dbContextOptions, databaseInitializer, log: null)
         {
