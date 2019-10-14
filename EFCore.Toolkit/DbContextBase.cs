@@ -79,6 +79,8 @@ namespace EFCore.Toolkit
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
+            this.log($"{this.Name}.OnConfiguring");
+
             if (this.GetConnectionString() is string connectionString && connectionString != null)
             {
                 optionsBuilder.UseSqlServer(connectionString);
@@ -91,6 +93,19 @@ namespace EFCore.Toolkit
 
             //optionsBuilder.UseLoggerFactory(new Consol)
         }
+
+        /// <inheritdoc />
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            this.log($"{this.Name}.OnModelCreating");
+     
+            ////modelBuilder.Remove<PluralizingTableNameConvention>();
+
+#if !NETSTANDARD1_3 && !NETFX
+            modelBuilder.Query<TableRowCounts>();
+#endif
+        }
+
 
         private void EnsureLog(Action<string> log = null)
         {
@@ -338,17 +353,6 @@ namespace EFCore.Toolkit
             // the current values with whatever the user choose. 
             entry.OriginalValues.SetValues(databaseValues);
             entry.CurrentValues.SetValues(resolvedValuesAsObject);
-        }
-
-        /// <inheritdoc />
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            ////modelBuilder.Remove<PluralizingTableNameConvention>();
-            ///
-
-#if !NETSTANDARD1_3 && !NETFX
-            modelBuilder.Query<TableRowCounts>();
-#endif
         }
 
         /// <summary>
