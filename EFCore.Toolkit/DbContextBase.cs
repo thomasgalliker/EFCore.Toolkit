@@ -43,6 +43,11 @@ namespace EFCore.Toolkit
             : this(dbContextOptions, databaseInitializer, log: null)
         {
         }
+        
+        protected DbContextBase(DbContextOptions dbContextOptions, Action<string> log)
+            : this(dbContextOptions, databaseInitializer: null, log: log)
+        {
+        }
 
         protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
             : base(dbContextOptions)
