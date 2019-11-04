@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Microsoft.EntityFrameworkCore.Internal;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.DataAccess.Modularity;
 
@@ -16,11 +17,22 @@ namespace ToolkitSample.Console
             {
                 var employeeRepository = scope.Resolve<IEmployeeRepository>();
                 var employees = employeeRepository.GetAll();
-                foreach (var employee in employees)
+
+                if (employees.Any())
                 {
-                    System.Console.WriteLine($"Id={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}");
+                    foreach (var employee in employees)
+                    {
+                        System.Console.WriteLine($"Id={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}");
+                    }
                 }
+                else
+                {
+                    System.Console.WriteLine($"GetAll returned empty!");
+                }
+
             }
+
+            System.Console.ReadKey();
         }
     }
 }

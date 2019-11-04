@@ -10,7 +10,7 @@ namespace ToolkitSample.DataAccess.Context
     {
         public EmployeeContextDbConnection()
             : base(name: "EFCore.Toolkit",
-                   connectionString: $@"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename={System.IO.Directory.GetCurrentDirectory()}\EFCore.Toolkit.mdf; Integrated Security=True;")
+                   connectionString: $@"Data Source=(localdb)\MSSQLLocalDB; Database=ToolkitSampleDb; Integrated Security=True;")
         {
             this.LazyLoadingEnabled = false;
         }
