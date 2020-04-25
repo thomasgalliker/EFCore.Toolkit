@@ -15,26 +15,26 @@ namespace ToolkitSample.DataAccess.Stubs
     /// <typeparam name="T">The type of entity to store.</typeparam>
     public class FakeDbSet<T> : DbSet<T> where T : class
     {
-        private readonly List<T> _data;
+        private readonly List<T> data;
 
         public FakeDbSet()
         {
-            this._data = new List<T>();
+            this.data = new List<T>();
         }
 
         public FakeDbSet(params T[] entities)
         {
-            this._data = new List<T>(entities);
+            this.data = new List<T>(entities);
         }
 
         public IEnumerator<T> GetEnumerator()
         {
-            return this._data.GetEnumerator();
+            return this.data.GetEnumerator();
         }
 
         public Expression Expression
         {
-            get { return Expression.Constant(this._data.AsQueryable()); }
+            get { return Expression.Constant(this.data.AsQueryable()); }
         }
 
         public Type ElementType
@@ -44,7 +44,7 @@ namespace ToolkitSample.DataAccess.Stubs
 
         public IQueryProvider Provider
         {
-            get { return this._data.AsQueryable().Provider; }
+            get { return this.data.AsQueryable().Provider; }
         }
 
         public T Find(params object[] keyValues)
@@ -54,19 +54,19 @@ namespace ToolkitSample.DataAccess.Stubs
 
         public T Add(T entity)
         {
-            this._data.Add(entity);
+            this.data.Add(entity);
             return entity;
         }
 
         public T Remove(T entity)
         {
-            this._data.Remove(entity);
+            this.data.Remove(entity);
             return entity;
         }
 
         public T Attach(T entity)
         {
-            this._data.Add(entity);
+            this.data.Add(entity);
             return entity;
         }
 
@@ -82,7 +82,7 @@ namespace ToolkitSample.DataAccess.Stubs
 
         public ObservableCollection<T> Local
         {
-            get { return new ObservableCollection<T>(this._data); }
+            get { return new ObservableCollection<T>(this.data); }
         }
     }
 }
