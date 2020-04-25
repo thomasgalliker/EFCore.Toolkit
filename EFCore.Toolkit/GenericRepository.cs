@@ -107,13 +107,7 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public virtual T Add(T entity)
         {
-            return this.Add<T>(entity);
-        }
-
-        /// <inheritdoc />
-        public virtual TDerived Add<TDerived>(TDerived entity) where TDerived : class, T
-        {
-            return this.context.Set<TDerived>().Add(entity).Entity;
+            return this.DbSet.Add(entity).Entity;
         }
 
         /// <inheritdoc />
@@ -132,23 +126,11 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public virtual T Update(T entity)
         {
-            return this.Update<T>(entity);
-        }
-
-        /// <inheritdoc />
-        public virtual TDerived Update<TDerived>(TDerived entity) where TDerived : class, T
-        {
-            return this.context.Edit(entity);
+            return this.DbSet.Update(entity).Entity;
         }
 
         /// <inheritdoc />
         public virtual T Update(T entity, T updateEntity)
-        {
-            return this.Update<T>(entity, updateEntity);
-        }
-
-        /// <inheritdoc />
-        public virtual TDerived Update<TDerived>(TDerived entity, TDerived updateEntity) where TDerived : class, T
         {
             return this.context.Edit(entity, updateEntity);
         }

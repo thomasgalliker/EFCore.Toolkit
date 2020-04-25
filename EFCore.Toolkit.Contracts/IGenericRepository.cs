@@ -23,8 +23,6 @@ namespace EFCore.Toolkit.Abstractions
         /// </remarks>
         T Add(T entity);
 
-        TDerived Add<TDerived>(TDerived entity) where TDerived : class, T;
-
         IEnumerable<T> AddRange(IEnumerable<T> entities);
 
         /// <summary>
@@ -41,21 +39,12 @@ namespace EFCore.Toolkit.Abstractions
         /// <param name="entity">The entity to be updated in the database context.</param>
         T Update(T entity);
 
-        TDerived Update<TDerived>(TDerived entity) where TDerived : class, T;
-
         /// <summary>
         ///     Updates the given entity. This method checks if an entity exists before it tries to perform the update activity.
         /// </summary>
         /// <param name="entity">The existing entity.</param>
         /// <param name="updateEntity">The update entity.</param>
         T Update(T entity, T updateEntity);
-
-        /// <summary>
-        ///     Updates the given entity. This method checks if an entity exists before it tries to perform the update activity.
-        /// </summary>
-        /// <param name="entity">The existing entity.</param>
-        /// <param name="updateEntity">The update entity.</param>
-        TDerived Update<TDerived>(TDerived entity, TDerived updateEntity) where TDerived : class, T;
 
         /// <summary>
         /// Update given properties in <paramref name="propertyExpressions"/> of given <paramref name="entity"/>.

@@ -64,14 +64,6 @@ namespace EFCore.Toolkit
             return entity;
         }
 
-        public TDerived Add<TDerived>(TDerived entity) where TDerived : class, T
-        {
-            entity.Id = this.items.GetNextId();
-            this.items.Add(entity);
-
-            return entity;
-        }
-
         public IEnumerable<T> AddRange(IEnumerable<T> entities)
         {
             var collection = entities.ToList();
@@ -99,23 +91,10 @@ namespace EFCore.Toolkit
             return entity;
         }
 
-        public TDerived Update<TDerived>(TDerived entity) where TDerived : class, T
-        {
-            throw new NotImplementedException();
-        }
-
         public T Update(T entity, T updateEntity)
         {
             this.items.Remove(entity);
             this.items.Add(updateEntity);
-
-            return updateEntity;
-        }
-
-        public TDerived Update<TDerived>(TDerived entity, TDerived updateEntity) where TDerived : class, T
-        {
-            this.Remove(entity);
-            this.Add(updateEntity);
 
             return updateEntity;
         }
