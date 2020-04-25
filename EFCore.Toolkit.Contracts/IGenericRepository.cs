@@ -41,6 +41,8 @@ namespace EFCore.Toolkit.Abstractions
         /// <param name="entity">The entity to be updated in the database context.</param>
         T Update(T entity);
 
+        TDerived Update<TDerived>(TDerived entity) where TDerived : class, T;
+
         /// <summary>
         ///     Updates the given entity. This method checks if an entity exists before it tries to perform the update activity.
         /// </summary>

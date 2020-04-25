@@ -94,7 +94,6 @@ namespace EFCore.Toolkit.Extensions
 
                     p.Relational().ColumnType = $"decimal({precision},{scale})";
                 }
-
             }
         }
 
