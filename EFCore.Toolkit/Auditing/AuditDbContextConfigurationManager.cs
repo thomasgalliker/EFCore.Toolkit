@@ -1,5 +1,4 @@
-﻿#if !NETSTANDARD1_3
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using EFCore.Toolkit.Auditing.ConfigFile;
@@ -52,4 +51,3 @@ namespace EFCore.Toolkit.Auditing
         }
     }
 }
-#endif

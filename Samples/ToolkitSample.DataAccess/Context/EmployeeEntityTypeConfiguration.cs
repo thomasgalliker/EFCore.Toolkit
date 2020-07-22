@@ -1,14 +1,15 @@
-﻿using EFCore.Toolkit;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class EmployeeEntityTypeConfiguration : EntityTypeConfiguration<Employee>
+    public class EmployeeEntityTypeConfiguration : IEntityTypeConfiguration<Employee>
     {
-        public override void Configure(EntityTypeBuilder<Employee> entity)
+        public void Configure(EntityTypeBuilder<Employee> entity)
         {
+            entity.HasBaseType<Person>();
+
             entity.Property(e => e.EmployementDate)
                 .IsRequired(false);
 
@@ -21,8 +22,6 @@ namespace ToolkitSample.DataAccess.Context
             entity.Property(e => e.PropertyB);
 
             //this.Unique(e => e.PropertyA, e => e.PropertyB);
-
-            entity.ToTable(nameof(Employee));
         }
     }
 }

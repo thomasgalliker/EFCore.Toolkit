@@ -33,7 +33,6 @@ namespace EFCore.Toolkit.Auditing
 
         private readonly Dictionary<Type, AuditTypeInfo> auditTypes = new Dictionary<Type, AuditTypeInfo>();
 
-#if !NETSTANDARD1_3
         static AuditDbContextBase()
         {
             lock (ConfigFileLock)
@@ -41,7 +40,6 @@ namespace EFCore.Toolkit.Auditing
                 AuditDbContextConfiguration = AuditDbContextConfigurationManager.GetAuditDbContextConfigurationFromXml();
             }
         }
-#endif
 
         /// <summary>
         ///     Empty constructor is used for 'update-database' command-line command.

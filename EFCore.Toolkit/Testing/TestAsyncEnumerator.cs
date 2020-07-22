@@ -4,13 +4,6 @@ using System.Threading.Tasks;
 
 namespace EFCore.Toolkit.Testing
 {
-    /// <summary>
-    /// TestAsyncEnumerator&lt;T&gt; implements <seealso cref="IAsyncEnumerator&lt;T&gt;"/>
-    /// which is used to mock collections behind async queryables -> ToListAsync
-    /// 
-    /// Source: https://stackoverflow.com/questions/40476233/how-to-mock-an-async-repository-with-entity-framework-core
-    /// </summary>
-    /// <typeparam name="T">Entity type.</typeparam>
     public class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
     {
         private readonly IEnumerator<T> inner;
@@ -22,14 +15,24 @@ namespace EFCore.Toolkit.Testing
 
         public void Dispose()
         {
-            this.inner.Dispose();
+            inner.Dispose();
         }
 
-        public T Current => this.inner.Current;
+        public T Current => inner.Current;
 
         public Task<bool> MoveNext(CancellationToken cancellationToken)
         {
-            return Task.FromResult(this.inner.MoveNext());
+            return Task.FromResult(inner.MoveNext());
+        }
+
+        public ValueTask<bool> MoveNextAsync()
+        {
+            return new ValueTask<bool>(Task.FromResult(inner.MoveNext()));
+        }
+
+        public ValueTask DisposeAsync()
+        {
+            return new ValueTask();
         }
     }
 }

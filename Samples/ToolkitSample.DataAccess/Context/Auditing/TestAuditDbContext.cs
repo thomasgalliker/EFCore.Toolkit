@@ -2,7 +2,6 @@
 using EFCore.Toolkit;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Auditing;
-using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.Model;
 using ToolkitSample.Model.Auditing;
@@ -46,16 +45,16 @@ namespace ToolkitSample.DataAccess.Context.Auditing
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.AddConfiguration(new PersonEntityConfiguration());
-            modelBuilder.AddConfiguration(new EmployeeEntityTypeConfiguration());
-            modelBuilder.AddConfiguration(new EmployeeAuditEntityTypeConfiguration());
-            modelBuilder.AddConfiguration(new TestEntityEntityTypeConfiguration());
-            modelBuilder.AddConfiguration(new TestEntityAuditEntityTypeConfiguration());
-            modelBuilder.AddConfiguration(new StudentEntityConfiguration());
-            modelBuilder.AddConfiguration(new DepartmentEntityConfiguration());
-            modelBuilder.AddConfiguration(new RoomEntityTypeConfiguration());
-            modelBuilder.AddConfiguration(new CountryEntityConfiguration());
-            modelBuilder.AddConfiguration(new ApplicationSettingEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeAuditEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new TestEntityEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new TestEntityAuditEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new StudentEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new DepartmentEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new RoomEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CountryEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ApplicationSettingEntityTypeConfiguration());
         }
     }
 }

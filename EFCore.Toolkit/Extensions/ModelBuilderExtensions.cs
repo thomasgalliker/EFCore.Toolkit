@@ -3,31 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EFCore.Toolkit.Extensions
 {
     public static class ModelBuilderExtensions
     {
-        public static void AddConfiguration<TEntity>(this ModelBuilder modelBuilder, EntityTypeConfiguration<TEntity> entityConfiguration) where TEntity : class
-        {
-            modelBuilder.Entity<TEntity>(entityConfiguration.Configure);
-        }
-
-#if !NETSTANDARD1_3 && !NETFX
-        
-
         public static void RemovePluralizingTableNameConvention(this ModelBuilder modelBuilder)
         {
             modelBuilder.EntityTypes().Configure(entityType =>
             {
                 if (entityType.IsOwned() == false)
                 {
-                    var existingName = entityType.Relational().TableName;
-                    var newName = entityType.DisplayName();
-                    Console.WriteLine($"RemovePluralizingTableNameConvention: entityType '{entityType.Name}': {existingName} >>> {newName}");
+                    var existingTableName = entityType.GetTableName();
+                    var newTableName = entityType.DisplayName();
+                    Console.WriteLine($"RemovePluralizingTableNameConvention: entityType '{entityType.Name}': {existingTableName} >>> {newTableName}");
 
-                    entityType.Relational().TableName = entityType.DisplayName();
+                    entityType.SetTableName(entityType.DisplayName());
                 }
             });
         }
@@ -42,7 +33,6 @@ namespace EFCore.Toolkit.Extensions
                     .ForEach(fk => fk.DeleteBehavior = DeleteBehavior.Restrict);
             }
         }
-#endif
 
         public static IEnumerable<IMutableEntityType> EntityTypes(this ModelBuilder builder)
         {
@@ -77,7 +67,6 @@ namespace EFCore.Toolkit.Extensions
             }
         }
 
-#if !NETSTANDARD1_3
         /// <summary>
         ///  Configures all decimals and nullable decimals with a default <paramref name="precision"/> (maximum allowed digits in a number) and <paramref name="scale"/> (maximum allowed digits after the decimal point).
         /// </summary>
@@ -85,14 +74,15 @@ namespace EFCore.Toolkit.Extensions
         {
             foreach (var p in modelBuilder.Properties<decimal>().Concat(modelBuilder.Properties<decimal?>()))
             {
+                var originalColumnType = p.GetColumnType();
                 if (p.GetMaxLength() == null &&
                     p.IsConcurrencyToken == false &&
-                    (p.Relational().ColumnType == null || p.Relational().ColumnType.StartsWith("decimal(", StringComparison.InvariantCultureIgnoreCase) == false))
+                    (originalColumnType == null || originalColumnType.StartsWith("decimal(", StringComparison.InvariantCultureIgnoreCase) == false))
                 {
-                    var columnType = $"decimal({precision},{scale})";
-                    Console.WriteLine($"SetColumnType({columnType}): {p.DeclaringEntityType.Name}.{p.Name}");
+                    var newColumnType = $"decimal({precision},{scale})";
+                    Console.WriteLine($"SetColumnType({newColumnType}): {p.DeclaringEntityType.Name}.{p.Name}");
 
-                    p.Relational().ColumnType = $"decimal({precision},{scale})";
+                    p.SetColumnType(newColumnType);
                 }
             }
         }
@@ -111,8 +101,9 @@ namespace EFCore.Toolkit.Extensions
                     (includeEntityTypeFilter == null || includeEntityTypeFilter(p.DeclaringEntityType)) &&
                     p.IsConcurrencyToken == false)
                 {
+                    var originalColumnType = p.GetColumnType();
                     var maxLengthInternal = maxLength;
-                    if (string.Equals(p.Relational().ColumnType, "nvarchar(MAX)", StringComparison.InvariantCultureIgnoreCase))
+                    if (string.Equals(originalColumnType, "nvarchar(MAX)", StringComparison.InvariantCultureIgnoreCase))
                     {
                         maxLengthInternal = null;
                     }
@@ -122,6 +113,5 @@ namespace EFCore.Toolkit.Extensions
                 }
             }
         }
-#endif
     }
 }

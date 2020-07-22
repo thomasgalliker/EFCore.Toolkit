@@ -257,6 +257,8 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public new virtual ChangeSet SaveChanges()
         {
+            //this.ApplyCreatedBy(() => this.userContext.GetCurrentUserId());
+
             var changeSet = this.GetChangeSet();
             try
             {
@@ -377,7 +379,7 @@ namespace EFCore.Toolkit
                 foreach (var propertyName in dbEntityEntry.CurrentValues.Properties.Select(p => p.Name))
                 {
                     var property = dbEntityEntry.Property(propertyName);
-                    if (property.Metadata.IsShadowProperty)
+                    if (property.Metadata.IsShadowProperty())
                     {
                         // BUG: Workaround for resetting IsModified of Discriminator property
                         property.IsModified = false;

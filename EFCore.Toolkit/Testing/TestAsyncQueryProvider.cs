@@ -7,13 +7,6 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace EFCore.Toolkit.Testing
 {
-    /// <summary>
-    /// TestAsyncQueryProvider implements <seealso cref="IAsyncQueryProvider"/>
-    /// which is used to mock collections behind async queryables -> ToListAsync
-    /// 
-    /// Source: https://stackoverflow.com/questions/40476233/how-to-mock-an-async-repository-with-entity-framework-core
-    /// </summary>
-    /// <typeparam name="TEntity">Entity type.</typeparam>
     public class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
     {
         private readonly IQueryProvider inner;
@@ -35,12 +28,12 @@ namespace EFCore.Toolkit.Testing
 
         public object Execute(Expression expression)
         {
-            return this.inner.Execute(expression);
+            return inner.Execute(expression);
         }
 
         public TResult Execute<TResult>(Expression expression)
         {
-            return this.inner.Execute<TResult>(expression);
+            return inner.Execute<TResult>(expression);
         }
 
         public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
@@ -50,7 +43,12 @@ namespace EFCore.Toolkit.Testing
 
         public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
         {
-            return Task.FromResult(this.Execute<TResult>(expression));
+            return Task.FromResult(Execute<TResult>(expression));
+        }
+
+        TResult IAsyncQueryProvider.ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+        {
+            return Execute<TResult>(expression);
         }
     }
 }

@@ -1,12 +1,13 @@
 ﻿using EFCore.Toolkit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class CountryEntityConfiguration : EntityTypeConfiguration<Model.Country>
+    public class CountryEntityConfiguration : IEntityTypeConfiguration<Model.Country>
     {
-        public override void Configure(EntityTypeBuilder<Country> entity)
+        public void Configure(EntityTypeBuilder<Country> entity)
         {
             entity.HasKey(d => d.Id);
 
