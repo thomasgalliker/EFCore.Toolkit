@@ -14,7 +14,10 @@ trigger:
     include:
     - master
     - develop
-
+  pr:
+    branches:
+    include:
+    - '*'
   paths:
     exclude:
     - README.md
