@@ -14,13 +14,14 @@ trigger:
     include:
     - master
     - develop
-  pr:
-    branches:
-    include:
-    - '*'
   paths:
     exclude:
     - README.md
+
+pr:
+  branches:
+    include:
+      - '*'
 
 variables:
   solution: 'EFCore.Toolkit.sln'
