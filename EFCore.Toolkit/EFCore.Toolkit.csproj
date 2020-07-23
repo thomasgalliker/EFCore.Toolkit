@@ -1,22 +1,33 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<Description>EFCore.Toolkit is a library which provides implementations for EntityFrameworkCore best practices, patterns, utilities and extensions.</Description>
-		<AssemblyTitle>EFCore.Toolkit</AssemblyTitle>
-		<VersionPrefix>1.0.0</VersionPrefix>
-		<Version>1.0.0</Version>
-		<Authors>Thomas Galliker</Authors>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<AssemblyName>EFCore.Toolkit</AssemblyName>
+		<Title>EFCore.Toolkit</Title>
+		<Product>EFCore.Toolkit</Product>
+		<AssemblyTitle>EFCore.Toolkit</AssemblyTitle>
+		<RootNamespace>EFCore.Toolkit</RootNamespace>
+		<Version>1.0.0</Version>
+		<Company>superdev GmbH</Company>
+		<Authors>Thomas Galliker</Authors>
+		<Description>EFCore.Toolkit is a library which provides implementations for EntityFrameworkCore best practices, patterns, utilities and extensions.</Description>
 		<PackageId>EFCore.Toolkit</PackageId>
-		<PackageTags>Entity Framework EntityFramework EntityFrameworkCore EFCore UnitOfWork IUnitOfWork Repository IRepository GenericRepository IGenericRepository DbContext DbContextBase ContextTestBase</PackageTags>
-		<PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/develop/logo.png</PackageIconUrl>
 		<PackageProjectUrl>https://github.com/thomasgalliker/EFCore.Toolkit</PackageProjectUrl>
+		<PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/develop/logo.png</PackageIconUrl>
 		<PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageTags>EntityFrameworkCore Entity Framework Core EFCore EF Core Bulk Batch Extensions Insert Update Delete Read</PackageTags>
+		<PackageReleaseNotes>Split leading comments</PackageReleaseNotes>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/thomasgalliker/EFCore.Toolkit</RepositoryUrl>
-		<RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
+		<OutputType>Library</OutputType>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		<SignAssembly>True</SignAssembly>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<PackageReleaseNotes>
+			1.0.0
+			- Initial release
+		</PackageReleaseNotes>
+		<Copyright>Copyright 2020</Copyright>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -26,24 +37,8 @@
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	</ItemGroup>
 
-	<PropertyGroup>
-		<ApplicationIcon />
-		<OutputType>Library</OutputType>
-		<StartupObject />
-		<Company>superdev GmbH</Company>
-		<Product>EFCore.Toolkit</Product>
-		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<RootNamespace>EFCore.Toolkit</RootNamespace>
-		<PackageReleaseNotes>
-			1.0.0
-			- Initial release
-		</PackageReleaseNotes>
-		<Copyright>Copyright 2020</Copyright>
-		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
 	</ItemGroup>
-
 </Project>
