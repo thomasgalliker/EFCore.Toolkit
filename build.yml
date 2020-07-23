@@ -14,6 +14,8 @@ trigger:
     include:
     - master
     - develop
+    - feature/*
+    - bugfix/*
   paths:
     exclude:
     - README.md
