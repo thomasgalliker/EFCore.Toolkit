@@ -1,5 +1,4 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<Title>EFCore.Toolkit</Title>
@@ -16,17 +15,14 @@
 		<PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
 		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 		<PackageTags>EntityFrameworkCore Entity Framework Core EFCore EF Core Bulk Batch Extensions Insert Update Delete Read</PackageTags>
-		<PackageReleaseNotes>Split leading comments</PackageReleaseNotes>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/thomasgalliker/EFCore.Toolkit</RepositoryUrl>
 		<OutputType>Library</OutputType>
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		<SignAssembly>True</SignAssembly>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<PackageReleaseNotes>
-			1.0.0
-			- Initial release
-		</PackageReleaseNotes>
+		<PackageReleaseNotes>3.0.0
+- Initial release for EntityFrameworkCore 3.x</PackageReleaseNotes>
 		<Copyright>Copyright 2020</Copyright>
 	</PropertyGroup>
 
@@ -36,8 +32,7 @@
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
 		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
 	</ItemGroup>
-
-
+	
 	<ItemGroup>
 		<ProjectReference Include="..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
 	</ItemGroup>
