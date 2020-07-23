@@ -10,7 +10,7 @@
 		<AssemblyName>EFCore.Toolkit</AssemblyName>
 		<PackageId>EFCore.Toolkit</PackageId>
 		<PackageTags>Entity Framework EntityFramework EntityFrameworkCore EFCore UnitOfWork IUnitOfWork Repository IRepository GenericRepository IGenericRepository DbContext DbContextBase ContextTestBase</PackageTags>
-		<PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/feature/ef3migration/logo.png</PackageIconUrl>
+		<PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/develop/logo.png</PackageIconUrl>
 		<PackageProjectUrl>https://github.com/thomasgalliker/EFCore.Toolkit</PackageProjectUrl>
 		<PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
 		<RepositoryType>git</RepositoryType>

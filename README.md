@@ -1,7 +1,7 @@
 # EFCore.Toolkit (Work in progress!)
 [![Version](https://img.shields.io/nuget/v/EFCore.Toolkit.svg)](https://www.nuget.org/packages/EFCore.Toolkit)  [![Downloads](https://img.shields.io/nuget/dt/EFCore.Toolkit.svg)](https://www.nuget.org/packages/EFCore.Toolkit)
 
-<img src="https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/feature/ef3migration/logo.png" width="100" height="100" alt="EFCore.Toolkit" align="right">
+<img src="https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/develop/logo.png" width="100" height="100" alt="EFCore.Toolkit" align="right">
 EFCore.Toolkit is a library which provides implementations for EntityFramework best practices, patterns, utilities and extensions.
 - Patterns such as UnitOfWork, Repository
 - Helper classes, e.g. DbContextBase, ContextTestBase
