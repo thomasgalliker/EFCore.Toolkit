@@ -193,7 +193,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public TEntity Edit<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class
+        public TEntity SetValues<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class
         {
             if (originalEntity == null)
             {

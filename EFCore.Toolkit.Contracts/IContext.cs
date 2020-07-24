@@ -1,9 +1,11 @@
 ﻿using System;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace EFCore.Toolkit.Abstractions
-{
+{    
+     /// <summary>
+     /// IContext is the database-independant abstraction of a data access context.
+     /// </summary>
     public interface IContext : IDisposable
     {
         /// <summary>
@@ -14,25 +16,27 @@ namespace EFCore.Toolkit.Abstractions
 
         /// <summary>
         ///     Drops the underlying database.
-        ///     USE WITH CARE!
         /// </summary>
         void DropDatabase();
 
         /// <summary>
-        ///     Sets the state of an <paramref name="entity"/> to given <
+        ///     Sets the state of <paramref name="entity"/> to given modified.
         /// </summary>
         void SetStateModified<TEntity>(TEntity entity) where TEntity : class;
 
         /// <summary>
-        ///     Reverts changes in <paramref name="entity" />.
+        ///     Sets the state of <paramref name="entity"/> to given unchanged.
         /// </summary>
         void SetStateUnchanged<TEntity>(TEntity entity) where TEntity : class;
 
         /// <summary>
-        ///     Updates the given attached <paramref name="originalEntity" /> with the new entity <paramref name="updateEntity" />.
+        ///     Updates the properties of <paramref name="originalEntity" /> with values from <paramref name="updateEntity" />.
         /// </summary>
-        TEntity Edit<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class;
+        TEntity SetValues<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class;
 
+        /// <summary>
+        ///     Removes the <paramref name="entity"/>.
+        /// </summary>
         TEntity Remove<TEntity>(TEntity entity) where TEntity : class;
 
         /// <summary>

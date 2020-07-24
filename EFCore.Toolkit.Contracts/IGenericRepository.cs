@@ -44,7 +44,7 @@ namespace EFCore.Toolkit.Abstractions
         /// </summary>
         /// <param name="entity">The existing entity.</param>
         /// <param name="updateEntity">The update entity.</param>
-        T Update(T entity, T updateEntity);
+        T SetValues(T entity, T updateEntity);
 
         /// <summary>
         /// Update given properties in <paramref name="propertyExpressions"/> of given <paramref name="entity"/>.

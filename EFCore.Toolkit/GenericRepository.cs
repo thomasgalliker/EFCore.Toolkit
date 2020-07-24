@@ -115,9 +115,9 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public virtual T Update(T entity, T updateEntity)
+        public virtual T SetValues(T entity, T updateEntity)
         {
-            return this.context.Edit(entity, updateEntity);
+            return this.context.SetValues(entity, updateEntity);
         }
 
         /// <inheritdoc />

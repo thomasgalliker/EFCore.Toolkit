@@ -91,7 +91,7 @@ namespace EFCore.Toolkit
             return entity;
         }
 
-        public T Update(T entity, T updateEntity)
+        public T SetValues(T entity, T updateEntity)
         {
             this.items.Remove(entity);
             this.items.Add(updateEntity);

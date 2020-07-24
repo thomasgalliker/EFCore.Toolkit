@@ -95,7 +95,7 @@ namespace ToolkitSample.DataAccess.Context
             throw new NotImplementedException();
         }
 
-        public TEntity Edit<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class
+        public TEntity SetValues<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class
         {
             throw new NotImplementedException();
         }
