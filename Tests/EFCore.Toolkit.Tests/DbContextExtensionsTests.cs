@@ -24,7 +24,6 @@ namespace EFCore.Toolkit.Tests
             this.testOutputHelper = testOutputHelper;
         }
 
-#if !NETSTANDARD1_3 && !NET452
         [Fact]
         public void ShouldGetGetTableRowCounts()
         {
@@ -52,6 +51,5 @@ namespace EFCore.Toolkit.Tests
             tableRowCounts.Should().ContainSingle(r => r.TableName == "[dbo].[Person]" && r.TableRowCount == 3);
             tableRowCounts.Should().ContainSingle(r => r.TableName == "[dbo].[Room]" && r.TableRowCount == 0);
         }
-#endif
     }
 }

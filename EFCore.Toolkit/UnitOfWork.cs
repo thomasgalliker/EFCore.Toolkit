@@ -1,5 +1,4 @@
-﻿#if !NETSTANDARD1_3
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,9 +6,7 @@ using System.Transactions;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Extensions;
-#if !NET40
 using System.Threading.Tasks;
-#endif
 
 namespace EFCore.Toolkit
 {
@@ -79,7 +76,6 @@ namespace EFCore.Toolkit
             return changeSets;
         }
 
-#if !NET40
         /// <inheritdoc />
         public async Task<ICollection<ChangeSet>> CommitAsync()
         {
@@ -115,7 +111,6 @@ namespace EFCore.Toolkit
 
             return changeSets;
         }
-#endif
 
         /// <inheritdoc />
         public void Dispose()
@@ -147,4 +142,3 @@ namespace EFCore.Toolkit
         }
     }
 }
-#endif

@@ -6,9 +6,7 @@ using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
-#if !NET40
 using System.Threading.Tasks;
-#endif
 
 namespace EFCore.Toolkit
 {
@@ -138,7 +136,7 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public virtual T UpdateProperties<TValue>(T entity, params Expression<Func<T, TValue>>[] propertyExpressions)
         {
-            this.context.UndoChanges(entity);
+            this.context.SetStateUnchanged(entity);
 
             var propertyNames = propertyExpressions.Select(pe => pe.GetPropertyInfo().Name).ToArray();
             this.context.ModifyProperties(entity, propertyNames);
@@ -155,19 +153,10 @@ namespace EFCore.Toolkit
             return entity;
         }
 
-
         /// <inheritdoc />
         public virtual T Remove(T entity)
         {
-            return this.context.Delete(entity);
-        }
-
-        /// <inheritdoc />
-        public virtual void LoadReferenced<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> navigationProperty)
-            where TEntity : class
-            where TProperty : class
-        {
-            this.context.LoadReferenced(entity, navigationProperty);
+            return this.context.Remove(entity);
         }
 
         /// <inheritdoc />
@@ -176,13 +165,11 @@ namespace EFCore.Toolkit
             return this.context.SaveChanges();
         }
 
-#if !NET40
         /// <inheritdoc />
         public Task<ChangeSet> SaveAsync()
         {
             return this.context.SaveChangesAsync();
         }
-#endif
 
         public void Dispose()
         {

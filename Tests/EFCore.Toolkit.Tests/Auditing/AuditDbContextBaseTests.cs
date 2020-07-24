@@ -162,7 +162,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             using (var context = this.CreateContext())
             {
                 var customer = context.Employees.Find(1);
-                context.Delete(customer);
+                context.Remove(customer);
                 context.SaveChanges();
             }
 

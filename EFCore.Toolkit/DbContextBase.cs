@@ -12,10 +12,7 @@ using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using IDbConnection = EFCore.Toolkit.Abstractions.IDbConnection;
-#if !NET40
 using System.Threading.Tasks;
-
-#endif
 
 namespace EFCore.Toolkit
 {
@@ -105,10 +102,6 @@ namespace EFCore.Toolkit
             this.log($"{this.Name}.OnModelCreating");
      
             ////modelBuilder.Remove<PluralizingTableNameConvention>();
-
-#if !NETSTANDARD1_3 && !NETFX
-            modelBuilder.Query<TableRowCounts>();
-#endif
         }
 
 
@@ -149,12 +142,6 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        ////public IDbSet<TEntity> DbSet<TEntity>() where TEntity : class
-        ////{
-        ////    return base.Set<TEntity>();
-        ////}
-
-        /// <inheritdoc />
         public void ResetDatabase()
         {
             this.log($"ResetDatabase of DbContext '{this.Name}' with ConnectionString = \"{this.GetConnectionString()}\"");
@@ -184,7 +171,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public TEntity Edit<TEntity>(TEntity entity) where TEntity : class
+        public void SetStateModified<TEntity>(TEntity entity) where TEntity : class
         {
             if (entity == null)
             {
@@ -192,7 +179,17 @@ namespace EFCore.Toolkit
             }
 
             this.Entry(entity).State = EntityState.Modified;
-            return entity;
+        }
+
+        /// <inheritdoc />
+        public void SetStateUnchanged<TEntity>(TEntity entity) where TEntity : class
+        {
+            if (entity == null)
+            {
+                throw new ArgumentException(nameof(entity));
+            }
+
+            this.Entry(entity).State = EntityState.Unchanged;
         }
 
         /// <inheritdoc />
@@ -219,16 +216,9 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public TEntity Delete<TEntity>(TEntity entity) where TEntity : class
+        public TEntity Remove<TEntity>(TEntity entity) where TEntity : class
         {
-            this.Entry(entity).State = EntityState.Deleted;
-            return entity;
-        }
-
-        /// <inheritdoc />
-        public void UndoChanges<TEntity>(TEntity entity) where TEntity : class
-        {
-            this.Entry(entity).State = EntityState.Unchanged;
+            return base.Set<TEntity>().Remove(entity).Entity;
         }
 
         /// <inheritdoc />
@@ -246,12 +236,6 @@ namespace EFCore.Toolkit
             //    // BUG: Workaround for resetting IsModified of Discriminator property
             //    property.IsModified = false;
             //}
-        }
-
-        /// <inheritdoc />
-        public void LoadReferenced<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> navigationProperty) where TEntity : class where TProperty : class
-        {
-            this.Entry(entity).Reference(navigationProperty).Load();
         }
 
         /// <inheritdoc />
@@ -288,7 +272,6 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public IConcurrencyResolveStrategy ConcurrencyResolveStrategy { get; set; } = new RethrowConcurrencyResolveStrategy();
 
-#if !NET40
         /// <inheritdoc />
         public virtual async Task<ChangeSet> SaveChangesAsync()
         {
@@ -330,7 +313,6 @@ namespace EFCore.Toolkit
             var dbTransaction = internalDbContextTransaction.GetDbTransaction();
             this.Database.UseTransaction(dbTransaction);
         }
-#endif
 
         private void HandleDbUpdateConcurrencyException(DbUpdateConcurrencyException dbUpdateConcurrencyException)
         {

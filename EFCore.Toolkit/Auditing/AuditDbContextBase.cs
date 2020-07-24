@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-//using System.Security.Principal;
 using EFCore.Toolkit.Auditing.Extensions;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Auditing;
@@ -11,10 +10,7 @@ using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-#if !NET40
 using System.Threading.Tasks;
-
-#endif
 
 namespace EFCore.Toolkit.Auditing
 {
@@ -213,7 +209,6 @@ namespace EFCore.Toolkit.Auditing
             }
         }
 
-#if !NET40
         /// <inheritdoc />
         public override Task<ChangeSet> SaveChangesAsync()
         {
@@ -251,7 +246,6 @@ namespace EFCore.Toolkit.Auditing
                 throw;
             }
         }
-#endif
 
         /// <summary>
         /// Update failed so remove the audit entities.

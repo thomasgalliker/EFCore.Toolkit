@@ -1,7 +1,4 @@
-﻿#if !NET40
-using System.Threading.Tasks;
-
-#endif
+﻿using System.Threading.Tasks;
 
 namespace EFCore.Toolkit.Abstractions
 {
@@ -35,8 +32,6 @@ namespace EFCore.Toolkit.Abstractions
         /// </exception>
         ChangeSet Save();
 
-#if !NET40
         Task<ChangeSet> SaveAsync();
-#endif
     }
 }

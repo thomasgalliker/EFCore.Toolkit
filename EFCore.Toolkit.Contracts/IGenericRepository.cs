@@ -69,7 +69,5 @@ namespace EFCore.Toolkit.Abstractions
         ///     exist in the database such that trying to delete it does not make sense.
         /// </remarks>
         T Remove(T entity);
-
-        void LoadReferenced<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> navigationProperty) where TEntity : class where TProperty : class;
     }
 }
