@@ -90,13 +90,6 @@ namespace EFCore.Toolkit
             return this.DbSet.Find(ids);
         }
 
-        /// <inheritdoc />
-        public IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate)
-        {
-            IEnumerable<T> query = this.Get().Where(predicate).AsEnumerable();
-            return query;
-        }
-
         public bool Any(Expression<Func<T, bool>> predicate)
         {
             return this.Get().Any(predicate);
