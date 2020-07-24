@@ -68,7 +68,6 @@ namespace EFCore.Toolkit
             this.DbSet = this.context.Set<T>();
         }
 
-
         /// <inheritdoc />
         public IContext Context => this.context;
 
@@ -88,11 +87,6 @@ namespace EFCore.Toolkit
         public T FindById(params object[] ids)
         {
             return this.DbSet.Find(ids);
-        }
-
-        public bool Any(Expression<Func<T, bool>> predicate)
-        {
-            return this.Get().Any(predicate);
         }
 
         /// <inheritdoc />
