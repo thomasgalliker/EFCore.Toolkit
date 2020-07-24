@@ -39,6 +39,8 @@ namespace EFCore.Toolkit.Abstractions
         /// <param name="entity">The entity to be updated in the database context.</param>
         T Update(T entity);
 
+        void UpdateRange(IEnumerable<T> entities);
+
         /// <summary>
         ///     Updates the given entity. This method checks if an entity exists before it tries to perform the update activity.
         /// </summary>
@@ -69,5 +71,7 @@ namespace EFCore.Toolkit.Abstractions
         ///     exist in the database such that trying to delete it does not make sense.
         /// </remarks>
         T Remove(T entity);
+
+        IEnumerable<T> RemoveRange(IEnumerable<T> entities);
     }
 }

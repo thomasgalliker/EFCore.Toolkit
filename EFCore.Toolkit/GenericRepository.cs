@@ -115,6 +115,12 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
+        public void UpdateRange(IEnumerable<T> entities)
+        {
+            this.DbSet.UpdateRange(entities);
+        }
+
+        /// <inheritdoc />
         public virtual T SetValues(T entity, T updateEntity)
         {
             return this.context.SetValues(entity, updateEntity);
@@ -143,7 +149,14 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public virtual T Remove(T entity)
         {
-            return this.context.Remove(entity);
+            return this.DbSet.Remove(entity).Entity;
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<T> RemoveRange(IEnumerable<T> entities)
+        {
+            this.DbSet.RemoveRange(entities);
+            return entities;
         }
 
         /// <inheritdoc />

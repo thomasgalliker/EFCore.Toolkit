@@ -40,7 +40,7 @@ namespace EFCore.Toolkit
             : this(dbContextOptions, databaseInitializer, log: null)
         {
         }
-        
+
         protected DbContextBase(DbContextOptions dbContextOptions, Action<string> log)
             : this(dbContextOptions, databaseInitializer: null, log: log)
         {
@@ -100,7 +100,7 @@ namespace EFCore.Toolkit
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             this.log($"{this.Name}.OnModelCreating");
-     
+
             ////modelBuilder.Remove<PluralizingTableNameConvention>();
         }
 
@@ -213,12 +213,6 @@ namespace EFCore.Toolkit
 
             attachedEntry.CurrentValues.SetValues(updateEntity);
             return originalEntity;
-        }
-
-        /// <inheritdoc />
-        public TEntity Remove<TEntity>(TEntity entity) where TEntity : class
-        {
-            return base.Set<TEntity>().Remove(entity).Entity;
         }
 
         /// <inheritdoc />

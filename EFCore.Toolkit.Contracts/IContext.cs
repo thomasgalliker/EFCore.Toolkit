@@ -35,11 +35,6 @@ namespace EFCore.Toolkit.Abstractions
         TEntity SetValues<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class;
 
         /// <summary>
-        ///     Removes the <paramref name="entity"/>.
-        /// </summary>
-        TEntity Remove<TEntity>(TEntity entity) where TEntity : class;
-
-        /// <summary>
         ///     Modifies the properties with <paramref name="propertyNames" /> of given entity <paramref name="entity" />.
         /// </summary>
         void ModifyProperties<TEntity>(TEntity entity, params string[] propertyNames) where TEntity : class;
