@@ -242,22 +242,12 @@ namespace EFCore.Toolkit
             {
                 base.SaveChanges();
             }
-            ////catch (DbEntityValidationException validationException)
-            ////{
-            ////    string errorMessage = validationException.GetFormattedErrorMessage();
-            ////    throw new DbEntityValidationException(errorMessage, validationException);
-            ////}
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 this.HandleDbUpdateConcurrencyException(dbUpdateConcurrencyException);
 
                 //TODO: Handle number of max retries
                 return ((IContext)this).SaveChanges();
-            }
-            catch (DbUpdateException dbUpdateException)
-            {
-                string errorMessage = dbUpdateException.GetFormattedErrorMessage();
-                throw new DbUpdateException(errorMessage, dbUpdateException);
             }
 
             return changeSet;
@@ -274,22 +264,12 @@ namespace EFCore.Toolkit
             {
                 await base.SaveChangesAsync();
             }
-            ////catch (DbEntityValidationException validationException)
-            ////{
-            ////    string errorMessage = validationException.GetFormattedErrorMessage();
-            ////    throw new DbEntityValidationException(errorMessage, validationException);
-            ////}
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 this.HandleDbUpdateConcurrencyException(dbUpdateConcurrencyException);
 
                 //TODO: Handle number of max retries
                 return await ((IContext)this).SaveChangesAsync();
-            }
-            catch (DbUpdateException dbUpdateException)
-            {
-                string errorMessage = dbUpdateException.GetFormattedErrorMessage();
-                throw new DbUpdateException(errorMessage, dbUpdateException);
             }
 
             return changeSet;
