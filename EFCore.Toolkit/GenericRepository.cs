@@ -153,7 +153,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public IEnumerable<T> RemoveRange(IEnumerable<T> entities)
+        public virtual IEnumerable<T> RemoveRange(IEnumerable<T> entities)
         {
             this.DbSet.RemoveRange(entities);
             return entities;
