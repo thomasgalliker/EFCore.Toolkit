@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using EFCore.Toolkit.Tests.Stubs;
 using FluentAssertions;
@@ -8,11 +6,19 @@ using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.Model;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Repository
 {
     public class InMemoryRepositoryTests
     {
+        private readonly ITestOutputHelper testOutputHelper;
+
+        public InMemoryRepositoryTests(ITestOutputHelper testOutputHelper)
+        {
+            this.testOutputHelper = testOutputHelper;
+        }
+
         [Fact]
         public void ShouldAddPerson()
         {
@@ -26,6 +32,27 @@ namespace EFCore.Toolkit.Tests.Repository
             // Assert
             var allPersons = personRepository.GetAll();
             allPersons.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public async Task ShouldAddPerson_Parallel()
+        {
+            // Arrange
+            var personRepository = new InMemoryPersonRepository();
+
+            // Act
+            var tasks = Enumerable.Range(1, 100).Select(i => Task.Factory.StartNew(() =>
+            {
+                var employee = Testdata.Employees.CreateEmployee1();
+                personRepository.Add(employee);
+                this.testOutputHelper.WriteLine($"personRepository.Add(Id={employee.Id})");
+            }));
+
+            await Task.WhenAll(tasks);
+
+            // Assert
+            var allPersons = personRepository.GetAll();
+            allPersons.Should().HaveCount(100);
         }
 
         [Fact]

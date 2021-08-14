@@ -28,7 +28,10 @@ namespace EFCore.Toolkit
 
         public void Dispose()
         {
-            this.items.Clear();
+            lock (this.items)
+            {
+                this.items.Clear();
+            }
         }
 
         /// <inheritdoc />
@@ -46,27 +49,40 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public IQueryable<T> Get()
         {
-            return new TestAsyncEnumerable<T>(this.items);
+            lock (this.items)
+            {
+                return new TestAsyncEnumerable<T>(this.items);
+            }
         }
 
         /// <inheritdoc />
         public IEnumerable<T> GetAll()
         {
-            return this.items;
+            lock (this.items)
+            {
+                return this.items;
+            }
         }
 
         /// <inheritdoc />
         public T FindById(params object[] ids)
         {
             var intIds = ids.Select(i => int.Parse($"{i}"));
-            return this.items.SingleOrDefault(i => intIds.Contains(i.Id)); // TODO Test this implementation
+
+            lock (this.items)
+            {
+                return this.items.SingleOrDefault(i => intIds.Contains(i.Id)); // TODO Test this implementation
+            }
         }
 
         /// <inheritdoc />
         public T Add(T entity)
         {
-            entity.Id = this.items.GetNextId();
-            this.items.Add(entity);
+            lock (this.items)
+            {
+                entity.Id = this.items.GetNextId();
+                this.items.Add(entity);
+            }
 
             return entity;
         }
@@ -95,8 +111,11 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public T Update(T entity)
         {
-            this.items.Remove(entity);
-            this.items.Add(entity);
+            lock (this.items)
+            {
+                this.items.Remove(entity);
+                this.items.Add(entity);
+            }
 
             return entity;
         }
@@ -111,8 +130,11 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public T SetValues(T entity, T updateEntity)
         {
-            this.items.Remove(entity);
-            this.items.Add(updateEntity);
+            lock (this.items)
+            {
+                this.items.Remove(entity);
+                this.items.Add(updateEntity);
+            }
 
             return updateEntity;
         }
@@ -138,7 +160,11 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public T Remove(T entity)
         {
-            this.items.Remove(entity);
+            lock (this.items)
+            {
+                this.items.Remove(entity);
+            }
+
             return entity;
         }
 
