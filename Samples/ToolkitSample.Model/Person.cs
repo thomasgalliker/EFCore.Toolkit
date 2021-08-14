@@ -1,11 +1,12 @@
 using System;
 using System.Diagnostics;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Auditing;
 
 namespace ToolkitSample.Model
 {
     [DebuggerDisplay("Person: Id={Id}, FirstName={FirstName}, LastName={LastName}")]
-    public class Person : ICreatedDate, IUpdatedDate
+    public class Person : IIdentifiable, ICreatedDate, IUpdatedDate
     {
         public int Id { get; set; }
 

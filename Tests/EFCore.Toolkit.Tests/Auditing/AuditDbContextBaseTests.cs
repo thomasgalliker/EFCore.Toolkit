@@ -110,7 +110,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             {
                 var allRooms = auditDbContext.Set<Room>().ToList();
                 var updatedRoom = allRooms.ElementAt(0);
-                updatedRoom.CreatedDate.Should().NotBeCloseTo(manipulatedCreatedDate, precision: 2000);
+                updatedRoom.CreatedDate.Should().NotBeCloseTo(manipulatedCreatedDate, precision: TimeSpan.FromSeconds(2));
             }
         }
 

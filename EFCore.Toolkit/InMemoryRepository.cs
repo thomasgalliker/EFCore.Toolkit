@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Extensions;
+using EFCore.Toolkit.Testing;
 
 namespace EFCore.Toolkit
 {
@@ -45,7 +46,7 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public IQueryable<T> Get()
         {
-            return this.items.AsQueryable();
+            return new TestAsyncEnumerable<T>(this.items);
         }
 
         /// <inheritdoc />
