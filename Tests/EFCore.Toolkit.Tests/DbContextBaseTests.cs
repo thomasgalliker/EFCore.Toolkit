@@ -23,7 +23,6 @@ namespace EFCore.Toolkit.Tests
             AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
-#if !NET40
         [Fact]
         public async void ShouldSaveChangesAsync()
         {
@@ -43,7 +42,6 @@ namespace EFCore.Toolkit.Tests
             changeSet.Changes.Should().HaveCount(1);
             changeSet.Changes.Where(c => c.State == ChangeState.Added).Should().HaveCount(1);
         }
-#endif
 
         [Fact]
         public void ShouldRethrowConcurrencyUpdateExceptionAsDefault()

@@ -6,9 +6,7 @@ using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
-#if !NET40
 using System.Threading.Tasks;
-#endif
 
 namespace EFCore.Toolkit
 {
@@ -70,7 +68,6 @@ namespace EFCore.Toolkit
             this.DbSet = this.context.Set<T>();
         }
 
-
         /// <inheritdoc />
         public IContext Context => this.context;
 
@@ -90,18 +87,6 @@ namespace EFCore.Toolkit
         public T FindById(params object[] ids)
         {
             return this.DbSet.Find(ids);
-        }
-
-        /// <inheritdoc />
-        public IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate)
-        {
-            IEnumerable<T> query = this.Get().Where(predicate).AsEnumerable();
-            return query;
-        }
-
-        public bool Any(Expression<Func<T, bool>> predicate)
-        {
-            return this.Get().Any(predicate);
         }
 
         /// <inheritdoc />
@@ -130,15 +115,21 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public virtual T Update(T entity, T updateEntity)
+        public void UpdateRange(IEnumerable<T> entities)
         {
-            return this.context.Edit(entity, updateEntity);
+            this.DbSet.UpdateRange(entities);
+        }
+
+        /// <inheritdoc />
+        public virtual T SetValues(T entity, T updateEntity)
+        {
+            return this.context.SetValues(entity, updateEntity);
         }
 
         /// <inheritdoc />
         public virtual T UpdateProperties<TValue>(T entity, params Expression<Func<T, TValue>>[] propertyExpressions)
         {
-            this.context.UndoChanges(entity);
+            this.context.SetStateUnchanged(entity);
 
             var propertyNames = propertyExpressions.Select(pe => pe.GetPropertyInfo().Name).ToArray();
             this.context.ModifyProperties(entity, propertyNames);
@@ -155,19 +146,17 @@ namespace EFCore.Toolkit
             return entity;
         }
 
-
         /// <inheritdoc />
         public virtual T Remove(T entity)
         {
-            return this.context.Delete(entity);
+            return this.DbSet.Remove(entity).Entity;
         }
 
         /// <inheritdoc />
-        public virtual void LoadReferenced<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> navigationProperty)
-            where TEntity : class
-            where TProperty : class
+        public virtual IEnumerable<T> RemoveRange(IEnumerable<T> entities)
         {
-            this.context.LoadReferenced(entity, navigationProperty);
+            this.DbSet.RemoveRange(entities);
+            return entities;
         }
 
         /// <inheritdoc />
@@ -176,13 +165,11 @@ namespace EFCore.Toolkit
             return this.context.SaveChanges();
         }
 
-#if !NET40
         /// <inheritdoc />
         public Task<ChangeSet> SaveAsync()
         {
             return this.context.SaveChangesAsync();
         }
-#endif
 
         public void Dispose()
         {

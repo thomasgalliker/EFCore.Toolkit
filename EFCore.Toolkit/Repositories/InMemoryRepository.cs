@@ -5,9 +5,14 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Extensions;
+using EFCore.Toolkit.Testing;
 
 namespace EFCore.Toolkit
 {
+    /// <summary>
+    /// The in-memory representation of <seealso cref="IGenericRepository{T}"/>.
+    /// </summary>
+    /// <typeparam name="T">The entity type.</typeparam>
     public class InMemoryRepository<T> : IGenericRepository<T> where T : IIdentifiable
     {
         private readonly List<T> items;
@@ -23,47 +28,66 @@ namespace EFCore.Toolkit
 
         public void Dispose()
         {
-            this.items.Clear();
+            lock (this.items)
+            {
+                this.items.Clear();
+            }
         }
 
+        /// <inheritdoc />
         public ChangeSet Save()
         {
             return ChangeSet.Empty;
         }
 
+        /// <inheritdoc />
         public Task<ChangeSet> SaveAsync()
         {
             return Task.FromResult(ChangeSet.Empty);
         }
 
+        /// <inheritdoc />
         public IQueryable<T> Get()
         {
-            return this.items.AsQueryable();
+            lock (this.items)
+            {
+                return new TestAsyncEnumerable<T>(this.items);
+            }
         }
 
+        /// <inheritdoc />
         public IEnumerable<T> GetAll()
         {
-            return this.items;
+            lock (this.items)
+            {
+                return this.items;
+            }
         }
 
+        /// <inheritdoc />
         public T FindById(params object[] ids)
         {
-            return this.items.FirstOrDefault(); // TODO Wrong implementation
+            var intIds = ids.Select(i => int.Parse($"{i}"));
+
+            lock (this.items)
+            {
+                return this.items.SingleOrDefault(i => intIds.Contains(i.Id)); // TODO Test this implementation
+            }
         }
 
-        public IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate)
-        {
-            return this.items;
-        }
-
+        /// <inheritdoc />
         public T Add(T entity)
         {
-            entity.Id = this.items.GetNextId();
-            this.items.Add(entity);
+            lock (this.items)
+            {
+                entity.Id = this.items.GetNextId();
+                this.items.Add(entity);
+            }
 
             return entity;
         }
 
+        /// <inheritdoc />
         public IEnumerable<T> AddRange(IEnumerable<T> entities)
         {
             var collection = entities.ToList();
@@ -75,6 +99,7 @@ namespace EFCore.Toolkit
             return collection;
         }
 
+        /// <inheritdoc />
         public T AddOrUpdate(T entity)
         {
             this.Remove(entity);
@@ -83,22 +108,38 @@ namespace EFCore.Toolkit
             return entity;
         }
 
+        /// <inheritdoc />
         public T Update(T entity)
         {
-            this.items.Remove(entity);
-            this.items.Add(entity);
+            lock (this.items)
+            {
+                this.items.Remove(entity);
+                this.items.Add(entity);
+            }
 
             return entity;
         }
 
-        public T Update(T entity, T updateEntity)
+        /// <inheritdoc />
+        public void UpdateRange(IEnumerable<T> entities)
         {
-            this.items.Remove(entity);
-            this.items.Add(updateEntity);
+            this.RemoveRange(entities);
+            this.AddRange(entities);
+        }
+
+        /// <inheritdoc />
+        public T SetValues(T entity, T updateEntity)
+        {
+            lock (this.items)
+            {
+                this.items.Remove(entity);
+                this.items.Add(updateEntity);
+            }
 
             return updateEntity;
         }
 
+        /// <inheritdoc />
         public T UpdateProperties<TValue>(T entity, params Expression<Func<T, TValue>>[] propertyExpressions)
         {
             this.Remove(entity);
@@ -107,6 +148,7 @@ namespace EFCore.Toolkit
             return entity;
         }
 
+        /// <inheritdoc />
         public T UpdateProperty<TValue>(T entity, Expression<Func<T, TValue>> propertyExpression, TValue value)
         {
             this.Remove(entity);
@@ -115,15 +157,24 @@ namespace EFCore.Toolkit
             return entity;
         }
 
+        /// <inheritdoc />
         public T Remove(T entity)
         {
-            this.items.Remove(entity);
+            lock (this.items)
+            {
+                this.items.Remove(entity);
+            }
 
             return entity;
         }
 
-        public void LoadReferenced<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> navigationProperty) where TEntity : class where TProperty : class
+        /// <inheritdoc />
+        public IEnumerable<T> RemoveRange(IEnumerable<T> entities)
         {
+            foreach (var entity in entities)
+            {
+                yield return this.Remove(entity);
+            }
         }
 
         public IContext Context { get; }

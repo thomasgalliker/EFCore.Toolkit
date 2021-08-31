@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,20 +6,13 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace EFCore.Toolkit.Testing
 {
-    /// <summary>
-    /// TestAsyncQueryProvider implements <seealso cref="IAsyncQueryProvider"/>
-    /// which is used to mock collections behind async queryables -> ToListAsync
-    /// 
-    /// Source: https://stackoverflow.com/questions/40476233/how-to-mock-an-async-repository-with-entity-framework-core
-    /// </summary>
-    /// <typeparam name="TEntity">Entity type.</typeparam>
     public class TestAsyncQueryProvider<TEntity> : IAsyncQueryProvider
     {
-        private readonly IQueryProvider inner;
+        private readonly IQueryProvider innerQueryProvider;
 
-        internal TestAsyncQueryProvider(IQueryProvider inner)
+        public TestAsyncQueryProvider(IQueryProvider innerQueryProvider)
         {
-            this.inner = inner;
+            this.innerQueryProvider = innerQueryProvider;
         }
 
         public IQueryable CreateQuery(Expression expression)
@@ -35,22 +27,33 @@ namespace EFCore.Toolkit.Testing
 
         public object Execute(Expression expression)
         {
-            return this.inner.Execute(expression);
+            return this.innerQueryProvider.Execute(expression);
         }
 
         public TResult Execute<TResult>(Expression expression)
         {
-            return this.inner.Execute<TResult>(expression);
+            return this.innerQueryProvider.Execute<TResult>(expression);
         }
 
-        public IAsyncEnumerable<TResult> ExecuteAsync<TResult>(Expression expression)
+        public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = new CancellationToken())
         {
-            return new TestAsyncEnumerable<TResult>(expression);
+            var result = Execute(expression);
+
+            var expectedResultType = typeof(TResult).GetGenericArguments()?.FirstOrDefault();
+            if (expectedResultType == null)
+            {
+                return default(TResult);
+            }
+
+            return (TResult)typeof(Task).GetMethod(nameof(Task.FromResult))
+                ?.MakeGenericMethod(expectedResultType)
+                .Invoke(null, new[] { result });
         }
 
-        public Task<TResult> ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken)
+
+        public Task<object> ExecuteAsync(Expression expression, CancellationToken cancellationToken)
         {
-            return Task.FromResult(this.Execute<TResult>(expression));
+            return Task.FromResult(this.Execute(expression));
         }
     }
 }

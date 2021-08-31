@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 
 namespace EFCore.Toolkit.Abstractions
 {
@@ -30,12 +28,5 @@ namespace EFCore.Toolkit.Abstractions
         /// <param name="ids">The values of the primary key for the entity to be found. </param>
         /// <returns> The entity found, or null. </returns>
         T FindById(params object[] ids);
-
-        /// <summary>
-        ///     Finds entities with the given search predicate.
-        /// </summary>
-        /// <param name="predicate">The search predicate.</param>
-        /// <returns>A collection of entities matching the search predicate.</returns>
-        IEnumerable<T> FindBy(Expression<Func<T, bool>> predicate);
     }
 }

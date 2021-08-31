@@ -6,7 +6,7 @@ namespace ToolkitSample.DataAccess.Context
 {
     public class TestEntityAuditEntityTypeConfiguration : AuditEntityTypeConfiguration<TestEntityAudit, int>
     {
-        public override void Configure(EntityTypeBuilder<TestEntityAudit> entity)
+        public void Configure(EntityTypeBuilder<TestEntityAudit> entity)
         {
             base.Configure(entity);
 

@@ -1,5 +1,4 @@
-﻿#if !NETSTANDARD1_3
-using System.Configuration;
+﻿using System.Configuration;
 
 namespace EFCore.Toolkit.Auditing.ConfigFile
 {
@@ -25,4 +24,3 @@ namespace EFCore.Toolkit.Auditing.ConfigFile
         }
     }
 }
-#endif

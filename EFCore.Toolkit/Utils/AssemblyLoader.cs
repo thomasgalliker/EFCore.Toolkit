@@ -1,5 +1,4 @@
-﻿#if !NETSTANDARD1_3
-using System;
+﻿using System;
 using System.Reflection;
 
 namespace EFCore.Toolkit.Utils
@@ -24,4 +23,3 @@ namespace EFCore.Toolkit.Utils
         }
     }
 }
-#endif

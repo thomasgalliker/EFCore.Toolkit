@@ -1,35 +1,56 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace EFCore.Toolkit.Testing
 {
-    /// <summary>
-    /// TestAsyncEnumerator&lt;T&gt; implements <seealso cref="IAsyncEnumerator&lt;T&gt;"/>
-    /// which is used to mock collections behind async queryables -> ToListAsync
-    /// 
-    /// Source: https://stackoverflow.com/questions/40476233/how-to-mock-an-async-repository-with-entity-framework-core
-    /// </summary>
-    /// <typeparam name="T">Entity type.</typeparam>
     public class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
     {
-        private readonly IEnumerator<T> inner;
+        private readonly IEnumerator<T> innerEnumerator;
+        private bool disposed = false;
 
-        public TestAsyncEnumerator(IEnumerator<T> inner)
+        public TestAsyncEnumerator(IEnumerator<T> enumerator)
         {
-            this.inner = inner;
+            this.innerEnumerator = enumerator;
         }
 
         public void Dispose()
         {
-            this.inner.Dispose();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
         }
 
-        public T Current => this.inner.Current;
+        public ValueTask DisposeAsync()
+        {
+            Dispose();
+            return new ValueTask();
+        }
 
         public Task<bool> MoveNext(CancellationToken cancellationToken)
         {
-            return Task.FromResult(this.inner.MoveNext());
+            return Task.FromResult(this.innerEnumerator.MoveNext());
+        }
+
+        public ValueTask<bool> MoveNextAsync()
+        {
+            return new ValueTask<bool>(Task.FromResult(this.innerEnumerator.MoveNext()));
+        }
+
+        public T Current => this.innerEnumerator.Current;
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!this.disposed)
+            {
+                if (disposing)
+                {
+                    // Dispose managed resources.
+                    this.innerEnumerator.Dispose();
+                }
+
+                this.disposed = true;
+            }
         }
     }
 }

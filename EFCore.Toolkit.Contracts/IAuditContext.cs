@@ -1,7 +1,4 @@
-﻿#if !NET40
-using System.Threading.Tasks;
-
-#endif
+﻿using System.Threading.Tasks;
 
 namespace EFCore.Toolkit.Abstractions
 {
@@ -19,13 +16,11 @@ namespace EFCore.Toolkit.Abstractions
         /// <exception cref="System.InvalidOperationException">Thrown if the context has been disposed.</exception>
         ChangeSet SaveChanges(string username);
 
-#if !NET40
         /// <summary>
         ///     Saves all changes made in this context to the underlying database.
         /// </summary>
         /// <returns>The number of objects written to the underlying database.</returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the context has been disposed.</exception>
         Task<ChangeSet> SaveChangesAsync(string username);
-#endif
     }
 }

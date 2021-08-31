@@ -12,10 +12,7 @@ using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using IDbConnection = EFCore.Toolkit.Abstractions.IDbConnection;
-#if !NET40
 using System.Threading.Tasks;
-
-#endif
 
 namespace EFCore.Toolkit
 {
@@ -43,7 +40,7 @@ namespace EFCore.Toolkit
             : this(dbContextOptions, databaseInitializer, log: null)
         {
         }
-        
+
         protected DbContextBase(DbContextOptions dbContextOptions, Action<string> log)
             : this(dbContextOptions, databaseInitializer: null, log: log)
         {
@@ -103,12 +100,8 @@ namespace EFCore.Toolkit
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             this.log($"{this.Name}.OnModelCreating");
-     
-            ////modelBuilder.Remove<PluralizingTableNameConvention>();
 
-#if !NETSTANDARD1_3 && !NETFX
-            modelBuilder.Query<TableRowCounts>();
-#endif
+            ////modelBuilder.Remove<PluralizingTableNameConvention>();
         }
 
 
@@ -149,12 +142,6 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        ////public IDbSet<TEntity> DbSet<TEntity>() where TEntity : class
-        ////{
-        ////    return base.Set<TEntity>();
-        ////}
-
-        /// <inheritdoc />
         public void ResetDatabase()
         {
             this.log($"ResetDatabase of DbContext '{this.Name}' with ConnectionString = \"{this.GetConnectionString()}\"");
@@ -184,7 +171,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public TEntity Edit<TEntity>(TEntity entity) where TEntity : class
+        public void SetStateModified<TEntity>(TEntity entity) where TEntity : class
         {
             if (entity == null)
             {
@@ -192,11 +179,21 @@ namespace EFCore.Toolkit
             }
 
             this.Entry(entity).State = EntityState.Modified;
-            return entity;
         }
 
         /// <inheritdoc />
-        public TEntity Edit<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class
+        public void SetStateUnchanged<TEntity>(TEntity entity) where TEntity : class
+        {
+            if (entity == null)
+            {
+                throw new ArgumentException(nameof(entity));
+            }
+
+            this.Entry(entity).State = EntityState.Unchanged;
+        }
+
+        /// <inheritdoc />
+        public TEntity SetValues<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class
         {
             if (originalEntity == null)
             {
@@ -219,19 +216,6 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public TEntity Delete<TEntity>(TEntity entity) where TEntity : class
-        {
-            this.Entry(entity).State = EntityState.Deleted;
-            return entity;
-        }
-
-        /// <inheritdoc />
-        public void UndoChanges<TEntity>(TEntity entity) where TEntity : class
-        {
-            this.Entry(entity).State = EntityState.Unchanged;
-        }
-
-        /// <inheritdoc />
         public void ModifyProperties<TEntity>(TEntity entity, params string[] propertyNames) where TEntity : class
         {
             var entry = this.Entry(entity);
@@ -249,35 +233,21 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public void LoadReferenced<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> navigationProperty) where TEntity : class where TProperty : class
-        {
-            this.Entry(entity).Reference(navigationProperty).Load();
-        }
-
-        /// <inheritdoc />
         public new virtual ChangeSet SaveChanges()
         {
+            //this.ApplyCreatedBy(() => this.userContext.GetCurrentUserId());
+
             var changeSet = this.GetChangeSet();
             try
             {
                 base.SaveChanges();
             }
-            ////catch (DbEntityValidationException validationException)
-            ////{
-            ////    string errorMessage = validationException.GetFormattedErrorMessage();
-            ////    throw new DbEntityValidationException(errorMessage, validationException);
-            ////}
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 this.HandleDbUpdateConcurrencyException(dbUpdateConcurrencyException);
 
                 //TODO: Handle number of max retries
                 return ((IContext)this).SaveChanges();
-            }
-            catch (DbUpdateException dbUpdateException)
-            {
-                string errorMessage = dbUpdateException.GetFormattedErrorMessage();
-                throw new DbUpdateException(errorMessage, dbUpdateException);
             }
 
             return changeSet;
@@ -286,7 +256,6 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public IConcurrencyResolveStrategy ConcurrencyResolveStrategy { get; set; } = new RethrowConcurrencyResolveStrategy();
 
-#if !NET40
         /// <inheritdoc />
         public virtual async Task<ChangeSet> SaveChangesAsync()
         {
@@ -295,22 +264,12 @@ namespace EFCore.Toolkit
             {
                 await base.SaveChangesAsync();
             }
-            ////catch (DbEntityValidationException validationException)
-            ////{
-            ////    string errorMessage = validationException.GetFormattedErrorMessage();
-            ////    throw new DbEntityValidationException(errorMessage, validationException);
-            ////}
             catch (DbUpdateConcurrencyException dbUpdateConcurrencyException)
             {
                 this.HandleDbUpdateConcurrencyException(dbUpdateConcurrencyException);
 
                 //TODO: Handle number of max retries
                 return await ((IContext)this).SaveChangesAsync();
-            }
-            catch (DbUpdateException dbUpdateException)
-            {
-                string errorMessage = dbUpdateException.GetFormattedErrorMessage();
-                throw new DbUpdateException(errorMessage, dbUpdateException);
             }
 
             return changeSet;
@@ -328,7 +287,6 @@ namespace EFCore.Toolkit
             var dbTransaction = internalDbContextTransaction.GetDbTransaction();
             this.Database.UseTransaction(dbTransaction);
         }
-#endif
 
         private void HandleDbUpdateConcurrencyException(DbUpdateConcurrencyException dbUpdateConcurrencyException)
         {
@@ -377,7 +335,7 @@ namespace EFCore.Toolkit
                 foreach (var propertyName in dbEntityEntry.CurrentValues.Properties.Select(p => p.Name))
                 {
                     var property = dbEntityEntry.Property(propertyName);
-                    if (property.Metadata.IsShadowProperty)
+                    if (property.Metadata.IsShadowProperty())
                     {
                         // BUG: Workaround for resetting IsModified of Discriminator property
                         property.IsModified = false;

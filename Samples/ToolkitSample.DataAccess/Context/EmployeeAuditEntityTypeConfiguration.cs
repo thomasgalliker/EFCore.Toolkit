@@ -7,10 +7,8 @@ namespace ToolkitSample.DataAccess.Context
 {
     public class EmployeeAuditEntityTypeConfiguration : AuditEntityTypeConfiguration<EmployeeAudit, int>
     {
-        public override void Configure(EntityTypeBuilder<EmployeeAudit> entity)
+        protected override void Configure(EntityTypeBuilder<EmployeeAudit> entity)
         {
-            base.Configure(entity);
-
             entity.Property(e => e.Id).IsRequired();
             entity.Property(e => e.LastName).IsRequired();
             entity.Property(e => e.FirstName).IsRequired();

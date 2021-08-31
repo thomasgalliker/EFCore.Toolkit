@@ -31,10 +31,11 @@ namespace EFCore.Toolkit.Extensions
         /// <typeparam name="TTo"></typeparam>
         public static TTo As<TTo>(this object subject)
         {
-            if (subject is TTo)
+            if (subject is TTo to)
             {
-                return (TTo)subject;
+                return to;
             }
+
             return default(TTo);
         }
 
@@ -68,16 +69,6 @@ namespace EFCore.Toolkit.Extensions
             return $"{type.Namespace}.{type.Name.Substring(0, type.Name.IndexOf('`'))}<{string.Join(", ", type.GenericTypeArguments.Select(t => t.GetFormattedFullname()))}>";
         }
 
-        private static bool HasDefaultValue(this ParameterInfo parameterInfo)
-        {
-#if NET40
-            var defaultValue = parameterInfo.RawDefaultValue;
-            return (defaultValue is DBNull) == false;
-#else
-            return parameterInfo.HasDefaultValue;
-#endif
-        }
-
         /// <summary>
         ///     Finds the best matching constructor for given type <paramref name="type" />.
         /// </summary>
@@ -93,7 +84,7 @@ namespace EFCore.Toolkit.Extensions
             {
                 var allMatched = false;
                 var ctorParameters = constructor.GetParameters();
-                if (args.Length >= ctorParameters.Count(p => p.HasDefaultValue() == false) && args.Length <= ctorParameters.Length)
+                if (args.Length >= ctorParameters.Count(p => p.HasDefaultValue == false) && args.Length <= ctorParameters.Length)
                 {
                     for (var ctorParameterIndex = 0; ctorParameterIndex < ctorParameters.Length; ctorParameterIndex++)
                     {

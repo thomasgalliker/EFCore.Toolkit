@@ -1,56 +1,29 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <Description>EFCore.Toolkit is a library which provides implementations for EntityFrameworkCore best practices, patterns, utilities and extensions.</Description>
-    <AssemblyTitle>EFCore.Toolkit.Contracts</AssemblyTitle>
-    <VersionPrefix>1.0.0</VersionPrefix>
-    <Version>1.0.0</Version>
-    <Authors>Thomas Galliker</Authors>
-    <TargetFrameworks>netstandard1.3;netstandard2.0;net451</TargetFrameworks>
-    <AssemblyName>EFCore.Toolkit.Abstractions</AssemblyName>
-    <PackageId>EFCore.Toolkit.Contracts</PackageId>
-    <PackageTags>objectdumper;dump;dumpobject;initializer;c#;objects;debug;logging;tracing</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit.Contracts/master/EFCore.Toolkit.Contracts.png</PackageIconUrl>
-    <PackageProjectUrl>https://github.com/thomasgalliker/EFCore.Toolkit.Contracts</PackageProjectUrl>
-    <PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
-    <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/thomasgalliker/EFCore.Toolkit.Contracts</RepositoryUrl>
-    <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
-    <SignAssembly>True</SignAssembly>
-  </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net451'">
-    <DefineConstants>$(DefineConstants);NET45</DefineConstants>
-  </PropertyGroup>
-
-  <PropertyGroup>
-    <ApplicationIcon />
-    <OutputType>Library</OutputType>
-    <StartupObject />
-    <Company>superdev GmbH</Company>
-    <Product>EFCore.Toolkit.Contracts</Product>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <RootNamespace>EFCore.Toolkit.Abstractions</RootNamespace>
-    <PackageReleaseNotes>
-      1.0.0
-      - Initial release
-    </PackageReleaseNotes>
-    <Copyright>Copyright 2018</Copyright>
-  </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net451' ">
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Data.Linq" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Net.Http.WebRequest" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System" />
-  </ItemGroup>
-
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+		<Title>EFCore.Toolkit.Contracts</Title>
+		<Product>EFCore.Toolkit.Contracts</Product>
+		<AssemblyTitle>EFCore.Toolkit.Abstractions</AssemblyTitle>
+		<RootNamespace>EFCore.Toolkit.Abstractions</RootNamespace>
+		<Version>1.0.0</Version>
+		<Company>superdev GmbH</Company>
+		<Authors>Thomas Galliker</Authors>
+		<Description>EFCore.Toolkit is a library which provides implementations for EntityFrameworkCore best practices, patterns, utilities and extensions.</Description>
+		<PackageId>EFCore.Toolkit.Contracts</PackageId>
+		<PackageProjectUrl>https://github.com/thomasgalliker/EFCore.Toolkit</PackageProjectUrl>
+		<PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/develop/logo.png</PackageIconUrl>
+		<PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<PackageTags>EntityFrameworkCore Entity Framework Core EFCore EF Core Bulk Batch Extensions Insert Update Delete Read</PackageTags>
+		<RepositoryType>git</RepositoryType>
+		<RepositoryUrl>https://github.com/thomasgalliker/EFCore.Toolkit</RepositoryUrl>
+		<OutputType>Library</OutputType>
+		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+		<SignAssembly>True</SignAssembly>
+		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<PackageReleaseNotes>3.0.0
+- Initial release for EntityFrameworkCore 3.x</PackageReleaseNotes>
+		<Copyright>Copyright 2020</Copyright>
+	</PropertyGroup>
 </Project>

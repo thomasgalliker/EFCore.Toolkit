@@ -5,9 +5,9 @@ using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class RoomEntityTypeConfiguration : EntityTypeConfiguration<Room>
+    public class RoomEntityTypeConfiguration : IEntityTypeConfiguration<Room>
     {
-        public override void Configure(EntityTypeBuilder<Room> entity)
+        public void Configure(EntityTypeBuilder<Room> entity)
         {
             entity.HasKey(e => e.Id);
 

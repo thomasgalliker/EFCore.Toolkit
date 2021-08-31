@@ -1,39 +1,29 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net451</TargetFrameworks>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net451' Or '$(TargetFramework)' == 'netstandard1.3'">
-    <PackageReference Include="Microsoft.EntityFrameworkCore">
-      <Version>1.1.6</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="1.1.6" />
-    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="1.1.6" />-->
-    <!--<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="1.1.6" />-->
-  </ItemGroup>
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Microsoft.EntityFrameworkCore">
-      <Version>2.2.3</Version>
-    </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.3" />
-    <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="2.0.0" />-->
-    <!--<DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />-->
-  </ItemGroup>
+	<ItemGroup>
+	  <Compile Remove="Migrations\**" />
+	  <EmbeddedResource Remove="Migrations\**" />
+	  <None Remove="Migrations\**" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
-    <ProjectReference Include="..\..\EFCore.Toolkit\EFCore.Toolkit.csproj" />
-    <ProjectReference Include="..\ToolkitSample.DataAccess.Contracts\ToolkitSample.DataAccess.Contracts.csproj" />
-    <ProjectReference Include="..\ToolkitSample.Model\ToolkitSample.Model.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.6" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
+		<ProjectReference Include="..\..\EFCore.Toolkit\EFCore.Toolkit.csproj" />
+		<ProjectReference Include="..\ToolkitSample.DataAccess.Contracts\ToolkitSample.DataAccess.Contracts.csproj" />
+		<ProjectReference Include="..\ToolkitSample.Model\ToolkitSample.Model.csproj" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.9.4" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Autofac" Version="5.2.0" />
+	</ItemGroup>
 
 </Project>

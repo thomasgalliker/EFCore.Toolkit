@@ -39,12 +39,14 @@ namespace EFCore.Toolkit.Abstractions
         /// <param name="entity">The entity to be updated in the database context.</param>
         T Update(T entity);
 
+        void UpdateRange(IEnumerable<T> entities);
+
         /// <summary>
         ///     Updates the given entity. This method checks if an entity exists before it tries to perform the update activity.
         /// </summary>
         /// <param name="entity">The existing entity.</param>
         /// <param name="updateEntity">The update entity.</param>
-        T Update(T entity, T updateEntity);
+        T SetValues(T entity, T updateEntity);
 
         /// <summary>
         /// Update given properties in <paramref name="propertyExpressions"/> of given <paramref name="entity"/>.
@@ -70,6 +72,6 @@ namespace EFCore.Toolkit.Abstractions
         /// </remarks>
         T Remove(T entity);
 
-        void LoadReferenced<TEntity, TProperty>(TEntity entity, Expression<Func<TEntity, TProperty>> navigationProperty) where TEntity : class where TProperty : class;
+        IEnumerable<T> RemoveRange(IEnumerable<T> entities);
     }
 }
