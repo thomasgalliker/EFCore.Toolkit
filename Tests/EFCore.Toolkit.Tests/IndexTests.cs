@@ -16,11 +16,10 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests
 {
-    public class IndexTests : ContextTestBase<EmployeeContext>
+    public class IndexTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         public IndexTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
-                  databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+            : base(databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
                   log: testOutputHelper.WriteLine)
         {
             AssemblyLoader.Current = new TestAssemblyLoader();
@@ -77,7 +76,7 @@ namespace EFCore.Toolkit.Tests
 
                 // Assert
                 var ex = action.Should().Throw<DbUpdateException>();
-                ex.Which.InnerException.InnerException.Message.Should()
+                ex.Which.InnerException.Message.Should()
                     .Contain("Cannot insert duplicate key row in object 'dbo.Room' with unique index 'IX_Room_Level_Sector'. The duplicate key value is (1, A).");
             }
         }

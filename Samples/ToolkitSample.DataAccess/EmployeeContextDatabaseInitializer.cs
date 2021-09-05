@@ -26,6 +26,7 @@ namespace ToolkitSample.DataAccess
                 if (!context.Set<Employee>().Any())
                 {
                     context.Seed(this.dataSeeds);
+                    context.SaveChanges();
                 }
             }
         }

@@ -1,8 +1,6 @@
 ﻿using System;
 using EFCore.Toolkit;
-using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Auditing;
-using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace ToolkitSample.DataAccess.Context
@@ -18,20 +16,20 @@ namespace ToolkitSample.DataAccess.Context
         {
         }
 
-        public EmployeeContext(IDbConnection dbConnection, IDatabaseInitializer<EmployeeContext> initializer)
-          : base(dbConnection, initializer, null)
+        public EmployeeContext(DbContextOptions dbContextOptions, IDatabaseInitializer<EmployeeContext> initializer)
+          : base(dbContextOptions, initializer, null)
         {
             this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
-        public EmployeeContext(IDbConnection dbConnection, Action<string> log)
-           : base(dbConnection, null, log)
+        public EmployeeContext(DbContextOptions dbContextOptions, Action<string> log)
+           : base(dbContextOptions, null, log)
         {
             this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
-        public EmployeeContext(IDbConnection dbConnection, IDatabaseInitializer<EmployeeContext> initializer, Action<string> log = null)
-           : base(dbConnection, initializer, log)
+        public EmployeeContext(DbContextOptions dbContextOptions, IDatabaseInitializer<EmployeeContext> initializer, Action<string> log = null)
+           : base(dbContextOptions, initializer, log)
         {
             this.ConfigureAuditing(AuditDbContextConfiguration);
         }

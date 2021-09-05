@@ -18,7 +18,7 @@ namespace EFCore.Toolkit.Tests
     public class DbContextBaseTests : ContextTestBase<EmployeeContext>
     {
         public DbContextBaseTests()
-            : base(dbConnection: () => new EmployeeContextTestDbConnection())
+            : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>())
         {
             AssemblyLoader.Current = new TestAssemblyLoader();
         }
@@ -47,26 +47,27 @@ namespace EFCore.Toolkit.Tests
         public void ShouldRethrowConcurrencyUpdateExceptionAsDefault()
         {
             // Arrange
+            var databaseInitializer = new CreateDatabaseIfNotExists<EmployeeContext>();
             var initialEmployee = Testdata.Employees.CreateEmployee1();
 
             string firstNameChange1 = initialEmployee.FirstName + " from employeeContext1";
             string firstNameChange2 = initialEmployee.FirstName + " from employeeContext2";
 
-            using (var employeeContext = this.CreateContext())
+            using (var employeeContext = this.CreateContext(databaseInitializer))
             {
                 employeeContext.Set<Employee>().Add(initialEmployee);
                 employeeContext.SaveChanges();
             }
 
             // Act
-            using (var employeeContext1 = this.CreateContext())
+            using (var employeeContext1 = this.CreateContext(databaseInitializer))
             {
                 // Get an employee (which has a Version Timestamp) in one context and modify
                 var employeeFromContext1 = employeeContext1.Set<Employee>().First(p => p.Id == 1);
                 employeeFromContext1.FirstName = firstNameChange1;
 
                 // Modify and Save the same employee in another context to simulate concurrent access
-                using (var employeeContext2 = this.CreateContext())
+                using (var employeeContext2 = this.CreateContext(databaseInitializer))
                 {
                     var employeeFromContext2 = employeeContext2.Set<Employee>().First(p => p.Id == 1);
                     employeeFromContext2.FirstName = firstNameChange2;
@@ -85,20 +86,21 @@ namespace EFCore.Toolkit.Tests
         public void ShouldResolveConcurrencyExceptionWithDatabaseWinsStrategy()
         {
             // Arrange
+            var databaseInitializer = new CreateDatabaseIfNotExists<EmployeeContext>();
             IConcurrencyResolveStrategy concurrencyResolveStrategy = new DatabaseWinsConcurrencyResolveStrategy();
             var initialEmployee = Testdata.Employees.CreateEmployee1();
 
             string firstNameChange1 = initialEmployee.FirstName + " from employeeContext1";
             string firstNameChange2 = initialEmployee.FirstName + " from employeeContext2";
 
-            using (var employeeContext = this.CreateContext())
+            using (var employeeContext = this.CreateContext(databaseInitializer))
             {
                 employeeContext.Set<Employee>().Add(initialEmployee);
                 employeeContext.SaveChanges();
             }
 
             // Act
-            using (var employeeContext1 = this.CreateContext())
+            using (var employeeContext1 = this.CreateContext(databaseInitializer))
             {
                 employeeContext1.ConcurrencyResolveStrategy = concurrencyResolveStrategy;
 
@@ -107,7 +109,7 @@ namespace EFCore.Toolkit.Tests
                 employeeFromContext1.FirstName = firstNameChange1;
 
                 // Modify and Save the same employee in another context to simulate concurrent access
-                using (var employeeContext2 = this.CreateContext())
+                using (var employeeContext2 = this.CreateContext(databaseInitializer))
                 {
                     var employeeFromContext2 = employeeContext2.Set<Employee>().First(p => p.Id == 1);
                     employeeFromContext2.FirstName = firstNameChange2;
@@ -119,7 +121,7 @@ namespace EFCore.Toolkit.Tests
             }
 
             // Assert
-            using (var employeeContext = this.CreateContext())
+            using (var employeeContext = this.CreateContext(databaseInitializer))
             {
                 var returnedEmployee = employeeContext.Set<Employee>().First(p => p.Id == 1);
                 returnedEmployee.FirstName.Should().Be(firstNameChange2);
@@ -130,20 +132,21 @@ namespace EFCore.Toolkit.Tests
         public void ShouldResolveConcurrencyExceptionWithClientWinsStrategy()
         {
             // Arrange
+            var databaseInitializer = new CreateDatabaseIfNotExists<EmployeeContext>();
             IConcurrencyResolveStrategy concurrencyResolveStrategy = new ClientWinsConcurrencyResolveStrategy();
             var initialEmployee = Testdata.Employees.CreateEmployee1();
 
             string firstNameChange1 = initialEmployee.FirstName + " from employeeContext1";
             string firstNameChange2 = initialEmployee.FirstName + " from employeeContext2";
 
-            using (var employeeContext = this.CreateContext())
+            using (var employeeContext = this.CreateContext(databaseInitializer))
             {
                 employeeContext.Set<Employee>().Add(initialEmployee);
                 employeeContext.SaveChanges();
             }
 
             // Act
-            using (var employeeContext1 = this.CreateContext())
+            using (var employeeContext1 = this.CreateContext(databaseInitializer))
             {
                 employeeContext1.ConcurrencyResolveStrategy = concurrencyResolveStrategy;
 
@@ -152,7 +155,7 @@ namespace EFCore.Toolkit.Tests
                 employeeFromContext1.FirstName = firstNameChange1;
 
                 // Modify and Save the same employee in another context to simulate concurrent access
-                using (var employeeContext2 = this.CreateContext())
+                using (var employeeContext2 = this.CreateContext(databaseInitializer))
                 {
                     var employeeFromContext2 = employeeContext2.Set<Employee>().First(p => p.Id == 1);
                     employeeFromContext2.FirstName = firstNameChange2;
@@ -164,7 +167,7 @@ namespace EFCore.Toolkit.Tests
             }
 
             // Assert
-            using (var employeeContext = this.CreateContext())
+            using (var employeeContext = this.CreateContext(databaseInitializer))
             {
                 var returnedEmployee = employeeContext.Set<Employee>().First(p => p.Id == 1);
                 returnedEmployee.FirstName.Should().Be(firstNameChange1);

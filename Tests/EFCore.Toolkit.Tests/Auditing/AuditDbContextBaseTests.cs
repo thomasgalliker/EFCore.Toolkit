@@ -21,7 +21,7 @@ namespace EFCore.Toolkit.Tests.Auditing
         private const string TestAuditUser = "TestAuditUser";
 
         public AuditDbContextBaseTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+            : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<TestAuditDbContext>(),
                 databaseInitializer: new CreateDatabaseIfNotExists<TestAuditDbContext>(),
                 log: testOutputHelper.WriteLine)
         {

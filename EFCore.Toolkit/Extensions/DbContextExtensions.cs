@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -131,22 +132,21 @@ namespace EFCore.Toolkit.Extensions
         /// <summary>
         /// Returns the number of table rows per database table.
         /// </summary>
-        public static List<TableRowCounts> GetTableRowCounts(this DbContext c)
+        public static async Task<List<TableRowCounts>> GetTableRowCountsAsync<T>(this DbContextBase<T> c) where T : DbContext
         {
-            throw new NotImplementedException("GetTableRowCounts is currently not implemented");
-            ////var rawSqlQuery = c.Query<TableRowCounts>().FromSql(
-            ////    @"CREATE TABLE #counts
-            ////        (
-            ////            TableName varchar(255),
-            ////            TableRowCount int
-            ////        )
+            var rawSqlQuery = c.ExecuteQuery<TableRowCounts>(
+                @"CREATE TABLE #counts
+                    (
+                        TableName varchar(255),
+                        TableRowCount int
+                    )
 
-            ////        EXEC sp_MSForEachTable @command1='INSERT #counts (TableName, TableRowCount) SELECT ''?'', COUNT(*) FROM ?'
-            ////        SELECT TableName, TableRowCount FROM #counts ORDER BY TableName, TableRowCount DESC
-            ////        DROP TABLE #counts");
+                    EXEC sp_MSForEachTable @command1='INSERT #counts (TableName, TableRowCount) SELECT ''?'', COUNT(*) FROM ?'
+                    SELECT TableName, TableRowCount FROM #counts ORDER BY TableName, TableRowCount DESC
+                    DROP TABLE #counts");
 
-            ////var tableCountResults = rawSqlQuery.ToList();
-            ////return tableCountResults;
+            var tableCountResults = await rawSqlQuery.ToListAsync();
+            return tableCountResults;
         }
 
         public static IQueryable Set(this DbContext context, Type entityType)

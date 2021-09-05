@@ -21,6 +21,7 @@
 		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
 		<SignAssembly>True</SignAssembly>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+		<LangVersion>latest</LangVersion>
 		<PackageReleaseNotes>3.0.0
 - Initial release for EntityFrameworkCore 3.x</PackageReleaseNotes>
 		<Copyright>Copyright 2020</Copyright>

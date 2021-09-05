@@ -17,7 +17,7 @@ namespace EFCore.Toolkit.Tests
     public class DataSeedIntegrationTests : ContextTestBase<EmployeeContext>
     {
         public DataSeedIntegrationTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+            : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
                   databaseInitializer: null,
                   log: testOutputHelper.WriteLine)
         {
