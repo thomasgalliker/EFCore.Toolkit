@@ -12,7 +12,7 @@ namespace EFCore.Toolkit.Tests.Repository
     public class PersonRepositoryTests : ContextTestBase<EmployeeContext>
     {
         public PersonRepositoryTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+            : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
                   databaseInitializer: new EmployeeContextDatabaseInitializer(new List<IDataSeed> { new CountryDataSeed() }),
                   log: testOutputHelper.WriteLine)
         {

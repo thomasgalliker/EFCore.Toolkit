@@ -21,7 +21,7 @@ namespace EFCore.Toolkit.Tests.Repository
     public class EmployeeReadOnlyRepositoryTests : ContextTestBase<EmployeeContext>
     {
         public EmployeeReadOnlyRepositoryTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+            : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
                   databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
                   log: testOutputHelper.WriteLine)
         {

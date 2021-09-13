@@ -15,19 +15,19 @@ namespace EFCore.Toolkit.Tests.Extensions
             var numberOfDeleted = changeSet.Changes.Count(c => c.State == ChangeState.Deleted);
 
             Func<string> getFailText = () =>
-                {
-                    var stringBuilder = new StringBuilder();
-                    stringBuilder.AppendLine("Expected ChangeSet to contain: ");
-                    stringBuilder.AppendLine($" - Added = {expectedNumberOfAdded}");
-                    stringBuilder.AppendLine($" - Modified = {expectedNumberOfModified}");
-                    stringBuilder.AppendLine($" - Deleted = {expectedNumberOfDeleted}");
-                    stringBuilder.AppendLine();
-                    stringBuilder.AppendLine("but found:");
-                    stringBuilder.AppendLine($" - Added = {numberOfAdded}");
-                    stringBuilder.AppendLine($" - Modified = {numberOfModified}");
-                    stringBuilder.AppendLine($" - Deleted = {numberOfDeleted}");
-                    return stringBuilder.ToString();
-                };
+            {
+                var stringBuilder = new StringBuilder();
+                stringBuilder.AppendLine("Expected ChangeSet to contain: ");
+                stringBuilder.AppendLine($" - Added = {expectedNumberOfAdded}");
+                stringBuilder.AppendLine($" - Modified = {expectedNumberOfModified}");
+                stringBuilder.AppendLine($" - Deleted = {expectedNumberOfDeleted}");
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine("but found:");
+                stringBuilder.AppendLine($" - Added = {numberOfAdded}");
+                stringBuilder.AppendLine($" - Modified = {numberOfModified}");
+                stringBuilder.AppendLine($" - Deleted = {numberOfDeleted}");
+                return stringBuilder.ToString();
+            };
 
             Execute.Assertion.ForCondition(numberOfAdded == expectedNumberOfAdded &&
                                            numberOfModified == expectedNumberOfModified &&

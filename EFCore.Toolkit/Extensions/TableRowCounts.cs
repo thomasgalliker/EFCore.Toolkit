@@ -1,5 +1,8 @@
-﻿namespace EFCore.Toolkit.Extensions
+﻿using System.Diagnostics;
+
+namespace EFCore.Toolkit.Extensions
 {
+    [DebuggerDisplay("TableRowCounts: {this.TableName}, Count={this.TableRowCount}")]
     public class TableRowCounts
     {
         public string TableName { get; set; }

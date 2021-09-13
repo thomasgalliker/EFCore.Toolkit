@@ -19,10 +19,10 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests
 {
-    public class UnitOfWorkIntegrationTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection>
+    public class UnitOfWorkIntegrationTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         //public UnitOfWorkIntegrationTests(ITestOutputHelper testOutputHelper)
-        //    : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+        //    : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
         //           log: testOutputHelper.WriteLine)
         //{
         //    AssemblyLoader.Current = new TestAssemblyLoader();
@@ -67,9 +67,10 @@ namespace EFCore.Toolkit.Tests
         public void ShouldFailToCommitMultipleContexts()
         {
             // Arrange
+            var databaseInitializer = new DropCreateDatabaseAlways<EmployeeContext>();
             IUnitOfWork unitOfWork = new UnitOfWork();
 
-            var context1 = this.CreateContext(databaseInitializer: new DropCreateDatabaseAlways<EmployeeContext>());
+            var context1 = this.CreateContext(databaseInitializer);
             var context2 = new Mock<ISampleContextTwo>();
             context2.Setup(m => m.SaveChanges()).Throws(new InvalidOperationException("SampleContextTwo failed to SaveChanges."));
 
@@ -87,7 +88,7 @@ namespace EFCore.Toolkit.Tests
             ex.WithInnerException<InvalidOperationException>();
             ex.Which.InnerException.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
 
-            var context = this.CreateContext(new DropCreateDatabaseAlways<EmployeeContext>());
+            var context = this.CreateContext(databaseInitializer);
             context.Set<Employee>().ToList().Should().HaveCount(0);
         }
 

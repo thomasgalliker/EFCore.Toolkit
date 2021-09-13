@@ -64,16 +64,6 @@ namespace EFCore.Toolkit.Auditing
         {
         }
 
-        protected AuditDbContextBase(IDbConnection dbConnection, IDatabaseInitializer<TContext> databaseInitializer)
-            : base(dbConnection, databaseInitializer)
-        {
-        }
-
-        protected AuditDbContextBase(IDbConnection dbConnection, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
-            : base(dbConnection, databaseInitializer, log)
-        {
-        }
-
         /// <summary>
         ///     Initializes static members of the AuditDbContext class.
         /// </summary>

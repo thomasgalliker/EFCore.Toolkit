@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.Toolkit.Testing
 {
@@ -12,33 +13,33 @@ namespace EFCore.Toolkit.Testing
     /// <typeparam name="TContext">The database context.</typeparam>
     /// <typeparam name="TDbConnection">The database connection.</typeparam>
     public abstract class ContextTestBase<TContext, TDbConnection> : ContextTestBase<TContext>
-        where TContext : DbContextBase<TContext> where TDbConnection : IDbConnection, new()
+        where TContext : DbContextBase<TContext> where TDbConnection : DbContextOptionsBuilder, new()
     {
-        protected ContextTestBase() : base(() => new TDbConnection())
+        protected ContextTestBase() : base(new TDbConnection().Options)
         {
         }
 
-        protected ContextTestBase(bool deleteDatabaseOnDispose) : base(() => new TDbConnection(), deleteDatabaseOnDispose)
+        protected ContextTestBase(bool deleteDatabaseOnDispose) : base(new TDbConnection().Options, deleteDatabaseOnDispose)
         {
         }
 
-        protected ContextTestBase(Action<string> log) : base(() => new TDbConnection(), log)
+        protected ContextTestBase(Action<string> log) : base(new TDbConnection().Options, log)
         {
         }
 
-        protected ContextTestBase(Action<string> log, bool deleteDatabaseOnDispose) : base(() => new TDbConnection(), log, deleteDatabaseOnDispose)
+        protected ContextTestBase(Action<string> log, bool deleteDatabaseOnDispose) : base(new TDbConnection().Options, log, deleteDatabaseOnDispose)
         {
         }
 
-        protected ContextTestBase(IDatabaseInitializer<TContext> databaseInitializer) : base(() => new TDbConnection(), databaseInitializer)
+        protected ContextTestBase(IDatabaseInitializer<TContext> databaseInitializer) : base(new TDbConnection().Options, databaseInitializer)
         {
         }
 
-        protected ContextTestBase(IDatabaseInitializer<TContext> databaseInitializer, Action<string> log) : base(() => new TDbConnection(), databaseInitializer, log)
+        protected ContextTestBase(IDatabaseInitializer<TContext> databaseInitializer, Action<string> log) : base(new TDbConnection().Options, databaseInitializer, log)
         {
         }
 
-        protected ContextTestBase(IDatabaseInitializer<TContext> databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose) : base(() => new TDbConnection(), databaseInitializer, log, deleteDatabaseOnDispose)
+        protected ContextTestBase(IDatabaseInitializer<TContext> databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose) : base(new TDbConnection().Options, databaseInitializer, log, deleteDatabaseOnDispose)
         {
         }
     }
@@ -47,54 +48,54 @@ namespace EFCore.Toolkit.Testing
         where TContext : DbContextBase<TContext>
     {
         private readonly ICollection<TContext> contextInstances = new List<TContext>();
-        private readonly IDbConnection dbConnection;
+        private readonly DbContextOptions dbContextOptions;
         private readonly IDatabaseInitializer<TContext> databaseInitializer;
-        private readonly string dbConnectionString;
+        private readonly string dbContextOptionsString;
         private bool disposed;
 
-        protected ContextTestBase(Func<IDbConnection> dbConnection)
-            : this(dbConnection: dbConnection, databaseInitializer: null, log: null)
+        protected ContextTestBase(DbContextOptions dbContextOptions)
+            : this(dbContextOptions: dbContextOptions, databaseInitializer: null, log: null)
         {
         }
 
-        protected ContextTestBase(Func<IDbConnection> dbConnection, bool deleteDatabaseOnDispose)
-            : this(dbConnection: dbConnection, databaseInitializer: null, log: null, deleteDatabaseOnDispose: deleteDatabaseOnDispose)
+        protected ContextTestBase(DbContextOptions dbContextOptions, bool deleteDatabaseOnDispose)
+            : this(dbContextOptions: dbContextOptions, databaseInitializer: null, log: null, deleteDatabaseOnDispose: deleteDatabaseOnDispose)
         {
         }
 
-        protected ContextTestBase(Func<IDbConnection> dbConnection, Action<string> log)
-            : this(dbConnection: dbConnection, databaseInitializer: null, log: log, deleteDatabaseOnDispose: true)
+        protected ContextTestBase(DbContextOptions dbContextOptions, Action<string> log)
+            : this(dbContextOptions: dbContextOptions, databaseInitializer: null, log: log, deleteDatabaseOnDispose: true)
         {
         }
 
-        protected ContextTestBase(Func<IDbConnection> dbConnection, Action<string> log, bool deleteDatabaseOnDispose)
-            : this(dbConnection: dbConnection, databaseInitializer: null, log: log, deleteDatabaseOnDispose: deleteDatabaseOnDispose)
+        protected ContextTestBase(DbContextOptions dbContextOptions, Action<string> log, bool deleteDatabaseOnDispose)
+            : this(dbContextOptions: dbContextOptions, databaseInitializer: null, log: log, deleteDatabaseOnDispose: deleteDatabaseOnDispose)
         {
         }
 
-        protected ContextTestBase(Func<IDbConnection> dbConnection, IDatabaseInitializer<TContext> databaseInitializer)
-            : this(dbConnection: dbConnection, databaseInitializer: databaseInitializer, log: null)
+        protected ContextTestBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer)
+            : this(dbContextOptions: dbContextOptions, databaseInitializer: databaseInitializer, log: null)
         {
         }
 
-        protected ContextTestBase(Func<IDbConnection> dbConnection, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
-            : this(dbConnection: dbConnection, databaseInitializer: databaseInitializer, log: log, deleteDatabaseOnDispose: true)
+        protected ContextTestBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
+            : this(dbContextOptions: dbContextOptions, databaseInitializer: databaseInitializer, log: log, deleteDatabaseOnDispose: true)
         {
         }
 
         /// <summary>
         ///     Initializes a new instance of the <see cref="ContextTestBase{TContext}" /> class.
         /// </summary>
-        /// <param name="dbConnection">The <see cref="IDbConnection" /> which is used to connect to the database.</param>
+        /// <param name="dbContextOptions">The <see cref="IDbConnection" /> which is used to connect to the database.</param>
         /// <param name="log">Log delegate used to write diagnostic log messages to.</param>
         /// <param name="databaseInitializer">
         ///     The <see cref="IDatabaseInitializer{TContext}" /> which is used initialize the
         ///     database. (Default is <see cref="DropCreateDatabaseAlways{TContext}" />).
         /// </param>
         /// <param name="deleteDatabaseOnDispose">Determines if the database needs to be deleted on dispose. (Default is true).</param>
-        protected ContextTestBase(Func<IDbConnection> dbConnection, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose)
+        protected ContextTestBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose)
         {
-            this.dbConnection = dbConnection();
+            this.dbContextOptions = dbContextOptions;
             this.Log = log;
             this.DeleteDatabaseOnDispose = deleteDatabaseOnDispose;
             this.databaseInitializer = databaseInitializer;
@@ -118,26 +119,26 @@ namespace EFCore.Toolkit.Testing
         }
 
         /// <summary>
-        ///     Returns the default db connection (given by ctor) if <paramref name="dbConnection" /> is null.
+        ///     Returns the default db connection (given by ctor) if <paramref name="dbContextOptions" /> is null.
         /// </summary>
-        private IDbConnection EnsureDbConnection(IDbConnection dbConnection)
+        private DbContextOptions EnsureDbConnection(DbContextOptions dbContextOptions)
         {
-            if (dbConnection == null)
+            if (dbContextOptions == null)
             {
-                dbConnection = this.dbConnection;
+                dbContextOptions = this.dbContextOptions;
             }
 
-            if (dbConnection == null && string.IsNullOrEmpty(this.dbConnectionString))
+            if (dbContextOptions == null && string.IsNullOrEmpty(this.dbContextOptionsString))
             {
-                throw new InvalidOperationException("Either dbConnection or nameOrConnectionString must be defined.");
+                throw new InvalidOperationException("Either dbContextOptions or nameOrConnectionString must be defined.");
             }
 
-            if (dbConnection == null)
-            {
-                dbConnection = new DbConnection(this.dbConnectionString);
-            }
+            //if (dbContextOptions == null)
+            //{
+            //    dbContextOptions = new DbConnection(this.dbContextOptionsString);
+            //}
 
-            return dbConnection;
+            return dbContextOptions;
         }
 
         protected TContext CreateContext()
@@ -148,13 +149,13 @@ namespace EFCore.Toolkit.Testing
         protected TContext CreateContext(IDatabaseInitializer<TContext> databaseInitializer = null)
         {
             var args = new List<object>();
-            if (!string.IsNullOrEmpty(this.dbConnectionString))
+            if (!string.IsNullOrEmpty(this.dbContextOptionsString))
             {
-                args.Add(this.dbConnectionString);
+                args.Add(this.dbContextOptionsString);
             }
             else
             {
-                var dbConn = this.EnsureDbConnection(this.dbConnection);
+                var dbConn = this.EnsureDbConnection(this.dbContextOptions);
                 args.Add(dbConn);
             }
 

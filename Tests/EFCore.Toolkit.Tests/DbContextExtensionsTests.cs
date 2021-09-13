@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
@@ -17,7 +18,7 @@ namespace EFCore.Toolkit.Tests
         private readonly ITestOutputHelper testOutputHelper;
 
         public DbContextExtensionsTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+            : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
                   databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
                    log: testOutputHelper.WriteLine)
         {
@@ -25,7 +26,7 @@ namespace EFCore.Toolkit.Tests
         }
 
         [Fact]
-        public void ShouldGetGetTableRowCounts()
+        public async Task ShouldGetGetTableRowCounts()
         {
             // Arrange
             List<TableRowCounts> tableRowCounts;
@@ -37,12 +38,13 @@ namespace EFCore.Toolkit.Tests
                 employeeContext.Set<Employee>().Add(Testdata.Employees.CreateEmployee3());
                 employeeContext.SaveChanges();
 
-
                 // Act
-                tableRowCounts = employeeContext.GetTableRowCounts();
+                tableRowCounts = await employeeContext.GetTableRowCountsAsync();
             }
 
             // Assert
+            this.testOutputHelper.WriteLine(ObjectDumper.Dump(tableRowCounts, DumpStyle.CSharp));
+
             tableRowCounts.Should().HaveCount(6);
             tableRowCounts.Should().ContainSingle(r => r.TableName == "[dbo].[ApplicationSetting]" && r.TableRowCount == 0);
             tableRowCounts.Should().ContainSingle(r => r.TableName == "[dbo].[Country]" && r.TableRowCount == 0);

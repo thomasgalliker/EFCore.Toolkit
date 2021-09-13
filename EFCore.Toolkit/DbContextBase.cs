@@ -1,18 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using EFCore.Toolkit.Concurrency;
+using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
+using EFCore.Toolkit.Concurrency;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
-using IDbConnection = EFCore.Toolkit.Abstractions.IDbConnection;
-using System.Threading.Tasks;
 
 namespace EFCore.Toolkit
 {
@@ -21,7 +18,6 @@ namespace EFCore.Toolkit
     {
         private static readonly IList<TContext> InitializerLock = new List<TContext>();
         private readonly IDatabaseInitializer<TContext> databaseInitializer;
-        private readonly IDbConnection dbConnection;
 
         /// <summary>
         ///     Empty constructor is used for 'update-database' command-line command.
@@ -59,34 +55,17 @@ namespace EFCore.Toolkit
 
         private string GetConnectionString()
         {
-            return this.dbConnection?.ConnectionString ?? null;
-        }
-
-        protected DbContextBase(IDbConnection dbConnection, IDatabaseInitializer<TContext> databaseInitializer)
-            : this(dbConnection, databaseInitializer, log: null)
-        {
-        }
-
-        protected DbContextBase(IDbConnection dbConnection, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
-            : this()
-        {
-            this.EnsureLog(log);
-            this.dbConnection = dbConnection;
-
-            this.log($"Initializing DbContext '{this.Name}' with ConnectionString = \"{this.GetConnectionString()}\" and IDatabaseInitializer=\"{databaseInitializer?.GetType().GetFormattedName()}\"");
-
-            this.databaseInitializer = databaseInitializer;
-            this.TryInitializeDatabase();
+            return base.Database.GetDbConnection().ConnectionString;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             this.log($"{this.Name}.OnConfiguring");
 
-            if (this.GetConnectionString() is string connectionString && connectionString != null)
-            {
-                optionsBuilder.UseSqlServer(connectionString);
-            }
+            //if (this.GetConnectionString() is string connectionString && connectionString != null)
+            //{
+            //    optionsBuilder.UseSqlServer(connectionString);
+            //}
 
             //if (!optionsBuilder.Options.Extensions.Any(extension => extension.GetType().Name == "InMemoryOptionsExtension"))
             //{
@@ -103,7 +82,6 @@ namespace EFCore.Toolkit
 
             ////modelBuilder.Remove<PluralizingTableNameConvention>();
         }
-
 
         private void EnsureLog(Action<string> log = null)
         {
@@ -166,8 +144,15 @@ namespace EFCore.Toolkit
 
         private void InternalDropDatabase()
         {
-            this.Database.KillConnectionsToTheDatabase();
-            this.Database.EnsureDeleted();
+            try
+            {
+                this.Database.EnsureDeleted();
+                this.Database.KillConnectionsToTheDatabase();
+            }
+            catch (Exception ex)
+            {
+                this.log($"InternalDropDatabase failed to drop the database: {ex}");
+            }
         }
 
         /// <inheritdoc />

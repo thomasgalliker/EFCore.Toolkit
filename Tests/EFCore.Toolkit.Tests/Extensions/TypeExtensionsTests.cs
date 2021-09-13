@@ -4,7 +4,7 @@ using System.Linq;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
 using FluentAssertions;
-
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context.Auditing;
 
 using Xunit;
@@ -71,8 +71,8 @@ namespace EFCore.Toolkit.Tests.Extensions
             // Arrange
             var args = new object[]
             {
-                new DbConnection("Data Source=(localdb)\\MSSQLLocalDB; AttachDbFilename=|DataDirectory|\\AuditingTestDb.mdf; Integrated Security=True;"),
-                new DropCreateDatabaseAlways<TestAuditDbContext>()
+                EmployeeContextTestDbConnection.CreateDbContextOptions<TestAuditDbContext>(),
+                new DropCreateDatabaseAlways<TestAuditDbContext>(),
             };
 
             // Act
@@ -80,10 +80,9 @@ namespace EFCore.Toolkit.Tests.Extensions
 
             // Assert
             var contextCtorParameters = contextCtor.ConstructorInfo.GetParameters();
-            contextCtorParameters.Should().HaveCount(3);
-            contextCtorParameters.ElementAt(0).ParameterType.Should().Be(typeof(IDbConnection));
+            contextCtorParameters.Should().HaveCount(2);
+            contextCtorParameters.ElementAt(0).ParameterType.Should().Be(typeof(DbContextOptions));
             contextCtorParameters.ElementAt(1).ParameterType.Should().Be(typeof(IDatabaseInitializer<TestAuditDbContext>));
-            contextCtorParameters.ElementAt(2).ParameterType.Should().Be(typeof(Action<string>));
 
             var testContext = contextCtor.Invoke();
             testContext.Should().BeOfType<TestAuditDbContext>();

@@ -26,7 +26,7 @@ namespace EFCore.Toolkit.Tests.Repository
     /// <summary>
     ///     Repository tests using <see cref="EmployeeContextTestDbConnection" /> as database connection.
     /// </summary>
-    public class GenericRepositoryTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection>
+    public class GenericRepositoryTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         private readonly ITestOutputHelper testOutputHelper;
 
@@ -514,14 +514,17 @@ namespace EFCore.Toolkit.Tests.Repository
             var updatedEmployees = new List<Employee>();
             var updatedEmployee1 = CreateEmployee1();
             updatedEmployee1.Id = originalEmployee1.Id;
+            updatedEmployee1.DepartmentId = originalEmployee1.DepartmentId;
             updatedEmployee1.RowVersion = originalEmployee1.RowVersion;
 
             var updatedEmployee2 = CreateEmployee2();
             updatedEmployee2.Id = originalEmployee2.Id;
+            updatedEmployee2.DepartmentId = originalEmployee2.DepartmentId;
             updatedEmployee2.RowVersion = originalEmployee2.RowVersion;
 
             var updatedEmployee3 = CreateEmployee3();
             updatedEmployee3.Id = originalEmployee3.Id;
+            updatedEmployee3.DepartmentId = originalEmployee3.DepartmentId;
             updatedEmployee3.RowVersion = originalEmployee3.RowVersion;
 
             updatedEmployees.Add(originalEmployee1);
@@ -548,7 +551,7 @@ namespace EFCore.Toolkit.Tests.Repository
             this.testOutputHelper.WriteLine($"Elapsed={stopwatch.ElapsedMilliseconds}ms");
 
             // Assert
-            committedChangeSet.Assert(expectedNumberOfAdded: 0, expectedNumberOfModified: 3, expectedNumberOfDeleted: 0);
+            committedChangeSet.Assert(expectedNumberOfAdded: 0, expectedNumberOfModified: 4, expectedNumberOfDeleted: 0);
 
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
@@ -559,6 +562,13 @@ namespace EFCore.Toolkit.Tests.Repository
                 allEmployees.ElementAt(2).Birthdate.Should().Be(new DateTime(2000, 12, 31, 01, 23, 20));
 
                 stopwatch.ElapsedMilliseconds.Should().BeLessThan(2500);
+            }
+
+            using (IGenericRepository<Department> departmentRepository = new GenericRepository<Department>(this.CreateContext()))
+            {
+                var allDepartments = departmentRepository.GetAll().ToList();
+                allDepartments.Should().HaveCount(1);
+                allDepartments.ElementAt(0).Name.Should().Be("Human Resources");
             }
         }
 

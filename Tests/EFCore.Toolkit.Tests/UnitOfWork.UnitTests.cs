@@ -176,7 +176,10 @@ namespace EFCore.Toolkit.Tests
         public async void ShouldCommitAsync()
         {
             // Arrange
+            var transactionMock = new Mock<ITransaction>();
             var sampleContextMock = new Mock<ISampleContext>();
+            sampleContextMock.Setup(c => c.BeginTransaction())
+                .Returns(transactionMock.Object);
 
             // Act
             using (IUnitOfWork unitOfWork = new UnitOfWork())
@@ -186,6 +189,8 @@ namespace EFCore.Toolkit.Tests
             }
 
             // Assert
+            transactionMock.Verify(x => x.Commit(), Times.Once);
+
             sampleContextMock.Verify(x => x.SaveChanges(), Times.Never);
             sampleContextMock.Verify(x => x.SaveChangesAsync(), Times.Once);
             sampleContextMock.Verify(x => x.Dispose(), Times.Once);

@@ -36,13 +36,6 @@ namespace ToolkitSample.DataAccess.Context.Auditing
             this.ConfigureAuditingFromAppConfig();
         }
 
-        public TestAuditDbContext(IDbConnection dbConnection, IDatabaseInitializer<TestAuditDbContext> databaseInitializer, Action<string> log = null)
-            : base(dbConnection, databaseInitializer, log)
-        {
-            //TODO this.Configuration.ProxyCreationEnabled = false;
-            this.ConfigureAuditingFromAppConfig();
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new PersonEntityConfiguration());
