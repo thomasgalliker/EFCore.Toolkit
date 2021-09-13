@@ -1,13 +1,13 @@
-﻿using EFCore.Toolkit;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class DepartmentEntityConfiguration : EntityTypeConfiguration<Model.Department>
+    public class DepartmentEntityConfiguration : IEntityTypeConfiguration<Model.Department>
     {
 
-        public override void Configure(EntityTypeBuilder<Department> entity)
+        public void Configure(EntityTypeBuilder<Department> entity)
         {
             entity.HasKey(d => d.Id);
 

@@ -2,7 +2,7 @@
 
 using ToolkitSample.Model;
 
-namespace EntityFramework.Toolkit.Tests.Stubs
+namespace EFCore.Toolkit.Tests.Stubs
 {
     public static class Testdata
     {

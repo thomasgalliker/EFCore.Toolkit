@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace EFCore.Toolkit.Contracts.Auditing
+namespace EFCore.Toolkit.Abstractions.Auditing
 {
     /// <summary>
     ///     Base class for audit entities.

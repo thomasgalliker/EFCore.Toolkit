@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Stubs;
 using ToolkitSample.Model;
@@ -95,22 +95,17 @@ namespace ToolkitSample.DataAccess.Context
             throw new NotImplementedException();
         }
 
-        TEntity IContext.Edit<TEntity>(TEntity entity)
+        public TEntity SetValues<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class
         {
             throw new NotImplementedException();
         }
 
-        public TEntity Edit<TEntity>(TEntity originalEntity, TEntity updateEntity) where TEntity : class
+        public TEntity Remove<TEntity>(TEntity entity) where TEntity : class
         {
             throw new NotImplementedException();
         }
 
-        public TEntity Delete<TEntity>(TEntity entity) where TEntity : class
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UndoChanges<TEntity>(TEntity entity) where TEntity : class
+        public void SetStateUnchanged<TEntity>(TEntity entity) where TEntity : class
         {
             throw new NotImplementedException();
         }
@@ -152,12 +147,21 @@ namespace ToolkitSample.DataAccess.Context
             return new ChangeSet(typeof(SampleContext), new List<IChange>());
         }
 
-#if !NET40
         Task<ChangeSet> IContext.SaveChangesAsync()
         {
             this.OnSaveCalled(EventArgs.Empty);
 
             return Task.Factory.StartNew(() => new ChangeSet(typeof(SampleContext), new List<IChange>()));
+        }
+
+        public ITransaction BeginTransaction()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void UseTransaction(ITransaction transaction)
+        {
+            throw new NotImplementedException();
         }
 
         public Task<ChangeSet> SaveChangesAsync(string username)
@@ -166,7 +170,11 @@ namespace ToolkitSample.DataAccess.Context
 
             return Task.Factory.StartNew(() => new ChangeSet(typeof(SampleContext), new List<IChange>()));
         }
-#endif
+
+        public void SetStateModified<TEntity>(TEntity entity) where TEntity : class
+        {
+            throw new NotImplementedException();
+        }
 
         public bool AuditingEnabled { get; set; }
     }

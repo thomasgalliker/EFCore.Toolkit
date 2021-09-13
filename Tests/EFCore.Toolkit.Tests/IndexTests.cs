@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EFCore.Toolkit;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
-using EntityFramework.Toolkit.Tests.Extensions;
-
+using EFCore.Toolkit.Tests.Auditing;
+using EFCore.Toolkit.Tests.Extensions;
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
@@ -14,15 +14,15 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
-    public class IndexTests : ContextTestBase<EmployeeContext>
+    public class IndexTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         public IndexTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
-                  databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+            : base(databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
                   log: testOutputHelper.WriteLine)
         {
+            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
@@ -75,9 +75,9 @@ namespace EntityFramework.Toolkit.Tests
                 Action action = () => context.SaveChanges();
 
                 // Assert
-                var ex = action.ShouldThrow<DbUpdateException>();
-                ex.Which.InnerException.InnerException.InnerException.Message.Should()
-                    .Contain("Cannot insert duplicate key row in object 'dbo.Room' with unique index 'UQ_Level_Sector'. The duplicate key value is (1, A).");
+                var ex = action.Should().Throw<DbUpdateException>();
+                ex.Which.InnerException.Message.Should()
+                    .Contain("Cannot insert duplicate key row in object 'dbo.Room' with unique index 'IX_Room_Level_Sector'. The duplicate key value is (1, A).");
             }
         }
     }

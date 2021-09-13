@@ -1,8 +1,7 @@
 ﻿using System;
 using EFCore.Toolkit;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Auditing;
-using EFCore.Toolkit.Auditing.Extensions;
-using EFCore.Toolkit.Contracts;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.Model;
 using ToolkitSample.Model.Auditing;
@@ -37,25 +36,18 @@ namespace ToolkitSample.DataAccess.Context.Auditing
             this.ConfigureAuditingFromAppConfig();
         }
 
-        public TestAuditDbContext(IDbConnection dbConnection, IDatabaseInitializer<TestAuditDbContext> databaseInitializer, Action<string> log = null)
-            : base(dbConnection, databaseInitializer, log)
-        {
-            //TODO this.Configuration.ProxyCreationEnabled = false;
-            this.ConfigureAuditingFromAppConfig();
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.AddConfiguration(new PersonEntityConfiguration());
-            modelBuilder.AddConfiguration(new EmployeeEntityTypeConfiguration());
-            modelBuilder.AddConfiguration(new EmployeeAuditEntityTypeConfiguration());
-            modelBuilder.AddConfiguration(new TestEntityEntityTypeConfiguration());
-            modelBuilder.AddConfiguration(new TestEntityAuditEntityTypeConfiguration());
-            modelBuilder.AddConfiguration(new StudentEntityConfiguration());
-            modelBuilder.AddConfiguration(new DepartmentEntityConfiguration());
-            modelBuilder.AddConfiguration(new RoomConfiguration());
-            modelBuilder.AddConfiguration(new CountryEntityConfiguration());
-            modelBuilder.AddConfiguration(new ApplicationSettingEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new EmployeeAuditEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new TestEntityEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new TestEntityAuditEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new StudentEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new DepartmentEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new RoomEntityTypeConfiguration());
+            modelBuilder.ApplyConfiguration(new CountryEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new ApplicationSettingEntityTypeConfiguration());
         }
     }
 }

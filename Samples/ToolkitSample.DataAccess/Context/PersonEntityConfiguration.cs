@@ -1,13 +1,13 @@
-﻿using EFCore.Toolkit;
+﻿using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class PersonEntityConfiguration : EntityTypeConfiguration<Person>
+    public class PersonEntityConfiguration : IEntityTypeConfiguration<Person>
     {
-        public override void Configure(EntityTypeBuilder<Person> entity)
+        public void Configure(EntityTypeBuilder<Person> entity)
         {
             entity.HasKey(d => d.Id);
 
@@ -31,7 +31,7 @@ namespace ToolkitSample.DataAccess.Context
                 .IsRowVersion()
                 .IsRequired();
 
-            entity.ToTable(nameof(Person));
+            entity.HasBaseType((Type)null);
         }
     }
 }

@@ -5,9 +5,9 @@ using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class RoomConfiguration : EntityTypeConfiguration<Room>
+    public class RoomEntityTypeConfiguration : IEntityTypeConfiguration<Room>
     {
-        public override void Configure(EntityTypeBuilder<Room> entity)
+        public void Configure(EntityTypeBuilder<Room> entity)
         {
             entity.HasKey(e => e.Id);
 
@@ -18,7 +18,7 @@ namespace ToolkitSample.DataAccess.Context
             entity.Property(e => e.Level);
             entity.Property(e => e.Sector).HasMaxLength(900);
 
-            //TODO entity.Unique(e => e.Level, e => e.Sector);
+            entity.HasIndex(e => new { e.Level, e.Sector }).IsUnique();
 
             entity.ToTable(nameof(Room));
         }

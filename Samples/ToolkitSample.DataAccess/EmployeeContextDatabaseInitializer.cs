@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using EFCore.Toolkit;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
@@ -26,6 +26,7 @@ namespace ToolkitSample.DataAccess
                 if (!context.Set<Employee>().Any())
                 {
                     context.Seed(this.dataSeeds);
+                    context.SaveChanges();
                 }
             }
         }

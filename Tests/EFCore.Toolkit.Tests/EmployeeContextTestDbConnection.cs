@@ -1,22 +1,33 @@
-﻿using System;
-using EFCore.Toolkit;
-using EFCore.Toolkit.Testing;
+﻿using EFCore.Toolkit.Testing;
+using Microsoft.EntityFrameworkCore;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     /// <summary>
     /// This DbConnection implementation provides a ConnectionString for testing purposes.
     /// </summary>
-    public class EmployeeContextTestDbConnection : DbConnection
+    public class EmployeeContextTestDbConnection<T> : DbContextOptionsBuilder<T> where T : DbContext
     {
         public EmployeeContextTestDbConnection()
-            : base(name: "EntityFramework.Toolkit.Tests",
-                   connectionString: @"Data Source=(localdb)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\EF.Toolkit.Tests.mdf; Integrated Security=True;".RandomizeDatabaseName())
         {
-            AppDomain.CurrentDomain.SetData("DataDirectory", System.IO.Directory.GetCurrentDirectory());
-
-            this.LazyLoadingEnabled = false;
-            this.ProxyCreationEnabled = false;
+            var connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=EF.Toolkit.Tests;Trusted_Connection=True;MultipleActiveResultSets=true;".RandomizeDatabaseName();
+            this.UseSqlServer(connectionString);
         }
     }
+
+    public class EmployeeContextTestDbConnection
+    {
+        public static DbContextOptions CreateDbContextOptions<TContext>() where TContext : DbContext
+        {
+            var connectionString = @"Server=(localdb)\MSSQLLocalDB;Database=EF.Toolkit.Tests;Trusted_Connection=True;MultipleActiveResultSets=true;".RandomizeDatabaseName();
+
+            var dbContextOptions = new DbContextOptionsBuilder<TContext>()
+                .UseSqlServer(connectionString)
+                .Options;
+
+            return dbContextOptions;
+        }
+    }
+
+
 }

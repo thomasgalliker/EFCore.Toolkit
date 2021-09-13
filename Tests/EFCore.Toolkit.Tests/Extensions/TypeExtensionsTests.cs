@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using EFCore.Toolkit;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
 using FluentAssertions;
-
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context.Auditing;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests.Extensions
+namespace EFCore.Toolkit.Tests.Extensions
 {
     public class TypeExtensionsTests
     {
@@ -50,7 +49,7 @@ namespace EntityFramework.Toolkit.Tests.Extensions
             Action action = () => typeof(TestAuditDbContext).GetMatchingConstructor(args);
 
             // Assert
-            action.ShouldThrow<InvalidOperationException>().Which.Message.Should().Contain("TestAuditDbContext does not have a constructor with no parameters.");
+            action.Should().Throw<InvalidOperationException>().Which.Message.Should().Contain("TestAuditDbContext does not have a constructor with no parameters.");
         }
 
         [Fact]
@@ -63,7 +62,7 @@ namespace EntityFramework.Toolkit.Tests.Extensions
             Action action = () => typeof(TestAuditDbContext).GetMatchingConstructor(args);
 
             // Assert
-            action.ShouldThrow<InvalidOperationException>().Which.Message.Should().Contain("TestAuditDbContext does not have a constructor with parameters (Single, Decimal).");
+            action.Should().Throw<InvalidOperationException>().Which.Message.Should().Contain("TestAuditDbContext does not have a constructor with parameters (Single, Decimal).");
         }
 
         [Fact]
@@ -72,8 +71,8 @@ namespace EntityFramework.Toolkit.Tests.Extensions
             // Arrange
             var args = new object[]
             {
-                new DbConnection("Data Source=(localdb)\\MSSQLLocalDB; AttachDbFilename=|DataDirectory|\\AuditingTestDb.mdf; Integrated Security=True;"),
-                new DropCreateDatabaseAlways<TestAuditDbContext>()
+                EmployeeContextTestDbConnection.CreateDbContextOptions<TestAuditDbContext>(),
+                new DropCreateDatabaseAlways<TestAuditDbContext>(),
             };
 
             // Act
@@ -81,10 +80,9 @@ namespace EntityFramework.Toolkit.Tests.Extensions
 
             // Assert
             var contextCtorParameters = contextCtor.ConstructorInfo.GetParameters();
-            contextCtorParameters.Should().HaveCount(3);
-            contextCtorParameters.ElementAt(0).ParameterType.Should().Be(typeof(IDbConnection));
+            contextCtorParameters.Should().HaveCount(2);
+            contextCtorParameters.ElementAt(0).ParameterType.Should().Be(typeof(DbContextOptions));
             contextCtorParameters.ElementAt(1).ParameterType.Should().Be(typeof(IDatabaseInitializer<TestAuditDbContext>));
-            contextCtorParameters.ElementAt(2).ParameterType.Should().Be(typeof(Action<string>));
 
             var testContext = contextCtor.Invoke();
             testContext.Should().BeOfType<TestAuditDbContext>();

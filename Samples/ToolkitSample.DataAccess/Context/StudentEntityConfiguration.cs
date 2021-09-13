@@ -5,13 +5,13 @@ using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class StudentEntityConfiguration : EntityTypeConfiguration<Student>
+    public class StudentEntityConfiguration : IEntityTypeConfiguration<Student>
     {
-        public override void Configure(EntityTypeBuilder<Student> entity)
+        public void Configure(EntityTypeBuilder<Student> entity)
         {
-            entity.Property(e => e.EnrollmentDate).IsRequired();
+            entity.HasBaseType<Person>();
 
-            entity.ToTable(nameof(Student));
+            entity.Property(e => e.EnrollmentDate).IsRequired();
         }
     }
 }

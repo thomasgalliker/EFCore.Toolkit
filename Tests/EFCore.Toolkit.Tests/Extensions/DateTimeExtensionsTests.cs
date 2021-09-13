@@ -1,10 +1,10 @@
 ﻿using System;
-using EFCore.Toolkit.Contracts.Extensions;
+using EFCore.Toolkit.Abstractions.Extensions;
 using FluentAssertions;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests.Extensions
+namespace EFCore.Toolkit.Tests.Extensions
 {
     public class DateTimeExtensionsTests
     {

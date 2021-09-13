@@ -1,6 +1,6 @@
 using System;
 
-namespace EFCore.Toolkit.Contracts.Auditing
+namespace EFCore.Toolkit.Abstractions.Auditing
 {
     /// <summary>
     ///     Describes the state of an audit entity.

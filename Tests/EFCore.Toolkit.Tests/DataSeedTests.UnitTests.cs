@@ -1,5 +1,5 @@
 ﻿using System.Linq;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using FluentAssertions;
 
 using ToolkitSample.DataAccess.Seed;
@@ -7,7 +7,7 @@ using ToolkitSample.Model;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     public class DataSeedUnitTests
     {

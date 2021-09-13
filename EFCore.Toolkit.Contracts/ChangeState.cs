@@ -1,4 +1,4 @@
-﻿namespace EFCore.Toolkit.Contracts
+﻿namespace EFCore.Toolkit.Abstractions
 {
     public enum ChangeState
     {

@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using EFCore.Toolkit.Contracts;
+using System.Threading.Tasks;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace EFCore.Toolkit.Extensions
@@ -87,6 +87,8 @@ namespace EFCore.Toolkit.Extensions
         /// </remarks>
         public static T AddOrUpdate<T>(this DbContext context, T entity) where T : class
         {
+            // Source: https://stackoverflow.com/questions/36208580/what-happened-to-addorupdate-in-ef-7-core
+
             if (context == null)
             {
                 throw new ArgumentNullException(nameof(context));
@@ -97,300 +99,63 @@ namespace EFCore.Toolkit.Extensions
                 throw new ArgumentNullException(nameof(entity));
             }
 
-            if (IsTransient(context, entity))
+            var entityEntry = context.Entry(entity);
+
+            var primaryKeyName = entityEntry.Context.Model.FindEntityType(typeof(T)).FindPrimaryKey().Properties
+                .Select(x => x.Name).Single();
+
+            var primaryKeyField = entity.GetType().GetRuntimeProperty(primaryKeyName);
+
+            var t = typeof(T);
+            if (primaryKeyField == null)
+            {
+                throw new Exception($"{t.FullName} does not have a primary key specified. Unable to exec AddOrUpdate call.");
+            }
+            var keyVal = primaryKeyField.GetValue(entity);
+            var dbVal = context.Set<T>().Find(keyVal);
+
+            if (dbVal != null)
+            {
+                context.Entry(dbVal).CurrentValues.SetValues(entity);
+                context.Set<T>().Update(dbVal);
+
+                entity = dbVal;
+            }
+            else
             {
                 context.Set<T>().Add(entity);
             }
-            else
-            {
-                context.Set<T>().Attach(entity);
-                context.Entry(entity).State = EntityState.Modified;
-            }
+
             return entity;
-        }
-
-        /// <summary>
-        ///     Determines whether the specified entity is newly created (Id not specified).
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context">The context.</param>
-        /// <param name="entity">The entity.</param>
-        /// <returns>
-        ///     <c>true</c> if the specified entity is transient; otherwise, <c>false</c>.
-        /// </returns>
-        /// <remarks>
-        ///     Will not work for HasDatabaseGeneratedOption(DatabaseGeneratedOption.None).
-        ///     Will not work for composite keys.
-        /// </remarks>
-        public static bool IsTransient<T>(this DbContext context, T entity) where T : class
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
-            var primaryKey = GetPrimaryKeyFor<T>(context);
-            var propertyType = primaryKey.PropertyInfo.PropertyType;
-            //what's the default value for the type?
-            var transientValue = propertyType.GetTypeInfo().IsValueType ? Activator.CreateInstance(propertyType) : null;
-            //is the pk the same as the default value (int == 0, string == null ...)
-            return Equals(primaryKey.PropertyInfo.GetValue(entity, null), transientValue);
-        }
-
-        /// <summary>
-        ///     Loads a stub entity (or actual entity if already loaded).
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context">The context.</param>
-        /// <param name="id">The id.</param>
-        /// <returns></returns>
-        /// <remarks>
-        ///     Will not work for composite keys.
-        /// </remarks>
-        public static T Load<T>(this DbContext context, object id) where T : class
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            var primaryKey = GetPrimaryKeyFor<T>(context);
-            //check to see if it's already loaded (slow if large numbers loaded)
-            var entity = context.Set<T>().Local.SingleOrDefault(x => id.Equals(primaryKey.PropertyInfo.GetValue(x, null)));
-            if (entity == null)
-            {
-                //it's not loaded, just create a stub with only primary key set
-                entity = CreateEntity<T>(id, primaryKey.PropertyInfo);
-
-                context.Set<T>().Attach(entity);
-            }
-            return entity;
-        }
-
-        /// <summary>
-        ///     Determines whether the specified entity is loaded from the database.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context">The context.</param>
-        /// <param name="id">The id.</param>
-        /// <returns>
-        ///     <c>true</c> if the specified entity is loaded; otherwise, <c>false</c>.
-        /// </returns>
-        /// <remarks>
-        ///     Will not work for composite keys.
-        /// </remarks>
-        public static bool IsLoaded<T>(this DbContext context, object id) where T : class
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
-
-            var primaryKey = GetPrimaryKeyFor<T>(context);
-            //check to see if it's already loaded (slow if large numbers loaded)
-            var entity = context.Set<T>().Local.SingleOrDefault(x => id.Equals(primaryKey.PropertyInfo.GetValue(x, null)));
-            return entity != null;
-        }
-
-        /// <summary>
-        ///     Marks the reference navigation properties unchanged.
-        ///     Use when adding a new entity whose references are known to be unchanged.
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context">The context.</param>
-        /// <param name="entity">The entity.</param>
-
-        /// <summary>
-        ///     Merges a DTO into a new or existing entity attached/added to context
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context">The context.</param>
-        /// <param name="dataTransferObject">
-        ///     The data transfer object. It must have a primary key property of the same name and
-        ///     type as the actual entity.
-        /// </param>
-        /// <returns></returns>
-        /// <remarks>
-        ///     Will not work for composite keys.
-        /// </remarks>
-        public static T Merge<T>(this DbContext context, T dataTransferObject) where T : class
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (dataTransferObject == null)
-            {
-                throw new ArgumentNullException(nameof(dataTransferObject));
-            }
-
-            //find the id property of the dto
-            var primaryKey = context.GetPrimaryKeyForEntity(dataTransferObject);
-
-            //has the id been set (existing item) or not (transient)?
-            var propertyType = primaryKey.PropertyInfo.PropertyType;
-            var transientValue = propertyType.GetTypeInfo().IsValueType ? Activator.CreateInstance(propertyType) : null;
-            var isTransient = Equals(primaryKey.Value, transientValue);
-
-            T entity;
-            if (isTransient)
-            {
-                //it's transient, just create a dummy
-                entity = CreateEntity<T>(primaryKey.Value, primaryKey.PropertyInfo);
-                //if DatabaseGeneratedOption(DatabaseGeneratedOption.None) and no id, this errors
-                context.Set<T>().Attach(entity);
-            }
-            else
-            {
-                //try to load from identity map or database
-                entity = context.Set<T>().Find(primaryKey.Value);
-                if (entity == null)
-                {
-                    //could not find entity, assume assigned primary key
-                    entity = CreateEntity<T>(primaryKey.Value, primaryKey.PropertyInfo);
-                    context.Set<T>().Add(entity);
-                }
-            }
-            //copy the values from DTO onto the entry
-            context.Entry(entity).CurrentValues.SetValues(dataTransferObject);
-            return entity;
-        }
-
-        /// <summary>
-        /// Returns the primary key <see cref="PropertyInfo"/> for a given type <typeparamref name="TEntity"/>.
-        /// </summary>
-        /// <typeparam name="TEntity">The entity type.</typeparam>
-        /// <param name="context">The context in which the given entity type lives.</param>
-        /// <returns></returns>
-        public static PrimaryKey GetPrimaryKeyFor<TEntity>(this DbContext context) where TEntity : class
-        {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            //find the primary key
-            var elementType = context.GetElementType(typeof(TEntity));
-            var primaryKey = elementType.FindPrimaryKey().Properties.First();
-
-            //look it up on the entity
-            var propertyInfo = typeof(TEntity).GetRuntimeProperty(primaryKey.Name);
-            return propertyInfo == null ? null : new PrimaryKey(propertyInfo, null);
-        }
-
-        /// <summary>
-        /// Returns the primary key for the given entity.
-        /// </summary>
-        /// <typeparam name="TEntity">Type of entity.</typeparam>
-        /// <param name="context">The target context.</param>
-        /// <param name="entity">The given entity.<</param>
-        /// <returns></returns>
-        public static PrimaryKey GetPrimaryKeyForEntity<TEntity>(this DbContext context, TEntity entity) where TEntity : class
-        {
-            var primaryKey = context.GetPrimaryKeyFor<TEntity>();
-            if (primaryKey == null)
-            {
-                throw new InvalidOperationException("Cannot find an id on the dataTransferObject");
-            }
-
-            var value = primaryKey.PropertyInfo.GetValue(entity, null);
-            return new PrimaryKey(primaryKey.PropertyInfo, value);
-        }
-
-        private static T CreateEntity<T>(object id, PropertyInfo property) where T : class
-        {
-            // consider IoC here
-            var entity = (T)Activator.CreateInstance(typeof(T));
-            //set the value of the primary key (may error if wrong type)
-            property.SetValue(entity, id, null);
-            return entity;
-        }
-
-        private static EntityType GetElementType(this DbContext context, Type entityType)
-        {
-            throw new NotImplementedException();
-            //var type = ObjectContext.GetObjectType(entityType);
-            //var objectContext = ((IObjectContextAdapter)context).ObjectContext;
-
-            //EntityType elementType;
-            //if (objectContext.MetadataWorkspace.TryGetItem(type.FullName, DataSpace.OSpace, out elementType))
-            //{
-            //    return elementType;
-            //}
-            //return null;
-        }
-
-        /// <summary>
-        /// Returns all navigation properties of the given <paramref name="entityType"/>.
-        /// </summary>
-        /// <param name="context">The context in which the <paramref name="entityType"/> lives.</param>
-        /// <param name="entityType">The entity type for which this method returns the navigation properties.</param>
-        /// <returns>A list of navigation properties.</returns>
-        public static List<PropertyInfo> GetNavigationProperties(this DbContext context, Type entityType)
-        {
-            throw new NotImplementedException();
-            //var elementType = context.GetElementType(entityType);
-            //return elementType.NavigationProperties
-            //    .Select(navigationProperty => entityType.GetProperty(navigationProperty.Name))
-            //    .ToList();
-        }
-
-        /// <summary>
-        /// Returns all navigation properties of the given <typeparamref name="TEntityType"/>.
-        /// </summary>
-        /// <param name="context">The context in which the <typeparamref name="TEntityType"/> lives.</param>
-        /// <returns>A list of navigation properties.</returns>
-        public static List<PropertyInfo> GetNavigationProperties<TEntityType>(this DbContext context) where TEntityType : class
-        {
-            var entityType = typeof(TEntityType);
-            return context.GetNavigationProperties(entityType);
         }
 
         /// <summary>
         /// Returns the number of table rows per database table.
         /// </summary>
-        public static List<TableRowCounts> GetTableRowCounts(this DbContext c)
+        public static async Task<List<TableRowCounts>> GetTableRowCountsAsync<T>(this DbContextBase<T> c) where T : DbContext
         {
-            throw new NotImplementedException();
-            //var rawSqlQuery = c.Database.SqlQuery<TableRowCounts>(
-            //    @"CREATE TABLE #counts
-            //        (
-            //            TableName varchar(255),
-            //            TableRowCount int
-            //        )
+            var rawSqlQuery = c.ExecuteQuery<TableRowCounts>(
+                @"CREATE TABLE #counts
+                    (
+                        TableName varchar(255),
+                        TableRowCount int
+                    )
 
-            //        EXEC sp_MSForEachTable @command1='INSERT #counts (TableName, TableRowCount) SELECT ''?'', COUNT(*) FROM ?'
-            //        SELECT TableName, TableRowCount FROM #counts ORDER BY TableName, TableRowCount DESC
-            //        DROP TABLE #counts");
+                    EXEC sp_MSForEachTable @command1='INSERT #counts (TableName, TableRowCount) SELECT ''?'', COUNT(*) FROM ?'
+                    SELECT TableName, TableRowCount FROM #counts ORDER BY TableName, TableRowCount DESC
+                    DROP TABLE #counts");
 
-            //var tableCountResults = rawSqlQuery.ToList();
-            //return tableCountResults;
+            var tableCountResults = await rawSqlQuery.ToListAsync();
+            return tableCountResults;
         }
 
-        public static IQueryable Set(this DbContext context, Type T)
+        public static IQueryable Set(this DbContext context, Type entityType)
         {
-
             // Get the generic type definition
-            MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), null);
+            MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), new Type[] { });
 
             // Build a method with the specific type argument you're interested in
-            method = method.MakeGenericMethod(T);
+            method = method.MakeGenericMethod(entityType);
 
             return method.Invoke(context, null) as IQueryable;
         }

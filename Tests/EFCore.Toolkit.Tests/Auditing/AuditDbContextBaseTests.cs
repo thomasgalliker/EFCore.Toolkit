@@ -1,10 +1,11 @@
 ﻿using System;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using EFCore.Toolkit.Auditing;
-using EFCore.Toolkit.Contracts.Auditing;
+using EFCore.Toolkit.Abstractions.Auditing;
 using EFCore.Toolkit.Testing;
+using EFCore.Toolkit.Tests.Stubs;
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context.Auditing;
@@ -13,27 +14,25 @@ using ToolkitSample.Model.Auditing;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EntityFramework.Toolkit.Tests.Auditing
+namespace EFCore.Toolkit.Tests.Auditing
 {
     public class AuditDbContextBaseTests : ContextTestBase<TestAuditDbContext>
     {
         private const string TestAuditUser = "TestAuditUser";
 
         public AuditDbContextBaseTests(ITestOutputHelper testOutputHelper)
-            : base(
-                dbConnectionString: () => "Data Source=(localdb)\\MSSQLLocalDB; AttachDbFilename=|DataDirectory|\\AuditingTestDb.mdf; Integrated Security=True;".RandomizeDatabaseName(),
+            : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<TestAuditDbContext>(),
+                databaseInitializer: new CreateDatabaseIfNotExists<TestAuditDbContext>(),
                 log: testOutputHelper.WriteLine)
         {
-            // Set variable 'DataDirectory' to the currentDirectory
-            var currentDirectory = Directory.GetCurrentDirectory();
-            AppDomain.CurrentDomain.SetData("DataDirectory", currentDirectory);
+            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
         public async void ShouldAuditCreatedAndUpdatedDate()
         {
             // Arrange
-            var initialEmployee = Stubs.Testdata.Employees.CreateEmployee1();
+            var initialEmployee = Testdata.Employees.CreateEmployee1();
 
             // Act
             using (var auditDbContext = this.CreateContext())
@@ -60,7 +59,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
         public void ShouldNotUpdateAuditCreatedDate_ICreatedDateAndIUpdatedDate()
         {
             // Arrange
-            var initialEmployee = Stubs.Testdata.Employees.CreateEmployee1();
+            var initialEmployee = Testdata.Employees.CreateEmployee1();
             using (var auditDbContext = this.CreateContext())
             {
                 auditDbContext.Set<Employee>().Add(initialEmployee);
@@ -89,7 +88,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
         public void ShouldNotUpdateAuditCreatedDate_ICreatedDate()
         {
             // Arrange
-            var initialRoom = Stubs.Testdata.Rooms.GetRoom1B();
+            var initialRoom = Testdata.Rooms.GetRoom1B();
             using (var auditDbContext = this.CreateContext())
             {
                 auditDbContext.Set<Room>().Add(initialRoom);
@@ -111,7 +110,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
             {
                 var allRooms = auditDbContext.Set<Room>().ToList();
                 var updatedRoom = allRooms.ElementAt(0);
-                updatedRoom.CreatedDate.Should().NotBeCloseTo(manipulatedCreatedDate, precision: 2000);
+                updatedRoom.CreatedDate.Should().NotBeCloseTo(manipulatedCreatedDate, precision: TimeSpan.FromSeconds(2));
             }
         }
 
@@ -121,7 +120,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
             // Arrange
             using (var context = this.CreateContext())
             {
-                context.Employees.Add(Stubs.Testdata.Employees.CreateEmployee1());
+                context.Employees.Add(Testdata.Employees.CreateEmployee1());
                 context.SaveChanges();
             }
 
@@ -155,7 +154,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
             // Arrange
             using (var context = this.CreateContext())
             {
-                context.Employees.Add(Stubs.Testdata.Employees.CreateEmployee1());
+                context.Employees.Add(Testdata.Employees.CreateEmployee1());
                 context.SaveChanges();
             }
 
@@ -163,7 +162,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
             using (var context = this.CreateContext())
             {
                 var customer = context.Employees.Find(1);
-                context.Delete(customer);
+                context.Remove(customer);
                 context.SaveChanges();
             }
 
@@ -184,7 +183,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
         public void ShouldRollbackAuditIfSaveChangesFails()
         {
             // Arrange
-            var initialEmployee = Stubs.Testdata.Employees.CreateEmployee1();
+            var initialEmployee = Testdata.Employees.CreateEmployee1();
 
             string firstNameChange1 = initialEmployee.FirstName + " from employeeContext1";
             string firstNameChange2 = initialEmployee.FirstName + " from employeeContext2";
@@ -214,7 +213,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
                 Action action = () => employeeContext1.SaveChanges();
 
                 // Assert
-                action.ShouldThrow<DbUpdateConcurrencyException>();
+                action.Should().Throw<DbUpdateConcurrencyException>();
 
                 using (var employeeContext = this.CreateContext())
                 {
@@ -224,7 +223,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
                     employeeAudits.Where(a => a.AuditType == AuditEntityState.Modified).Should().HaveCount(1);
 
                     var employeeAuditAdded = employeeAudits.Single(a => a.AuditType == AuditEntityState.Added);
-                    employeeAuditAdded.Id.Should().Be(0);
+                    employeeAuditAdded.Id.Should().Be(1);
                     employeeAuditAdded.FirstName.Should().Be(initialEmployee.FirstName);
                     employeeAuditAdded.LastName.Should().Be(initialEmployee.LastName);
 
@@ -236,7 +235,6 @@ namespace EntityFramework.Toolkit.Tests.Auditing
             }
 
             // Assert
-
         }
 
         ////[Fact]
@@ -399,7 +397,7 @@ namespace EntityFramework.Toolkit.Tests.Auditing
             Action action = () => context.RegisterAuditType(auditTypeInfo);
 
             // Assert
-            action.ShouldThrow<ArgumentException>().Which.Message.Should().Contain("Type TestEntity is already registered for auditing.");
+            action.Should().Throw<ArgumentException>().Which.Message.Should().Contain("Type TestEntity is already registered for auditing.");
         }
     }
 }

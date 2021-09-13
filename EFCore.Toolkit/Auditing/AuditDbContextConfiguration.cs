@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.Collections.Generic;
 
 namespace EFCore.Toolkit.Auditing
 {
@@ -16,7 +17,7 @@ namespace EFCore.Toolkit.Auditing
 
         public DateTimeKind AuditDateTimeKind { get; }
 
-        public AuditTypeInfo[] AuditTypeInfos { get; }
+        public IEnumerable<AuditTypeInfo> AuditTypeInfos { get; }
 
     }
 }

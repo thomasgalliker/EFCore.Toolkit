@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using EFCore.Toolkit;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
 using FluentAssertions;
 
@@ -11,7 +10,7 @@ using ToolkitSample.DataAccess.Context;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     public class UnitOfWorkUnitTests
     {
@@ -20,7 +19,9 @@ namespace EntityFramework.Toolkit.Tests
         {
             // Arrange
             var unitOfWork = new UnitOfWork();
+            var transactionMock = new Mock<ITransaction>();
             var sampleContextMock = new Mock<ISampleContext>();
+            sampleContextMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
 
             unitOfWork.RegisterContext(sampleContextMock.Object);
 
@@ -29,6 +30,7 @@ namespace EntityFramework.Toolkit.Tests
 
             // Assert
             sampleContextMock.Verify(x => x.SaveChanges(), Times.Once);
+            transactionMock.Verify(t => t.Commit(), Times.Once);
         }
 
         [Fact]
@@ -36,7 +38,9 @@ namespace EntityFramework.Toolkit.Tests
         {
             // Arrange
             var unitOfWork = new UnitOfWork();
+            var transactionMock = new Mock<ITransaction>();
             var sampleContextOneMock = new Mock<ISampleContext>();
+            sampleContextOneMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
             var sampleContextTwoMock = new Mock<ISampleContextTwo>();
 
             unitOfWork.RegisterContext(sampleContextOneMock.Object);
@@ -48,6 +52,7 @@ namespace EntityFramework.Toolkit.Tests
             // Assert
             sampleContextOneMock.Verify(x => x.SaveChanges(), Times.Once);
             sampleContextTwoMock.Verify(x => x.SaveChanges(), Times.Once);
+            transactionMock.Verify(t => t.Commit(), Times.Once);
         }
 
         [Fact]
@@ -55,7 +60,9 @@ namespace EntityFramework.Toolkit.Tests
         {
             // Arrange
             var unitOfWork = new UnitOfWork();
+            var transactionMock = new Mock<ITransaction>();
             var sampleContextOneMock = new Mock<ISampleContext>();
+            sampleContextOneMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
             var sampleContextTwoMock = new Mock<ISampleContextTwo>();
             sampleContextTwoMock.Setup(m => m.SaveChanges()).Throws(new InvalidOperationException("SampleContextTwo failed to SaveChanges."));
 
@@ -66,13 +73,14 @@ namespace EntityFramework.Toolkit.Tests
             Action action = () => unitOfWork.Commit();
 
             // Assert
-            var ex = action.ShouldThrow<UnitOfWorkException>();
+            var ex = action.Should().Throw<UnitOfWorkException>();
             ex.Which.Message.Should().Contain("failed to commit.");
             ex.WithInnerException<InvalidOperationException>();
             ex.Which.InnerException.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
 
             sampleContextOneMock.Verify(x => x.SaveChanges(), Times.Once);
             sampleContextTwoMock.Verify(x => x.SaveChanges(), Times.Once);
+            //transactionMock.Verify(t => t.Rollback(), Times.Once); // Rollback is done automatically
         }
 
         [Fact]
@@ -95,7 +103,9 @@ namespace EntityFramework.Toolkit.Tests
             // Arrange
             IUnitOfWork unitOfWork = new UnitOfWork();
 
+            var transactionMock = new Mock<ITransaction>();
             var contextMock = new Mock<IContext>();
+            contextMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
             var changeSet = new ChangeSet(contextMock.GetType(), new List<IChange> { Change.CreateAddedChange(new object()) });
             contextMock.Setup(c => c.SaveChanges()).Returns(changeSet);
 
@@ -106,6 +116,7 @@ namespace EntityFramework.Toolkit.Tests
 
             // Assert
             numberOfChanges.Should().HaveCount(1);
+            transactionMock.Verify(t => t.Commit(), Times.Once);
         }
 
         [Fact]
@@ -156,17 +167,19 @@ namespace EntityFramework.Toolkit.Tests
             Action action = () => unitOfWork.Commit();
 
             // Assert
-            action.ShouldThrow<ObjectDisposedException>();
+            action.Should().Throw<ObjectDisposedException>();
             sampleContextMock.Verify(x => x.SaveChanges(), Times.Never);
             sampleContextMock.Verify(x => x.Dispose(), Times.Once);
         }
 
-#if NET45
         [Fact]
         public async void ShouldCommitAsync()
         {
             // Arrange
+            var transactionMock = new Mock<ITransaction>();
             var sampleContextMock = new Mock<ISampleContext>();
+            sampleContextMock.Setup(c => c.BeginTransaction())
+                .Returns(transactionMock.Object);
 
             // Act
             using (IUnitOfWork unitOfWork = new UnitOfWork())
@@ -176,11 +189,12 @@ namespace EntityFramework.Toolkit.Tests
             }
 
             // Assert
+            transactionMock.Verify(x => x.Commit(), Times.Once);
+
             sampleContextMock.Verify(x => x.SaveChanges(), Times.Never);
             sampleContextMock.Verify(x => x.SaveChangesAsync(), Times.Once);
             sampleContextMock.Verify(x => x.Dispose(), Times.Once);
         }
-#endif
 
         //TODO Write test to save + check summary of changes
         //TODO Write test to saveasync + check summary of changes

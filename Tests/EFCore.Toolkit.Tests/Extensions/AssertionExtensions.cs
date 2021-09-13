@@ -1,13 +1,13 @@
 ﻿using FluentAssertions;
 using ToolkitSample.Model;
 
-namespace EntityFramework.Toolkit.Tests.Extensions
+namespace EFCore.Toolkit.Tests.Extensions
 {
     internal static class AssertionExtensions
     {
         internal static void ShouldBeEquivalentTo(this Employee subject, Employee expected)
         {
-            subject.ShouldBeEquivalentTo(expected, options => options.IncludingAllRuntimeProperties()
+            subject.Should().BeEquivalentTo(expected, options => options.IncludingAllRuntimeProperties()
                                                                              .ExcludingNestedObjects()
                                                                              .IgnoringCyclicReferences()
                                                                              .Excluding(e => e.Id)
@@ -21,7 +21,7 @@ namespace EntityFramework.Toolkit.Tests.Extensions
 
         internal static void ShouldBeEquivalentTo(this Department subject, Department expected)
         {
-            subject.ShouldBeEquivalentTo(expected, options => options.IncludingAllRuntimeProperties()
+            subject.Should().BeEquivalentTo(expected, options => options.IncludingAllRuntimeProperties()
                                                                              .ExcludingNestedObjects()
                                                                              .IgnoringCyclicReferences()
                                                                              .Excluding(e => e.Id)

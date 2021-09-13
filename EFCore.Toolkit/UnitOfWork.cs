@@ -1,17 +1,15 @@
-﻿#if !NETSTANDARD1_3
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Transactions;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
-
-#if !NET40
+using EFCore.Toolkit.Extensions;
 using System.Threading.Tasks;
-#endif
 
 namespace EFCore.Toolkit
-{ 
+{
     public sealed class UnitOfWork : IUnitOfWork
     {
         private readonly Dictionary<Type, IContext> contexts;
@@ -23,18 +21,22 @@ namespace EFCore.Toolkit
             this.contexts = new Dictionary<Type, IContext>();
         }
 
-        public void RegisterContext<TContext>(TContext contextFactory) where TContext : IContext
+        public void RegisterContext<TContext>(TContext context) where TContext : IContext
         {
-            if (contextFactory == null)
+            if (context == null)
             {
-                throw new ArgumentNullException(nameof(contextFactory));
+                throw new ArgumentNullException(nameof(context));
             }
 
-            Type contextType = contextFactory.GetType();
+            var contextType = context.GetType();
 
             if (!this.contexts.ContainsKey(contextType))
             {
-                this.contexts.Add(contextType, contextFactory);
+                this.contexts.Add(contextType, context);
+            }
+            else
+            {
+                throw new InvalidOperationException($"Context '{contextType.GetFormattedName()}' is already registered.");
             }
         }
 
@@ -45,16 +47,25 @@ namespace EFCore.Toolkit
             Type lastContextType = null;
             try
             {
-                using (var transactionScope = new TransactionScope(TransactionScopeOption.Required))
+                var firstContext = this.contexts.FirstOrDefault();
+                if (firstContext.Value != null)
                 {
+                    var transaction = firstContext.Value.BeginTransaction();
                     foreach (var context in this.contexts)
                     {
+                        if (context.Value != firstContext.Value)
+                        {
+                            context.Value.UseTransaction(transaction);
+                        }
+
                         lastContextType = context.Key;
                         var changes = context.Value.SaveChanges();
                         changeSets.Add(changes);
                     }
 
-                    transactionScope.Complete();
+                    // Commit transaction if all commands succeed, transaction will auto-rollback
+                    // when disposed if either commands fails
+                    transaction.Commit();
                 }
             }
             catch (Exception ex)
@@ -65,7 +76,6 @@ namespace EFCore.Toolkit
             return changeSets;
         }
 
-#if !NET40
         /// <inheritdoc />
         public async Task<ICollection<ChangeSet>> CommitAsync()
         {
@@ -73,16 +83,25 @@ namespace EFCore.Toolkit
             Type lastContextType = null;
             try
             {
-                using (var transactionScope = new TransactionScope(TransactionScopeOption.Required))
+                var firstContext = this.contexts.FirstOrDefault();
+                if (firstContext.Value != null)
                 {
+                    var transaction = firstContext.Value.BeginTransaction();
                     foreach (var context in this.contexts)
                     {
+                        if (context.Value != firstContext.Value)
+                        {
+                            context.Value.UseTransaction(transaction);
+                        }
+
                         lastContextType = context.Key;
-                        var changeSet = await context.Value.SaveChangesAsync();
-                        changeSets.Add(changeSet);
+                        var changes = await context.Value.SaveChangesAsync();
+                        changeSets.Add(changes);
                     }
 
-                    transactionScope.Complete();
+                    // Commit transaction if all commands succeed, transaction will auto-rollback
+                    // when disposed if either commands fails
+                    transaction.Commit();
                 }
             }
             catch (Exception ex)
@@ -92,7 +111,6 @@ namespace EFCore.Toolkit
 
             return changeSets;
         }
-#endif
 
         /// <inheritdoc />
         public void Dispose()
@@ -124,4 +142,3 @@ namespace EFCore.Toolkit
         }
     }
 }
-#endif

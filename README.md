@@ -1,7 +1,7 @@
 # EFCore.Toolkit (Work in progress!)
 [![Version](https://img.shields.io/nuget/v/EFCore.Toolkit.svg)](https://www.nuget.org/packages/EFCore.Toolkit)  [![Downloads](https://img.shields.io/nuget/dt/EFCore.Toolkit.svg)](https://www.nuget.org/packages/EFCore.Toolkit)
 
-<img src="https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/master/logo.png" width="100" height="100" alt="EFCore.Toolkit" align="right">
+<img src="https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/develop/logo.png" width="100" height="100" alt="EFCore.Toolkit" align="right">
 EFCore.Toolkit is a library which provides implementations for EntityFramework best practices, patterns, utilities and extensions.
 - Patterns such as UnitOfWork, Repository
 - Helper classes, e.g. DbContextBase, ContextTestBase
@@ -17,7 +17,7 @@ Use the following command to install EFCore.Toolkit using NuGet package manager 
 	
 For contract assemblies you may only want to use the abstractions of EFCore.Toolkit. For this reason, you can install EFCore.Toolkit.Core which comes as a dedicated NuGet package and is absolutely free of any dependencies.
 
-	PM> Install-Package EFCore.Toolkit.Core
+	PM> Install-Package EFCore.Toolkit.Contracts
 
 ### API Usage
 #### Repository pattern and GenericRepository
@@ -41,7 +41,7 @@ Providing databases with predefined data is an essential feature. IDataSeed is t
 ### EFCore.Toolkit and IoC
 EFCore.Toolkit is ready to be used with an IoC framework. You may intend to create a data access module which contains your EF context, the repositories, the entity type configurations, etc. On top of that, you want to promote the CRUD-style repositories to whoever want to consume your data access layer. So, simply create a seperate data access abstraction assembly which contains an interface definition for your repositories. Have a look at the ToolkitSample provided in this project. This sample project adds modularity using the well-known Autofac IoC framework. Have a look at the module configuration ```DataAccessModule``` to get an impression of how to set-up the dependencies.
 
-```
+```C#
 // Register all data seeds:
 builder.RegisterType<DepartmentDataSeed>().As<IDataSeed>().SingleInstance();
 
@@ -60,4 +60,4 @@ Depending on your application, you may need to change the instantiation mode for
 If you have any further ideas or specific needs, do not hesitate to submit a [new issue](https://github.com/thomasgalliker/EFCore.Toolkit/issues).
 
 ### License
-This project is Copyright &copy; 2018 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
+This project is Copyright &copy; 2020 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.

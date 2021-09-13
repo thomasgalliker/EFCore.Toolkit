@@ -1,11 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net451</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Contracts.csproj" />
+    <ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
     <ProjectReference Include="..\ToolkitSample.Model\ToolkitSample.Model.csproj" />
   </ItemGroup>
 

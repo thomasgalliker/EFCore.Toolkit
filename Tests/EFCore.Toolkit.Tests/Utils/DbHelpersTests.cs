@@ -8,7 +8,7 @@ using FluentAssertions;
 
 using Xunit;
 
-namespace EntityFramework.Toolkit.Tests.Utils
+namespace EFCore.Toolkit.Tests.Utils
 {
     public class DbHelpersTests
     {

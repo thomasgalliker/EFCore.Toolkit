@@ -1,8 +1,8 @@
-﻿#if NET45
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
 using EFCore.Toolkit.Auditing.ConfigFile;
+using EFCore.Toolkit.Utils;
 
 namespace EFCore.Toolkit.Auditing
 {
@@ -10,8 +10,22 @@ namespace EFCore.Toolkit.Auditing
     {
         internal static AuditDbContextConfiguration GetAuditDbContextConfigurationFromXml()
         {
-            var auditConfigurationSection = ConfigurationManager.GetSection("entityFramework.Audit") as AuditConfigurationSection ??
-                         new AuditConfigurationSection();
+            var assemblyLoader = AssemblyLoader.Current;
+            var entryAssembly = assemblyLoader.GetEntryAssembly();
+            if (entryAssembly == null)
+            {
+                throw new InvalidOperationException("AssemblyLoader did not provide a valid value for GetEntryAssembly");
+            }
+
+            var configPath = entryAssembly.Location;
+            return GetAuditDbContextConfigurationFromXml(configPath);
+        }
+
+        internal static AuditDbContextConfiguration GetAuditDbContextConfigurationFromXml(string configPath)
+        {
+            var configuration = ConfigurationManager.OpenExeConfiguration(configPath);
+            var auditConfigurationSection = configuration.Sections["entityFramework.Audit"] as AuditConfigurationSection;
+            auditConfigurationSection = auditConfigurationSection ?? new AuditConfigurationSection();
 
             var entityMapping = new List<AuditTypeInfo>();
 
@@ -37,4 +51,3 @@ namespace EFCore.Toolkit.Auditing
         }
     }
 }
-#endif

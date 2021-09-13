@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
 using FluentAssertions;
 
@@ -12,12 +12,12 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EntityFramework.Toolkit.Tests
+namespace EFCore.Toolkit.Tests
 {
     public class DataSeedIntegrationTests : ContextTestBase<EmployeeContext>
     {
         public DataSeedIntegrationTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+            : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
                   databaseInitializer: null,
                   log: testOutputHelper.WriteLine)
         {

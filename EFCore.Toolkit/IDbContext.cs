@@ -1,8 +1,11 @@
-﻿using EFCore.Toolkit.Contracts;
+﻿using EFCore.Toolkit.Abstractions;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.Toolkit
 {
+    /// <summary>
+    /// IDbContext is the abstraction interface of an EntityFramework context.
+    /// </summary>
     public interface IDbContext : IContext
     {
         /// <summary>

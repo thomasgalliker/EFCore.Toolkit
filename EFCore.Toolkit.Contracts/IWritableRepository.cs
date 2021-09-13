@@ -1,8 +1,6 @@
-﻿#if !NET40
-using System.Threading.Tasks;
-#endif
+﻿using System.Threading.Tasks;
 
-namespace EFCore.Toolkit.Contracts
+namespace EFCore.Toolkit.Abstractions
 {
     public interface IWritableRepository : IRepository
     {
@@ -34,8 +32,6 @@ namespace EFCore.Toolkit.Contracts
         /// </exception>
         ChangeSet Save();
 
-#if !NET40
         Task<ChangeSet> SaveAsync();
-#endif
     }
 }

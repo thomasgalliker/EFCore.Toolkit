@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using EFCore.Toolkit;
-using EFCore.Toolkit.Contracts;
-using EFCore.Toolkit.Contracts.Extensions;
+using EFCore.Toolkit.Abstractions;
+using EFCore.Toolkit.Abstractions.Extensions;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Testing;
-using EntityFramework.Toolkit.Tests.Extensions;
-using EntityFramework.Toolkit.Tests.Stubs;
-
+using EFCore.Toolkit.Tests.Auditing;
+using EFCore.Toolkit.Tests.Extensions;
+using EFCore.Toolkit.Tests.Stubs;
+using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Contracts.Repository;
@@ -19,14 +19,14 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-using static EntityFramework.Toolkit.Tests.Stubs.Testdata.Employees;
+using static EFCore.Toolkit.Tests.Stubs.Testdata.Employees;
 
-namespace EntityFramework.Toolkit.Tests.Repository
+namespace EFCore.Toolkit.Tests.Repository
 {
     /// <summary>
     ///     Repository tests using <see cref="EmployeeContextTestDbConnection" /> as database connection.
     /// </summary>
-    public class GenericRepositoryTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection>
+    public class GenericRepositoryTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         private readonly ITestOutputHelper testOutputHelper;
 
@@ -35,6 +35,8 @@ namespace EntityFramework.Toolkit.Tests.Repository
                   log: testOutputHelper.WriteLine)
         {
             this.testOutputHelper = testOutputHelper;
+
+            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
@@ -512,14 +514,17 @@ namespace EntityFramework.Toolkit.Tests.Repository
             var updatedEmployees = new List<Employee>();
             var updatedEmployee1 = CreateEmployee1();
             updatedEmployee1.Id = originalEmployee1.Id;
+            updatedEmployee1.DepartmentId = originalEmployee1.DepartmentId;
             updatedEmployee1.RowVersion = originalEmployee1.RowVersion;
 
             var updatedEmployee2 = CreateEmployee2();
             updatedEmployee2.Id = originalEmployee2.Id;
+            updatedEmployee2.DepartmentId = originalEmployee2.DepartmentId;
             updatedEmployee2.RowVersion = originalEmployee2.RowVersion;
 
             var updatedEmployee3 = CreateEmployee3();
             updatedEmployee3.Id = originalEmployee3.Id;
+            updatedEmployee3.DepartmentId = originalEmployee3.DepartmentId;
             updatedEmployee3.RowVersion = originalEmployee3.RowVersion;
 
             updatedEmployees.Add(originalEmployee1);
@@ -546,7 +551,7 @@ namespace EntityFramework.Toolkit.Tests.Repository
             this.testOutputHelper.WriteLine($"Elapsed={stopwatch.ElapsedMilliseconds}ms");
 
             // Assert
-            committedChangeSet.Assert(expectedNumberOfAdded: 0, expectedNumberOfModified: 3, expectedNumberOfDeleted: 0);
+            committedChangeSet.Assert(expectedNumberOfAdded: 0, expectedNumberOfModified: 4, expectedNumberOfDeleted: 0);
 
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
@@ -557,6 +562,13 @@ namespace EntityFramework.Toolkit.Tests.Repository
                 allEmployees.ElementAt(2).Birthdate.Should().Be(new DateTime(2000, 12, 31, 01, 23, 20));
 
                 stopwatch.ElapsedMilliseconds.Should().BeLessThan(2500);
+            }
+
+            using (IGenericRepository<Department> departmentRepository = new GenericRepository<Department>(this.CreateContext()))
+            {
+                var allDepartments = departmentRepository.GetAll().ToList();
+                allDepartments.Should().HaveCount(1);
+                allDepartments.ElementAt(0).Name.Should().Be("Human Resources");
             }
         }
 
@@ -573,7 +585,7 @@ namespace EntityFramework.Toolkit.Tests.Repository
             Action action = () => employeeRepository.Save();
 
             // Assert
-            action.ShouldThrow<UpdateConcurrencyException>();
+            action.Should().Throw<UpdateConcurrencyException>();
 
             employeeRepository = new EmployeeRepository(this.CreateContext());
             var allEmployees = employeeRepository.GetAll().ToList();

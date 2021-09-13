@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0;net451</TargetFrameworks>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <AssemblyName>EFCore.Toolkit.Tests</AssemblyName>
     <PackageId>EFCore.Toolkit.Tests</PackageId>
     <RuntimeIdentifiers>win10-x64</RuntimeIdentifiers>
@@ -11,12 +11,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="4.8.1" />
-    <PackageReference Include="FluentAssertions" Version="4.19.4" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="Moq" Version="4.10.0" />
-    <PackageReference Include="xunit" Version="2.4.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
+    <PackageReference Include="Autofac" Version="5.2.0" />
+    <PackageReference Include="coverlet.msbuild" Version="3.1.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FluentAssertions" Version="6.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="ObjectDumper.NET" Version="3.3.7" />
+    <PackageReference Include="xunit" Version="2.4.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
 
   <!-- Include files in the Resources directory to be used across the test suite -->
@@ -27,7 +35,7 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Contracts.csproj" />
+    <ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
     <ProjectReference Include="..\..\EFCore.Toolkit\EFCore.Toolkit.csproj" />
     <ProjectReference Include="..\..\Samples\ToolkitSample.DataAccess.Contracts\ToolkitSample.DataAccess.Contracts.csproj" />
     <ProjectReference Include="..\..\Samples\ToolkitSample.DataAccess\ToolkitSample.DataAccess.csproj" />

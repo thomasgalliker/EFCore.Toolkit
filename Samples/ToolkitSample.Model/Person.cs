@@ -1,11 +1,12 @@
 using System;
 using System.Diagnostics;
-using EFCore.Toolkit.Contracts.Auditing;
+using EFCore.Toolkit.Abstractions;
+using EFCore.Toolkit.Abstractions.Auditing;
 
 namespace ToolkitSample.Model
 {
     [DebuggerDisplay("Person: Id={Id}, FirstName={FirstName}, LastName={LastName}")]
-    public class Person : ICreatedDate, IUpdatedDate
+    public class Person : IIdentifiable, ICreatedDate, IUpdatedDate
     {
         public int Id { get; set; }
 
@@ -17,7 +18,7 @@ namespace ToolkitSample.Model
 
         public string CountryId { get; set; }
 
-        public virtual Country Country { get; set; }
+        public Country Country { get; set; }
 
         public byte[] RowVersion { get; set; }
 

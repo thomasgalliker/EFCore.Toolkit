@@ -1,10 +1,10 @@
-﻿using EFCore.Toolkit.Contracts.Auditing;
+﻿using EFCore.Toolkit.Abstractions.Auditing;
 
 namespace ToolkitSample.Model.Auditing
 {
     public class EmployeeAudit : AuditEntity
     {
-        public virtual int Id { get; set; }
+        public int Id { get; set; }
 
         public virtual string FirstName { get; set; }
 

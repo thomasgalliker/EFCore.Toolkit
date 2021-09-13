@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace EFCore.Toolkit.Contracts
+namespace EFCore.Toolkit.Abstractions
 {
     /// <summary>
     ///     Interface for changed objects and object properties.

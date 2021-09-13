@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using EFCore.Toolkit.Contracts;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
 using ToolkitSample.DataAccess;
 using ToolkitSample.DataAccess.Context;
@@ -7,12 +7,12 @@ using ToolkitSample.DataAccess.Seed;
 using Xunit.Abstractions;
 
 
-namespace EntityFramework.Toolkit.Tests.Repository
+namespace EFCore.Toolkit.Tests.Repository
 {
     public class PersonRepositoryTests : ContextTestBase<EmployeeContext>
     {
         public PersonRepositoryTests(ITestOutputHelper testOutputHelper)
-            : base(dbConnection: () => new EmployeeContextTestDbConnection(),
+            : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
                   databaseInitializer: new EmployeeContextDatabaseInitializer(new List<IDataSeed> { new CountryDataSeed() }),
                   log: testOutputHelper.WriteLine)
         {
