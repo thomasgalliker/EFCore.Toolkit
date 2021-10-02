@@ -36,7 +36,7 @@ namespace EFCore.Toolkit.Extensions
                 return to;
             }
 
-            return default(TTo);
+            return default;
         }
 
         internal static string GetFormattedName(this Type type)

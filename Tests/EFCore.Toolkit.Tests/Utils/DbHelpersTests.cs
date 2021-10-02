@@ -17,10 +17,9 @@ namespace EFCore.Toolkit.Tests.Utils
         {
             // Arrange
             Expression<Func<Product, string>> expr = p => p.StringProperty;
-            string path;
 
             // Act
-            var isParsed = DbHelpers.TryParsePath(expr.Body, out path);
+            var isParsed = DbHelpers.TryParsePath(expr.Body, out var path);
 
             // Assert
             isParsed.Should().BeTrue();
@@ -32,10 +31,9 @@ namespace EFCore.Toolkit.Tests.Utils
         {
             // Arrange
             Expression<Func<Product, object>> expr = p => p.BaseProperty;
-            string path;
 
             // Act
-            var isParsed = DbHelpers.TryParsePath(expr.Body, out path);
+            var isParsed = DbHelpers.TryParsePath(expr.Body, out var path);
 
             // Assert
             isParsed.Should().BeTrue();
@@ -47,10 +45,9 @@ namespace EFCore.Toolkit.Tests.Utils
         {
             // Arrange
             Expression<Func<Product, object>> expr = p => p.CollectionProperty.Select(x => x.Key);
-            string path;
 
             // Act
-            var isParsed = DbHelpers.TryParsePath(expr.Body, out path);
+            var isParsed = DbHelpers.TryParsePath(expr.Body, out var path);
 
             // Assert
             isParsed.Should().BeTrue();

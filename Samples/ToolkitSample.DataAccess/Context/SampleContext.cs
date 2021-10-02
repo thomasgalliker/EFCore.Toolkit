@@ -65,11 +65,7 @@ namespace ToolkitSample.DataAccess.Context
         /// <param name="e">Arguments for the event</param>
         private void OnSaveCalled(EventArgs e)
         {
-            var handler = this.SaveCalled;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            this.SaveCalled?.Invoke(this, e);
         }
 
         /// <summary>
@@ -78,11 +74,7 @@ namespace ToolkitSample.DataAccess.Context
         /// <param name="e">Arguments for the event</param>
         private void OnDisposeCalled(EventArgs e)
         {
-            var handler = this.DisposeCalled;
-            if (handler != null)
-            {
-                handler(this, e);
-            }
+            this.DisposeCalled?.Invoke(this, e);
         }
 
         public void ResetDatabase()

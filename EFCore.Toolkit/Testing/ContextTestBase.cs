@@ -50,7 +50,6 @@ namespace EFCore.Toolkit.Testing
         private readonly ICollection<TContext> contextInstances = new List<TContext>();
         private readonly DbContextOptions dbContextOptions;
         private readonly IDatabaseInitializer<TContext> databaseInitializer;
-        private readonly string dbContextOptionsString;
         private bool disposed;
 
         protected ContextTestBase(DbContextOptions dbContextOptions)

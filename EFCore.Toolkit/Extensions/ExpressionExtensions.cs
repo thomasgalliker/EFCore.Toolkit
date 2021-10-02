@@ -8,17 +8,14 @@ namespace EFCore.Toolkit.Extensions
     {
         private static MemberExpression GetMemberExpression(this LambdaExpression lambdaExpression)
         {
-            var memberExpression = lambdaExpression.Body as MemberExpression;
-            if (memberExpression != null)
+            if (lambdaExpression.Body is MemberExpression memberExpression)
             {
                 return memberExpression;
             }
 
-            var unaryExpression = lambdaExpression.Body as UnaryExpression;
-            if (unaryExpression != null)
+            if (lambdaExpression.Body is UnaryExpression unaryExpression)
             {
-                var innerUnaryExpression = unaryExpression.Operand as UnaryExpression;
-                if (innerUnaryExpression != null)
+                if (unaryExpression.Operand is UnaryExpression innerUnaryExpression)
                 {
                     return innerUnaryExpression.Operand as MemberExpression;
                 }
