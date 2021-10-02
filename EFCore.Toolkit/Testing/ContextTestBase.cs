@@ -120,22 +120,12 @@ namespace EFCore.Toolkit.Testing
         /// <summary>
         ///     Returns the default db connection (given by ctor) if <paramref name="dbContextOptions" /> is null.
         /// </summary>
-        private DbContextOptions EnsureDbConnection(DbContextOptions dbContextOptions)
+        private DbContextOptions EnsureDbContextOptions(DbContextOptions dbContextOptions)
         {
             if (dbContextOptions == null)
             {
                 dbContextOptions = this.dbContextOptions;
             }
-
-            if (dbContextOptions == null && string.IsNullOrEmpty(this.dbContextOptionsString))
-            {
-                throw new InvalidOperationException("Either dbContextOptions or nameOrConnectionString must be defined.");
-            }
-
-            //if (dbContextOptions == null)
-            //{
-            //    dbContextOptions = new DbConnection(this.dbContextOptionsString);
-            //}
 
             return dbContextOptions;
         }
@@ -148,15 +138,9 @@ namespace EFCore.Toolkit.Testing
         protected TContext CreateContext(IDatabaseInitializer<TContext> databaseInitializer = null)
         {
             var args = new List<object>();
-            if (!string.IsNullOrEmpty(this.dbContextOptionsString))
-            {
-                args.Add(this.dbContextOptionsString);
-            }
-            else
-            {
-                var dbConn = this.EnsureDbConnection(this.dbContextOptions);
-                args.Add(dbConn);
-            }
+
+            var dbContextOptions = this.EnsureDbContextOptions(this.dbContextOptions);
+            args.Add(dbContextOptions);
 
             if (databaseInitializer == null)
             {
