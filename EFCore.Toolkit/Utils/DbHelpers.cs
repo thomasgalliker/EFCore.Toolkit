@@ -9,30 +9,25 @@ namespace EFCore.Toolkit.Utils
         {
             path = null;
             Expression expression1 = expression.RemoveConvert();
-            MemberExpression memberExpression = expression1 as MemberExpression;
-            MethodCallExpression methodCallExpression = expression1 as MethodCallExpression;
-            if (memberExpression != null)
+            if (expression1 is MemberExpression memberExpression)
             {
-                string name = memberExpression.Member.Name;
-                string path1;
-                if (!TryParsePath(memberExpression.Expression, out path1))
+                var name = memberExpression.Member.Name;
+                if (!TryParsePath(memberExpression.Expression, out var path1))
                 {
                     return false;
                 }
                 path = path1 == null ? name : path1 + "." + name;
             }
-            else if (methodCallExpression != null)
+            else if (expression1 is MethodCallExpression methodCallExpression)
             {
-                string path1;
 
                 if (methodCallExpression.Method.Name == "Select" &&
-                    methodCallExpression.Arguments.Count == 2 && 
-                    TryParsePath(methodCallExpression.Arguments[0], out path1) 
+                    methodCallExpression.Arguments.Count == 2 &&
+                    TryParsePath(methodCallExpression.Arguments[0], out var path1)
                     && path1 != null)
                 {
-                    LambdaExpression lambdaExpression = methodCallExpression.Arguments[1] as LambdaExpression;
-                    string path2;
-                    if (lambdaExpression != null && TryParsePath(lambdaExpression.Body, out path2) && path2 != null)
+                    if (methodCallExpression.Arguments[1] is LambdaExpression lambdaExpression &&
+                        TryParsePath(lambdaExpression.Body, out var path2) && path2 != null)
                     {
                         path = path1 + "." + path2;
                         return true;

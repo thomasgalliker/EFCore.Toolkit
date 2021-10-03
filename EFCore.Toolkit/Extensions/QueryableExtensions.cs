@@ -62,9 +62,7 @@ namespace EFCore.Toolkit.Extensions
                 throw new ArgumentNullException(nameof(pathExpression));
             }
 
-            string path;
-
-            if (!DbHelpers.TryParsePath(pathExpression.Body, out path) || path == null)
+            if (!DbHelpers.TryParsePath(pathExpression.Body, out var path) || path == null)
             {
                 throw new ArgumentException("A specified Include path is not valid. The given path expression may contains invalid elements.", nameof(pathExpression));
             }

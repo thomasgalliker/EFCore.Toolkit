@@ -93,7 +93,7 @@ namespace EFCore.Toolkit
             this.log = message => log(message);
         }
 
-        private Action<string> log { get; set; }
+        private Action<string> log;
 
         /// <inheritdoc />
         public string Name { get; } = typeof(TContext).GetFormattedName();

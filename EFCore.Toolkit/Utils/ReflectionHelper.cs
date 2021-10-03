@@ -46,13 +46,13 @@ namespace EFCore.Toolkit.Utils
 
         private static MethodInfo GetMethod(Expression<Action> expression)
         {
-            MethodCallExpression callExpression = (MethodCallExpression)expression.Body;
+            var callExpression = (MethodCallExpression)expression.Body;
             return callExpression.Method;
         }
 
         private static MethodInfo GetMethod<T>(Expression<Func<T>> expression)
         {
-            MethodCallExpression callExpression = (MethodCallExpression)expression.Body;
+            var callExpression = (MethodCallExpression)expression.Body;
             return callExpression.Method;
         }
 
@@ -83,29 +83,25 @@ namespace EFCore.Toolkit.Utils
                 throw new ArgumentNullException(nameof(expression));
             }
 
-            var memberExpression = expression as MemberExpression;
-            if (memberExpression != null)
+            if (expression is MemberExpression memberExpression)
             {
                 // Reference type property or field
                 return memberExpression.Member.Name;
             }
 
-            var methodCallExpression = expression as MethodCallExpression;
-            if (methodCallExpression != null)
+            if (expression is MethodCallExpression methodCallExpression)
             {
                 // Reference type method
                 return methodCallExpression.Method.Name;
             }
 
-            var unaryExpression = expression as UnaryExpression;
-            if (unaryExpression != null)
+            if (expression is UnaryExpression unaryExpression)
             {
                 // Property, field of method returning value type
                 return GetMemberName(unaryExpression);
             }
 
-            var lambdaExpression = expression as LambdaExpression;
-            if (lambdaExpression != null)
+            if (expression is LambdaExpression lambdaExpression)
             {
                 return GetMemberName(lambdaExpression.Body);
             }
@@ -115,8 +111,7 @@ namespace EFCore.Toolkit.Utils
 
         private static string GetMemberName(UnaryExpression unaryExpression)
         {
-            var methodCallExpression = unaryExpression.Operand as MethodCallExpression;
-            if (methodCallExpression != null)
+            if (unaryExpression.Operand is MethodCallExpression methodCallExpression)
             {
                 var methodExpression = methodCallExpression;
                 return methodExpression.Method.Name;

@@ -13,7 +13,7 @@ namespace EFCore.Toolkit.Abstractions.Extensions
        /// <returns>A collection of entities matching the search predicate.</returns>
         public static IEnumerable<T> FindBy<T>(this IReadOnlyRepository<T> repository, Expression<Func<T, bool>> predicate)
         {
-            IEnumerable<T> query = repository.Get().Where(predicate).AsEnumerable();
+            var query = repository.Get().Where(predicate).AsEnumerable();
             return query;
         }
 

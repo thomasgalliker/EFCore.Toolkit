@@ -30,7 +30,7 @@ namespace EFCore.Toolkit.Abstractions
         /// </exception>
         private Change(object changedEntity, ChangeState state, IEnumerable<PropertyChangeInfo> changedProperties)
         {
-            if(changedEntity == null)
+            if (changedEntity == null)
             {
                 throw new ArgumentNullException(nameof(changedEntity));
             }
