@@ -85,7 +85,7 @@ namespace EFCore.Toolkit.Testing
         /// <summary>
         ///     Initializes a new instance of the <see cref="ContextTestBase{TContext}" /> class.
         /// </summary>
-        /// <param name="dbContextOptions">The <see cref="IDbConnection" /> which is used to connect to the database.</param>
+        /// <param name="dbContextOptions">The <see cref="DbContextOptions" /> which is used to connect to the database.</param>
         /// <param name="log">Log delegate used to write diagnostic log messages to.</param>
         /// <param name="databaseInitializer">
         ///     The <see cref="IDatabaseInitializer{TContext}" /> which is used initialize the
