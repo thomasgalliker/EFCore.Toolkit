@@ -2,15 +2,15 @@
 
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
-		<Title>EFCore.Toolkit.Contracts</Title>
-		<Product>EFCore.Toolkit.Contracts</Product>
+		<Title>EFCore.Toolkit.Abstractions</Title>
+		<Product>EFCore.Toolkit.Abstractions</Product>
 		<AssemblyTitle>EFCore.Toolkit.Abstractions</AssemblyTitle>
 		<RootNamespace>EFCore.Toolkit.Abstractions</RootNamespace>
 		<Version>1.0.0</Version>
 		<Company>superdev GmbH</Company>
 		<Authors>Thomas Galliker</Authors>
 		<Description>EFCore.Toolkit is a library which provides implementations for EntityFrameworkCore best practices, patterns, utilities and extensions.</Description>
-		<PackageId>EFCore.Toolkit.Contracts</PackageId>
+		<PackageId>EFCore.Toolkit.Abstractions</PackageId>
 		<PackageProjectUrl>https://github.com/thomasgalliker/EFCore.Toolkit</PackageProjectUrl>
 		<PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/develop/logo.png</PackageIconUrl>
 		<PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>

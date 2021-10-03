@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Query.Internal;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace EFCore.Toolkit.Testing
 {
@@ -37,12 +37,12 @@ namespace EFCore.Toolkit.Testing
 
         public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = new CancellationToken())
         {
-            var result = Execute(expression);
+            var result = this.Execute(expression);
 
             var expectedResultType = typeof(TResult).GetGenericArguments()?.FirstOrDefault();
             if (expectedResultType == null)
             {
-                return default(TResult);
+                return default;
             }
 
             return (TResult)typeof(Task).GetMethod(nameof(Task.FromResult))

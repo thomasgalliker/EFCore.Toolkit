@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using EFCore.Toolkit.Auditing.Extensions;
+using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Auditing;
 using EFCore.Toolkit.Abstractions.Extensions;
+using EFCore.Toolkit.Auditing.Extensions;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using System.Threading.Tasks;
 
 namespace EFCore.Toolkit.Auditing
 {
@@ -280,7 +280,6 @@ namespace EFCore.Toolkit.Auditing
                     creatableEntity.CreatedDate = dateTimeNow.Value;
                 }
 
-                var updateableEntity = entry.Entity as IUpdatedDate;
                 if (entry.State == EntityState.Modified)
                 {
                     if (creatableEntity != null)
@@ -288,7 +287,7 @@ namespace EFCore.Toolkit.Auditing
                         entry.Property(nameof(ICreatedDate.CreatedDate)).IsModified = false;
                     }
 
-                    if (updateableEntity != null)
+                    if (entry.Entity is IUpdatedDate updateableEntity)
                     {
                         updateableEntity.UpdatedDate = dateTimeNow.Value;
                     }
