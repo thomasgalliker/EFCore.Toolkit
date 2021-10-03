@@ -16,7 +16,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
+		<ProjectReference Include="..\..\EFCore.Toolkit.Abstractions\EFCore.Toolkit.Abstractions.csproj" />
 		<ProjectReference Include="..\..\EFCore.Toolkit\EFCore.Toolkit.csproj" />
 		<ProjectReference Include="..\ToolkitSample.DataAccess.Contracts\ToolkitSample.DataAccess.Contracts.csproj" />
 		<ProjectReference Include="..\ToolkitSample.Model\ToolkitSample.Model.csproj" />

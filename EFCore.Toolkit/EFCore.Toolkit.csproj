@@ -39,6 +39,6 @@
 	</ItemGroup>
 	
 	<ItemGroup>
-		<ProjectReference Include="..\EFCore.Toolkit.Contracts\EFCore.Toolkit.Abstractions.csproj" />
+		<ProjectReference Include="..\EFCore.Toolkit.Abstractions\EFCore.Toolkit.Abstractions.csproj" />
 	</ItemGroup>
 </Project>
