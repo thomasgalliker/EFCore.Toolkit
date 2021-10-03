@@ -1,4 +1,4 @@
-# EFCore.Toolkit (Work in progress!)
+# EFCore.Toolkit
 [![Version](https://img.shields.io/nuget/v/EFCore.Toolkit.svg)](https://www.nuget.org/packages/EFCore.Toolkit)  [![Downloads](https://img.shields.io/nuget/dt/EFCore.Toolkit.svg)](https://www.nuget.org/packages/EFCore.Toolkit)
 
 <img src="https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/develop/logo.png" width="100" height="100" alt="EFCore.Toolkit" align="right">
@@ -15,7 +15,7 @@ Use the following command to install EFCore.Toolkit using NuGet package manager 
 
     PM> Install-Package EFCore.Toolkit
 	
-For contract assemblies you may only want to use the abstractions of EFCore.Toolkit. For this reason, you can install EFCore.Toolkit.Core which comes as a dedicated NuGet package and is absolutely free of any dependencies.
+For certain assemblies you may only want to use abstractions used in EFCore.Toolkit. In this case, you can install EFCore.Toolkit.Abstractions which is available as a seperate Nuget package and is absolutely free of any external dependencies.
 
 	PM> Install-Package EFCore.Toolkit.Abstractions
 
@@ -60,4 +60,4 @@ Depending on your application, you may need to change the instantiation mode for
 If you have any further ideas or specific needs, do not hesitate to submit a [new issue](https://github.com/thomasgalliker/EFCore.Toolkit/issues).
 
 ### License
-This project is Copyright &copy; 2020 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
+This project is Copyright &copy; 2021 [Thomas Galliker](https://ch.linkedin.com/in/thomasgalliker). Free for non-commercial use. For commercial use please contact the author.
