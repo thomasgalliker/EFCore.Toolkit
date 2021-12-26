@@ -7,7 +7,7 @@ using ToolkitSample.DataAccess.Seed;
 using Xunit.Abstractions;
 
 
-namespace EFCore.Toolkit.Tests.Repository
+namespace EFCore.Toolkit.Tests.Repositories
 {
     public class PersonRepositoryTests : ContextTestBase<EmployeeContext>
     {

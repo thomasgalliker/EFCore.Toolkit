@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using EFCore.Toolkit;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Extensions;
 using EFCore.Toolkit.Testing;
@@ -16,7 +15,7 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EFCore.Toolkit.Tests.Repository
+namespace EFCore.Toolkit.Tests.Repositories
 {
     public class EmployeeReadOnlyRepositoryTests : ContextTestBase<EmployeeContext>
     {
@@ -139,7 +138,7 @@ namespace EFCore.Toolkit.Tests.Repository
         public void ShouldFindByFirstName()
         {
             // Arrange
-            string expectedFirstName = "Thomas";
+            var expectedFirstName = "Thomas";
 
             var employees = new List<Employee> { Testdata.Employees.CreateEmployee1(), Testdata.Employees.CreateEmployee2(), Testdata.Employees.CreateEmployee3() };
 

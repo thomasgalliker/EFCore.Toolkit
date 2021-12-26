@@ -21,7 +21,7 @@ using Xunit.Abstractions;
 
 using static EFCore.Toolkit.Tests.Stubs.Testdata.Employees;
 
-namespace EFCore.Toolkit.Tests.Repository
+namespace EFCore.Toolkit.Tests.Repositories
 {
     /// <summary>
     ///     Repository tests using <see cref="EmployeeContextTestDbConnection" /> as database connection.
@@ -507,7 +507,7 @@ namespace EFCore.Toolkit.Tests.Repository
                 employeeRepository.Save();
             }
 
-            int n = 5000;
+            var n = 5000;
             var timespanOffset = new TimeSpan(0, 0, 0, 1);
             var stopwatch = new Stopwatch();
 
@@ -536,7 +536,7 @@ namespace EFCore.Toolkit.Tests.Repository
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
                 stopwatch.Start();
-                for (int i = 0; i < n; i++)
+                for (var i = 0; i < n; i++)
                 {
                     foreach (var updateEmployee in updatedEmployees)
                     {

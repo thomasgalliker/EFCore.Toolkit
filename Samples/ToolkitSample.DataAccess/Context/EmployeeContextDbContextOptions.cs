@@ -1,8 +1,7 @@
 ﻿using EFCore.Toolkit.Testing;
 using Microsoft.EntityFrameworkCore;
-using ToolkitSample.DataAccess.Context;
 
-namespace ToolkitSample.DataAccess
+namespace ToolkitSample.DataAccess.Context
 {
     public class EmployeeContextDbContextOptions
     {

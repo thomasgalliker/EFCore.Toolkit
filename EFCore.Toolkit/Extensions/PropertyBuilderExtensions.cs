@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace EFCore.Toolkit.Abstractions.Extensions
+namespace EFCore.Toolkit.Extensions
 {
     public static class PropertyBuilderExtensions
     {
