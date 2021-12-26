@@ -24,6 +24,6 @@
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageReleaseNotes>3.0.0
 - Initial release for EntityFrameworkCore 3.x</PackageReleaseNotes>
-		<Copyright>Copyright 2020</Copyright>
+		<Copyright>Copyright 2021</Copyright>
 	</PropertyGroup>
 </Project>
