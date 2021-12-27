@@ -34,12 +34,12 @@ namespace EFCore.Toolkit
         /// Returns <see cref="IQueryable{TEntity}"/> which allows to control whether or not to filter entities by current user.
         /// </summary>
         /// <param name="filterByCurrentUser">Returns current user's entities if <c>true</c>. No filter applied if <c>false</c>.</param>
-        public IQueryable<TEntity> Get(bool filterByCurrentUser)
+        public virtual IQueryable<TEntity> Get(bool filterByCurrentUser)
         {
             if (filterByCurrentUser)
             {
                 var currentUserId = this.userContext.GetCurrentUserId();
-                return base.Get().Where(i => Equals(i.CreatedBy, currentUserId));
+                return base.Get().WhereCreatedBy(currentUserId);
             }
 
             return base.Get();
