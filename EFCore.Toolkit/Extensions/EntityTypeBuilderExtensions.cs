@@ -32,9 +32,9 @@ namespace EFCore.Toolkit.Extensions
         }
 
         /// <summary>
-        /// Configures an entity as <seealso cref="ICreatedBy<TKey>"/>.
+        /// Configures an entity as <seealso cref="ICreatedBy{TKey}"/>.
         /// </summary>
-        /// <typeparam name="TEntity">Entity which implements <seealso cref="ICreatedBy<TKey>"/>.</typeparam>
+        /// <typeparam name="TEntity">Entity which implements <seealso cref="ICreatedBy{TKey}"/>.</typeparam>
         /// <param name="entity">EntityTypeBuilder for <typeparamref name="TEntity"/>.</param>
         public static EntityTypeBuilder<TEntity> HasCreatedBy<TEntity, TKey>(this EntityTypeBuilder<TEntity> entity) where TEntity : class, ICreatedBy<TKey>
         {
