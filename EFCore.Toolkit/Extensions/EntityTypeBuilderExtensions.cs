@@ -1,4 +1,5 @@
 ﻿using EFCore.Toolkit.Abstractions;
+using EFCore.Toolkit.Abstractions.Auditing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -45,13 +46,37 @@ namespace EFCore.Toolkit.Extensions
         }
 
         /// <summary>
-        /// Configures an entity as <seealso cref="ICreatedBy<int>"/>.
+        /// Configures an entity as <seealso cref="ICreatedBy{int}"/>.
         /// </summary>
-        /// <typeparam name="TEntity">Entity which implements <seealso cref="ICreatedBy<int>"/>.</typeparam>
+        /// <typeparam name="TEntity">Entity which implements <seealso cref="ICreatedBy{int}"/>.</typeparam>
         /// <param name="entity">EntityTypeBuilder for <typeparamref name="TEntity"/>.</param>
         public static EntityTypeBuilder<TEntity> HasCreatedBy<TEntity>(this EntityTypeBuilder<TEntity> entity) where TEntity : class, ICreatedBy<int>
         {
             return entity.HasCreatedBy<TEntity, int>();
+        }
+
+        /// <summary>
+        /// Configures an entity as <seealso cref="ICreatedDate"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity which implements <seealso cref="ICreatedDate"/>.</typeparam>
+        /// <param name="entity">EntityTypeBuilder for <typeparamref name="TEntity"/>.</param>
+        public static EntityTypeBuilder<TEntity> HasCreatedDate<TEntity>(this EntityTypeBuilder<TEntity> entity) where TEntity : class, ICreatedDate
+        {
+            entity.Property(e => e.CreatedDate).IsRequired();
+
+            return entity;
+        }
+
+        /// <summary>
+        /// Configures an entity as <seealso cref="IUpdatedDate"/>.
+        /// </summary>
+        /// <typeparam name="TEntity">Entity which implements <seealso cref="IUpdatedDate"/>.</typeparam>
+        /// <param name="entity">EntityTypeBuilder for <typeparamref name="TEntity"/>.</param>
+        public static EntityTypeBuilder<TEntity> HasUpdatedDate<TEntity>(this EntityTypeBuilder<TEntity> entity) where TEntity : class, IUpdatedDate
+        {
+            entity.Property(e => e.UpdatedDate).IsOptional();
+
+            return entity;
         }
 
         /// <summary>
