@@ -67,7 +67,7 @@ namespace EFCore.Toolkit.Extensions
         /// <summary>
         /// Adds a column "RowVersion" of type byte[] used for optimistic concurrency detection.
         /// </summary>
-        public static PropertyBuilder<byte[]> HasRowVersion<TProperty>(this EntityTypeBuilder entityTypeBuilder)
+        public static PropertyBuilder<byte[]> HasRowVersion(this EntityTypeBuilder entityTypeBuilder)
         {
             return entityTypeBuilder.Property<byte[]>("RowVersion")
                 .IsRowVersion()
