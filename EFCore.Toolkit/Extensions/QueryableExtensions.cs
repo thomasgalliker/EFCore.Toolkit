@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -8,6 +9,26 @@ namespace EFCore.Toolkit.Extensions
 {
     public static class QueryableExtensions
     {
+        /// <summary>
+        /// Filters entities which implement <seealso cref="ICreatedBy{TKey}"/>
+        /// </summary>
+        /// <typeparam name="T">The entity type.</typeparam>
+        /// <typeparam name="TKey">Type of user ID which relates to the entity.</typeparam>
+        /// <param name="queryable">The queryable to be filtered.</param>
+        /// <param name="createdBy">The user ID for which queryable is filtered.</param>
+        /// <returns>Queryable which contains only those entities which belong to user with ID <paramref name="createdBy"/>.</returns>
+        public static IQueryable<T> WhereCreatedBy<T, TKey>(this IQueryable<T> queryable, TKey createdBy) where T : class, ICreatedBy<TKey>
+        {
+            return queryable.Where(i => Equals(i.CreatedBy, createdBy));
+        }
+
+        /// <summary>
+        /// Filters the elements of an System.Linq.IQueryable based on a specified <paramref name="type"/>.
+        /// </summary>
+        /// <typeparam name="T">The entity type.</typeparam>
+        /// <param name="queryable">An System.Linq.IQueryable whose elements to filter.</param>
+        /// <param name="type">The type to filter the elements of the sequence on.</param>
+        /// <returns>A collection that contains the elements from source that have <paramref name="type"/>.</returns>
         public static IQueryable<T> OfType<T>(this IQueryable<T> queryable, Type type)
         {
             // TODO Check if type is subclass of T
@@ -20,6 +41,7 @@ namespace EFCore.Toolkit.Extensions
 
             return ofTypeQueryable;
         }
+
         /// <summary>
         ///     Includes navigation properties.
         /// </summary>
