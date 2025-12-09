@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31702.278
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36717.8 d17.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{533683F1-B92C-4149-A2AD-6045623BC6D8}"
 EndProject
@@ -16,9 +16,11 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{74445271-DF27-4206-8B26-1203CB23FCD6}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		build.yml = build.yml
+		.gitignore = .gitignore
 		logo.png = logo.png
+		azure-pipelines.yml = azure-pipelines.yml
 		README.md = README.md
+		ReleaseNotes.txt = ReleaseNotes.txt
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitSample.DataAccess", "Samples\ToolkitSample.DataAccess\ToolkitSample.DataAccess.csproj", "{FB809EAA-A63F-457D-9662-57C0D1BE0135}"
