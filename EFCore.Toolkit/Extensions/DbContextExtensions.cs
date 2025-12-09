@@ -54,6 +54,7 @@ namespace EFCore.Toolkit.Extensions
             var parameter = Expression.Parameter(typeof(TEntity));
             var propertyName = propertyExpression.GetPropertyInfo().Name;
             var property = Expression.Property(parameter, propertyName);
+
             foreach (var entity in entities)
             {
                 var propertyValue = entity.GetPropertyValue(propertyName);
@@ -73,8 +74,36 @@ namespace EFCore.Toolkit.Extensions
 
         public static void AddOrUpdate<TEntity>(this IDbContext context, Expression<Func<TEntity, object>> propertyExpression, params TEntity[] entities) where TEntity : class
         {
-            var c = (DbContext)context;
-            c.AddOrUpdate<TEntity>(x => x, entities);
+            if (context == null)
+            {
+                throw new ArgumentNullException(nameof(context));
+            }
+
+            if (propertyExpression == null)
+            {
+                throw new ArgumentNullException(nameof(propertyExpression));
+            }
+
+            var dbSet = context.Set<TEntity>();
+            var parameter = Expression.Parameter(typeof(TEntity));
+            var propertyName = propertyExpression.GetPropertyInfo().Name;
+            var property = Expression.Property(parameter, propertyName);
+
+            foreach (var entity in entities)
+            {
+                var propertyValue = entity.GetPropertyValue(propertyName);
+                var equalExpression = Expression.Equal(property, Expression.Constant(propertyValue));
+                var lambdaExpression = Expression.Lambda<Func<TEntity, bool>>(equalExpression, parameter);
+                var existingEntity = dbSet.SingleOrDefault(lambdaExpression);
+                if (existingEntity != null)
+                {
+                    context.Entry(existingEntity).CurrentValues.SetValues(entity);
+                }
+                else
+                {
+                    context.Entry(entity).State = EntityState.Added;
+                }
+            }
         }
 
         /// <summary>
