@@ -20,4 +20,9 @@ namespace EFCore.Toolkit.Abstractions
         /// </summary>
         object[] GetAllObjects();
     }
+
+    public interface IDataSeed<TEntity> : IDataSeed
+    {
+        // TODO: Use generic version of IDataSeed in DbContextExtensions
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -31,13 +32,13 @@ namespace EFCore.Toolkit.Extensions
 
                 ReflectionHelper.InvokeGenericMethod(
                     null,
-                    () => DbContextExtensions.AddOrUpdate<object>(null!, null!, null!),
+                    () => DbContextExtensions.AddOrUpdate<object>((DbContext)null!, null!, null!),
                     dataSeed.EntityType,
                     new object[] { context, predicate, dataSeed.GetAllObjects() });
             }
         }
 
-        public static void AddOrUpdate<TEntity>(this IDbContext context, Expression<Func<TEntity, object>> propertyExpression, params TEntity[] entities) where TEntity : class
+        public static void AddOrUpdate<TEntity>(this DbContext context, Expression<Func<object, object>> propertyExpression, params object[] entities) where TEntity : class
         {
             if (context == null)
             {
@@ -68,6 +69,12 @@ namespace EFCore.Toolkit.Extensions
                     context.Entry(entity).State = EntityState.Added;
                 }
             }
+        }
+
+        public static void AddOrUpdate<TEntity>(this IDbContext context, Expression<Func<TEntity, object>> propertyExpression, params TEntity[] entities) where TEntity : class
+        {
+            var c = (DbContext)context;
+            c.AddOrUpdate<TEntity>(x => x, entities);
         }
 
         /// <summary>

@@ -7,7 +7,7 @@ namespace EFCore.Toolkit
     ///     Provides a template for generic seed implementors.
     /// </summary>
     /// <typeparam name="TEntity">The entity type for which the implementor provides a seed.</typeparam>
-    public abstract class DataSeedBase<TEntity> : IDataSeed
+    public abstract class DataSeedBase<TEntity> : IDataSeed<TEntity>
     {
         /// <summary>
         ///     Initializes a new instance of the <see cref="DataSeedBase{TEntity}" /> class.
