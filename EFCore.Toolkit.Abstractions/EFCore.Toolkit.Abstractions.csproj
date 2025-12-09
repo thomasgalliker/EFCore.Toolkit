@@ -1,29 +1,45 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<Title>EFCore.Toolkit.Abstractions</Title>
+		<TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+		<OutputType>Library</OutputType>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+
+	<!--NuGet package-->
+	<PropertyGroup>
 		<Product>EFCore.Toolkit.Abstractions</Product>
-		<AssemblyTitle>EFCore.Toolkit.Abstractions</AssemblyTitle>
-		<RootNamespace>EFCore.Toolkit.Abstractions</RootNamespace>
+		<Description>EFCore.Toolkit.Abstractions contains data contracts used in EFCore.Toolkit.</Description>
 		<Version>1.0.0</Version>
-		<Company>superdev GmbH</Company>
 		<Authors>Thomas Galliker</Authors>
-		<Description>EFCore.Toolkit is a library which provides implementations for EntityFrameworkCore best practices, patterns, utilities and extensions.</Description>
 		<PackageId>EFCore.Toolkit.Abstractions</PackageId>
+		<PackageTags>EntityFrameworkCore;Entity;Framework;Core;EFCore;EF;Core;Bulk;Batch;Extensions;Insert;Update;Delete;Read</PackageTags>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageProjectUrl>https://github.com/thomasgalliker/EFCore.Toolkit</PackageProjectUrl>
-		<PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/develop/logo.png</PackageIconUrl>
-		<PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
-		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<PackageTags>EntityFrameworkCore Entity Framework Core EFCore EF Core Bulk Batch Extensions Insert Update Delete Read</PackageTags>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/thomasgalliker/EFCore.Toolkit</RepositoryUrl>
-		<OutputType>Library</OutputType>
-		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-		<SignAssembly>True</SignAssembly>
+		<Company>superdev GmbH</Company>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<PackageReleaseNotes>3.0.0
-- Initial release for EntityFrameworkCore 3.x</PackageReleaseNotes>
-		<Copyright>Copyright 2021</Copyright>
+		<Copyright>Copyright $([System.DateTime]::Now.ToString(`yyyy`)) © Thomas Galliker</Copyright>
+		<PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../ReleaseNotes.txt"))</PackageReleaseNotes>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EmbedAllSources>true</EmbedAllSources>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<None Include="..\README.md" Pack="True" PackagePath="\" />
+		<None Include="..\LICENSE" Pack="True" PackagePath="\" />
+		<None Include="..\logo.png" Pack="True" PackagePath="\" />
+	</ItemGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
 </Project>
