@@ -34,7 +34,7 @@ namespace EFCore.Toolkit.Abstractions.Extensions
         /// <exception cref="T:System.ArgumentNullException">
         ///     <paramref name="predicate" /> is null.
         /// </exception>
-        public static IEnumerable<T> RemoveAll<T>(this IGenericRepository<T> repository, Func<T, bool> predicate = null)
+        public static IEnumerable<T> RemoveAll<T>(this IGenericRepository<T> repository, Func<T, bool>? predicate = null)
         {
             IEnumerable<T> query = repository.Get();
             if (predicate != null)

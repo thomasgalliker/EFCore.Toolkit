@@ -56,7 +56,7 @@ namespace EFCore.Toolkit.Abstractions
         /// <summary>
         /// Update given property in <paramref name="propertyExpression"/> of given <paramref name="entity"/> with <paramref name="value"/>.
         /// </summary>
-        T UpdateProperty<TValue>(T entity, Expression<Func<T, TValue>> propertyExpression, TValue value);
+        T UpdateProperty<TValue>(T entity, Expression<Func<T, TValue>> propertyExpression, TValue? value);
 
         /// <summary>
         ///     Marks the given entity as Deleted such that it will be deleted from the database when SaveChanges

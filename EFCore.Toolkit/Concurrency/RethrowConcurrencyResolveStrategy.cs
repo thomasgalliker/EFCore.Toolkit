@@ -7,7 +7,7 @@ namespace EFCore.Toolkit.Concurrency
     /// </summary>
     public sealed class RethrowConcurrencyResolveStrategy : IConcurrencyResolveStrategy
     {
-        public object ResolveConcurrencyException(object conflictingEntity, object databaseEntity)
+        public object? ResolveConcurrencyException(object conflictingEntity, object databaseEntity)
         {
             return null;
         }

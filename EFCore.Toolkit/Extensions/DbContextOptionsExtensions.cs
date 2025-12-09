@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.SqlServer.Infrastructure.Internal;
@@ -11,7 +8,7 @@ namespace EFCore.Toolkit.Extensions
 {
     public static class DbContextOptionsExtensions
     {
-        private static DbContextOptions ContextOptions;
+        private static DbContextOptions? ContextOptions;
 
         public static void ConfigureDefaultValue(this DbContextOptions contextOptions)
         {
@@ -36,7 +33,7 @@ namespace EFCore.Toolkit.Extensions
                 {
                     var extensionType = extension.GetType();
 
-                    string newIdValue = null;
+                    string? newIdValue = null;
                     if (NewIdDictionary.TryGetValue(extensionType.Name, out var sqlNewIdValue))
                     {
                         newIdValue = sqlNewIdValue;

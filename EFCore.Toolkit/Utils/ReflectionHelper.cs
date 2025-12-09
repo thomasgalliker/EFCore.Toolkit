@@ -20,7 +20,7 @@ namespace EFCore.Toolkit.Utils
             return methodDefinition;
         }
 
-        internal static object InvokeGenericMethod(object target, Expression<Action> expression, Type genericType, object[] parameters = null)
+        internal static object InvokeGenericMethod(object? target, Expression<Action> expression, Type genericType, object[]? parameters = null)
         {
             if (parameters == null)
             {
@@ -32,7 +32,7 @@ namespace EFCore.Toolkit.Utils
             return result;
         }
 
-        internal static object InvokeGenericMethod<T>(object target, Expression<Func<T>> expression, Type genericType, object[] parameters = null)
+        internal static object InvokeGenericMethod<T>(object? target, Expression<Func<T>> expression, Type genericType, object[]? parameters = null)
         {
             if (parameters == null)
             {
@@ -61,7 +61,7 @@ namespace EFCore.Toolkit.Utils
             return sourceObject.GetType().GetTypeInfo().GetDeclaredProperty(propertyName).GetValue(sourceObject, null);
         }
 
-        internal static void SetPropertyValue(this object sourceObject, string propertyName, object value)
+        internal static void SetPropertyValue(this object sourceObject, string propertyName, object? value)
         {
             sourceObject.GetType().GetTypeInfo().GetDeclaredProperty(propertyName).SetValue(sourceObject, value);
         }

@@ -35,7 +35,7 @@ namespace EFCore.Toolkit.Testing
             return this.innerQueryProvider.Execute<TResult>(expression);
         }
 
-        public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = new CancellationToken())
+        public TResult? ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = new CancellationToken())
         {
             var result = this.Execute(expression);
 
@@ -45,7 +45,7 @@ namespace EFCore.Toolkit.Testing
                 return default;
             }
 
-            return (TResult)typeof(Task).GetMethod(nameof(Task.FromResult))
+            return (TResult?)typeof(Task).GetMethod(nameof(Task.FromResult))
                 ?.MakeGenericMethod(expectedResultType)
                 .Invoke(null, new[] { result });
         }

@@ -29,7 +29,7 @@ namespace EFCore.Toolkit.Tests.Auditing
         }
 
         [Fact]
-        public async void ShouldAuditCreatedAndUpdatedDate()
+        public async Task ShouldAuditCreatedAndUpdatedDate()
         {
             // Arrange
             var initialEmployee = Testdata.Employees.CreateEmployee1();

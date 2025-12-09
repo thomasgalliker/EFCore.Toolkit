@@ -59,7 +59,7 @@ namespace EFCore.Toolkit.Auditing
         {
         }
 
-        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
+        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string>? log)
             : base(dbContextOptions, databaseInitializer, log)
         {
         }
@@ -303,7 +303,7 @@ namespace EFCore.Toolkit.Auditing
             }
         }
 
-        private AuditTypeInfo GetAuditTypeInfo(Type entityType)
+        private AuditTypeInfo? GetAuditTypeInfo(Type entityType)
         {
             lock (this.auditTypes)
             {

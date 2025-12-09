@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace EFCore.Toolkit.Extensions
@@ -93,7 +90,7 @@ namespace EFCore.Toolkit.Extensions
         /// <param name="modelBuilder"></param>
         /// <param name="maxLength"></param>
         /// <param name="includeEntityTypeFilter"></param>
-        public static void SetDefaultStringMaxLength(this ModelBuilder modelBuilder, int? maxLength = 4000, Func<IMutableEntityType, bool> includeEntityTypeFilter = null)
+        public static void SetDefaultStringMaxLength(this ModelBuilder modelBuilder, int? maxLength = 4000, Func<IMutableEntityType, bool>? includeEntityTypeFilter = null)
         {
             foreach (var p in modelBuilder.Properties<string>())
             {

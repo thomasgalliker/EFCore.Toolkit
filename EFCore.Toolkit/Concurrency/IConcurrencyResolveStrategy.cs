@@ -9,6 +9,6 @@ namespace EFCore.Toolkit.Concurrency
         /// <param name="conflictingEntity">The object which caused the save conflict.</param>
         /// <param name="databaseEntity">The object which is already present in the database.</param>
         /// <returns></returns>
-        object ResolveConcurrencyException(object conflictingEntity, object databaseEntity);
+        object? ResolveConcurrencyException(object conflictingEntity, object databaseEntity);
     }
 }

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -29,7 +27,7 @@ namespace EFCore.Toolkit.Extensions
         ///     Has been introduced to allow casting objects without breaking the fluent API.
         /// </remarks>
         /// <typeparam name="TTo"></typeparam>
-        public static TTo As<TTo>(this object subject)
+        public static TTo? As<TTo>(this object subject)
         {
             if (subject is TTo to)
             {

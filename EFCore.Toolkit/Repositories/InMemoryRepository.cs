@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Extensions;
 using EFCore.Toolkit.Testing;
@@ -17,7 +13,8 @@ namespace EFCore.Toolkit
     {
         private readonly List<T> items;
 
-        public InMemoryRepository() : this(new List<T>())
+        public InMemoryRepository()
+            : this(new List<T>())
         {
         }
 
@@ -149,7 +146,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public T UpdateProperty<TValue>(T entity, Expression<Func<T, TValue>> propertyExpression, TValue value)
+        public T UpdateProperty<TValue>(T entity, Expression<Func<T, TValue>> propertyExpression, TValue? value)
         {
             this.Remove(entity);
             this.Add(entity);
@@ -185,6 +182,12 @@ namespace EFCore.Toolkit
 
         }
 
-        public IContext Context { get; }
+        public IContext Context
+        {
+            get
+            {
+                throw new NotSupportedException();
+            }
+        }
     }
 }

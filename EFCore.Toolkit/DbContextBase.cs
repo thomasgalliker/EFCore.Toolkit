@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Concurrency;
 using EFCore.Toolkit.Exceptions;
@@ -17,7 +13,7 @@ namespace EFCore.Toolkit
         where TContext : DbContext
     {
         private static readonly IList<TContext> InitializerLock = new List<TContext>();
-        private readonly IDatabaseInitializer<TContext> databaseInitializer;
+        private readonly IDatabaseInitializer<TContext>? databaseInitializer;
 
         /// <summary>
         ///     Empty constructor is used for 'update-database' command-line command.
@@ -42,10 +38,12 @@ namespace EFCore.Toolkit
         {
         }
 
-        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
+        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext>? databaseInitializer, Action<string>? log)
             : base(dbContextOptions)
         {
-            this.EnsureLog(log);
+            log ??= s => Debug.WriteLine(s);
+
+            this.log = message => log(message);
 
             this.log($"Initializing DbContext '{this.Name}' with NameOrConnectionString = \"{this.GetConnectionString()}\" and IDatabaseInitializer =\"{databaseInitializer?.GetType().GetFormattedName()}\"");
 
@@ -81,16 +79,6 @@ namespace EFCore.Toolkit
             this.log($"{this.Name}.OnModelCreating");
 
             ////modelBuilder.Remove<PluralizingTableNameConvention>();
-        }
-
-        private void EnsureLog(Action<string> log = null)
-        {
-            if (log == null)
-            {
-                log = s => Debug.WriteLine(s);
-            }
-
-            this.log = message => log(message);
         }
 
         private Action<string> log;

@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -149,7 +145,7 @@ namespace EFCore.Toolkit.Extensions
             return tableCountResults;
         }
 
-        public static IQueryable Set(this DbContext context, Type entityType)
+        public static IQueryable? Set(this DbContext context, Type entityType)
         {
             // Get the generic type definition
             MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), new Type[] { });
@@ -160,7 +156,7 @@ namespace EFCore.Toolkit.Extensions
             return method.Invoke(context, null) as IQueryable;
         }
 
-        public static IQueryable<T> Set<T>(this DbContext context)
+        public static IQueryable<T>? Set<T>(this DbContext context)
         {
             // Get the generic type definition 
             MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), null);

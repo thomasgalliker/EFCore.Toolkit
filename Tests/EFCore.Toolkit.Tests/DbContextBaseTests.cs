@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Concurrency;
 using EFCore.Toolkit.Testing;
@@ -24,7 +25,7 @@ namespace EFCore.Toolkit.Tests
         }
 
         [Fact]
-        public async void ShouldSaveChangesAsync()
+        public async Task ShouldSaveChangesAsync()
         {
             // Arrange
             var initialEmployee = Testdata.Employees.CreateEmployee1();

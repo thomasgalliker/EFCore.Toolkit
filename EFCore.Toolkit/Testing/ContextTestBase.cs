@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EFCore.Toolkit.Abstractions;
-using EFCore.Toolkit.Extensions;
+﻿using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.Toolkit.Testing
@@ -49,7 +45,7 @@ namespace EFCore.Toolkit.Testing
     {
         private readonly ICollection<TContext> contextInstances = new List<TContext>();
         private readonly DbContextOptions dbContextOptions;
-        private readonly IDatabaseInitializer<TContext> databaseInitializer;
+        private readonly IDatabaseInitializer<TContext>? databaseInitializer;
         private bool disposed;
 
         protected ContextTestBase(DbContextOptions dbContextOptions)
@@ -72,12 +68,12 @@ namespace EFCore.Toolkit.Testing
         {
         }
 
-        protected ContextTestBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer)
+        protected ContextTestBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext>? databaseInitializer)
             : this(dbContextOptions: dbContextOptions, databaseInitializer: databaseInitializer, log: null)
         {
         }
 
-        protected ContextTestBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
+        protected ContextTestBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext>? databaseInitializer, Action<string>? log)
             : this(dbContextOptions: dbContextOptions, databaseInitializer: databaseInitializer, log: log, deleteDatabaseOnDispose: true)
         {
         }
@@ -92,7 +88,7 @@ namespace EFCore.Toolkit.Testing
         ///     database. (Default is <see cref="DropCreateDatabaseAlways{TContext}" />).
         /// </param>
         /// <param name="deleteDatabaseOnDispose">Determines if the database needs to be deleted on dispose. (Default is true).</param>
-        protected ContextTestBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose)
+        protected ContextTestBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext>? databaseInitializer, Action<string>? log, bool deleteDatabaseOnDispose)
         {
             this.dbContextOptions = dbContextOptions;
             this.Log = log;
@@ -100,7 +96,7 @@ namespace EFCore.Toolkit.Testing
             this.databaseInitializer = databaseInitializer;
         }
 
-        public Action<string> Log { get; set; }
+        public Action<string>? Log { get; set; }
 
         protected bool DeleteDatabaseOnDispose { get; set; }
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace EFCore.Toolkit.Abstractions
 {
@@ -8,7 +6,7 @@ namespace EFCore.Toolkit.Abstractions
     public class Change : IChange
     {
         private Change(object changedEntity, ChangeState state)
-            : this(changedEntity, state, null)
+            : this(changedEntity, state, null!)
         {
         }
 

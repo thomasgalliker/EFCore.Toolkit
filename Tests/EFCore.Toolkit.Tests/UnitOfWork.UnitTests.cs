@@ -173,7 +173,7 @@ namespace EFCore.Toolkit.Tests
         }
 
         [Fact]
-        public async void ShouldCommitAsync()
+        public async Task ShouldCommitAsync()
         {
             // Arrange
             var transactionMock = new Mock<ITransaction>();

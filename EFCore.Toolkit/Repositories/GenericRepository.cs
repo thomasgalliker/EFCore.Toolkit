@@ -134,7 +134,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public virtual T UpdateProperty<TValue>(T entity, Expression<Func<T, TValue>> propertyExpression, TValue value)
+        public virtual T UpdateProperty<TValue>(T entity, Expression<Func<T, TValue>> propertyExpression, TValue? value)
         {
             entity = this.UpdateProperties(entity, propertyExpression);
 
