@@ -1,0 +1,10 @@
+5.1
+- Maintenance update.
+- New build configuration.
+
+5.0
+- Update to Entity Framework Core 5.x.
+- Support for .NET Standard 2.1 and .NET 5.
+
+3.0
+- Initial release for EntityFrameworkCore 3.x.
