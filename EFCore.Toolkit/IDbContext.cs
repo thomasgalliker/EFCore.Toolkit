@@ -1,5 +1,6 @@
 ﻿using EFCore.Toolkit.Abstractions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace EFCore.Toolkit
 {
@@ -19,5 +20,7 @@ namespace EFCore.Toolkit
         /// <typeparam name="TEntity"></typeparam>
         /// <returns></returns>
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
+
+        public EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
     }
 }

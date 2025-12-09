@@ -212,6 +212,7 @@ namespace EFCore.Toolkit
             //this.ApplyCreatedBy(() => this.userContext.GetCurrentUserId());
 
             var changeSet = this.GetChangeSet();
+
             try
             {
                 base.SaveChanges();

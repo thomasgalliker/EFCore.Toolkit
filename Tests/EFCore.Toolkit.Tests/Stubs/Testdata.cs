@@ -1,5 +1,5 @@
 ﻿using System;
-
+using System.Collections.Generic;
 using ToolkitSample.Model;
 
 namespace EFCore.Toolkit.Tests.Stubs
@@ -94,7 +94,16 @@ namespace EFCore.Toolkit.Tests.Stubs
         {
             public static Country CreateCountrySwitzerland()
             {
-                return new Country { Id = "CH", Name = "Switzerland" };
+                return new Country
+                {
+                    Id = "CH",
+                    Name = "Switzerland"
+                };
+            }
+
+            public static IEnumerable<Country> GetAll()
+            {
+                yield return CreateCountrySwitzerland();
             }
         }
 

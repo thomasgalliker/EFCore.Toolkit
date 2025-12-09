@@ -37,7 +37,7 @@ namespace EFCore.Toolkit.Extensions
             }
         }
 
-        public static void AddOrUpdate<TEntity>(this DbContext context, Expression<Func<object, object>> propertyExpression, params object[] entities) where TEntity : class
+        public static void AddOrUpdate<TEntity>(this IDbContext context, Expression<Func<TEntity, object>> propertyExpression, params TEntity[] entities) where TEntity : class
         {
             if (context == null)
             {
@@ -49,7 +49,7 @@ namespace EFCore.Toolkit.Extensions
                 throw new ArgumentNullException(nameof(propertyExpression));
             }
 
-            var set = context.Set<TEntity>();
+            var dbSet = context.Set<TEntity>();
             var parameter = Expression.Parameter(typeof(TEntity));
             var propertyName = propertyExpression.GetPropertyInfo().Name;
             var property = Expression.Property(parameter, propertyName);
@@ -58,7 +58,7 @@ namespace EFCore.Toolkit.Extensions
                 var propertyValue = entity.GetPropertyValue(propertyName);
                 var equalExpression = Expression.Equal(property, Expression.Constant(propertyValue));
                 var lambdaExpression = Expression.Lambda<Func<TEntity, bool>>(equalExpression, parameter);
-                var existingEntity = set.SingleOrDefault(lambdaExpression);
+                var existingEntity = dbSet.SingleOrDefault(lambdaExpression);
                 if (existingEntity != null)
                 {
                     context.Entry(existingEntity).CurrentValues.SetValues(entity);
@@ -81,7 +81,7 @@ namespace EFCore.Toolkit.Extensions
         ///     Will not work for HasDatabaseGeneratedOption(DatabaseGeneratedOption.None).
         ///     Will not work for composite keys.
         /// </remarks>
-        public static T AddOrUpdate<T>(this DbContext context, T entity) where T : class
+        public static T AddOrUpdate<T>(this IDbContext context, T entity) where T : class
         {
             // Source: https://stackoverflow.com/questions/36208580/what-happened-to-addorupdate-in-ef-7-core
 
