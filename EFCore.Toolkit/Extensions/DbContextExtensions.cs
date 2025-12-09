@@ -5,6 +5,7 @@ using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace EFCore.Toolkit.Extensions
 {
@@ -31,7 +32,7 @@ namespace EFCore.Toolkit.Extensions
 
                 ReflectionHelper.InvokeGenericMethod(
                     null,
-                    () => DbContextExtensions.AddOrUpdate<object>(null, null, null),
+                    () => DbContextExtensions.AddOrUpdate<object>(null!, null!, null!),
                     dataSeed.EntityType,
                     new object[] { context, predicate, dataSeed.GetAllObjects() });
             }
@@ -145,7 +146,7 @@ namespace EFCore.Toolkit.Extensions
             return tableCountResults;
         }
 
-        public static IQueryable? Set(this DbContext context, Type entityType)
+        public static IQueryable Set(this DbContext context, Type entityType)
         {
             // Get the generic type definition
             MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), new Type[] { });
@@ -153,10 +154,10 @@ namespace EFCore.Toolkit.Extensions
             // Build a method with the specific type argument you're interested in
             method = method.MakeGenericMethod(entityType);
 
-            return method.Invoke(context, null) as IQueryable;
+            return (IQueryable)method.Invoke(context, null);
         }
 
-        public static IQueryable<T>? Set<T>(this DbContext context)
+        public static IQueryable<T> Set<T>(this DbContext context)
         {
             // Get the generic type definition 
             MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), null);
@@ -164,7 +165,7 @@ namespace EFCore.Toolkit.Extensions
             // Build a method with the specific type argument you're interested in 
             method = method.MakeGenericMethod(typeof(T));
 
-            return method.Invoke(context, null) as IQueryable<T>;
+            return (IQueryable<T>)method.Invoke(context, null);
         }
     }
 }

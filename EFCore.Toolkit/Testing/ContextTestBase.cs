@@ -103,7 +103,7 @@ namespace EFCore.Toolkit.Testing
         /// <summary>
         ///     Returns the default database initializer (given by ctor) if <paramref name="databaseInitializer" /> is null.
         /// </summary>
-        private IDatabaseInitializer<TContext> EnsureDatabaseInitializer(IDatabaseInitializer<TContext> databaseInitializer)
+        private IDatabaseInitializer<TContext> EnsureDatabaseInitializer(IDatabaseInitializer<TContext>? databaseInitializer)
         {
             if (databaseInitializer == null)
             {
@@ -131,7 +131,7 @@ namespace EFCore.Toolkit.Testing
             return this.CreateContext(this.databaseInitializer);
         }
 
-        protected TContext CreateContext(IDatabaseInitializer<TContext> databaseInitializer = null)
+        protected TContext CreateContext(IDatabaseInitializer<TContext>? databaseInitializer = null)
         {
             var args = new List<object>();
 

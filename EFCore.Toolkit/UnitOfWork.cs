@@ -44,7 +44,7 @@ namespace EFCore.Toolkit
         public ICollection<ChangeSet> Commit()
         {
             var changeSets = new Collection<ChangeSet>();
-            Type lastContextType = null;
+            Type? lastContextType = null;
             try
             {
                 var firstContext = this.contexts.FirstOrDefault();

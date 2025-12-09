@@ -54,12 +54,12 @@ namespace EFCore.Toolkit.Auditing
         {
         }
 
-        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer)
+        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext>? databaseInitializer)
             : this(dbContextOptions, databaseInitializer, log: null)
         {
         }
 
-        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string>? log)
+        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext>? databaseInitializer, Action<string>? log)
             : base(dbContextOptions, databaseInitializer, log)
         {
         }

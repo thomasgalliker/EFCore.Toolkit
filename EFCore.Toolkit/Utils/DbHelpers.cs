@@ -5,7 +5,7 @@ namespace EFCore.Toolkit.Utils
 {
     internal static class DbHelpers
     {
-        internal static bool TryParsePath(Expression expression, out string path)
+        internal static bool TryParsePath(Expression expression, out string? path)
         {
             path = null;
             Expression expression1 = expression.RemoveConvert();
@@ -52,6 +52,7 @@ namespace EFCore.Toolkit.Utils
                 //}
                 return false;
             }
+
             return true;
         }
     }

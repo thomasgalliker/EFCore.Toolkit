@@ -15,11 +15,14 @@ namespace EFCore.Toolkit
         private static readonly IList<TContext> InitializerLock = new List<TContext>();
         private readonly IDatabaseInitializer<TContext>? databaseInitializer;
 
+        private Action<string> log;
+
         /// <summary>
         ///     Empty constructor is used for 'update-database' command-line command.
         /// </summary>
         protected DbContextBase()
         {
+            this.log ??= s => Debug.WriteLine(s);
             //TryInitializeDatabase(this, null);
         }
 
@@ -43,7 +46,7 @@ namespace EFCore.Toolkit
         {
             log ??= s => Debug.WriteLine(s);
 
-            this.log = message => log(message);
+            this.log = log;
 
             this.log($"Initializing DbContext '{this.Name}' with NameOrConnectionString = \"{this.GetConnectionString()}\" and IDatabaseInitializer =\"{databaseInitializer?.GetType().GetFormattedName()}\"");
 
@@ -80,8 +83,6 @@ namespace EFCore.Toolkit
 
             ////modelBuilder.Remove<PluralizingTableNameConvention>();
         }
-
-        private Action<string> log;
 
         /// <inheritdoc />
         public string Name { get; } = typeof(TContext).GetFormattedName();
