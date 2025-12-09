@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Extensions;
 using EFCore.Toolkit.Exceptions;
@@ -305,6 +306,45 @@ namespace EFCore.Toolkit.Tests.Repositories
                 var allEmployees = employeeRepository.GetAll().ToList();
                 allEmployees.Should().HaveCount(2);
                 removedEmployee.ShouldBeEquivalentTo(CreateEmployee1());
+            }
+        }
+
+        [Fact]
+        public async Task ShouldSoftDeletePerson()
+        {
+            // Arrange
+            var employees = new List<Employee>
+            {
+                CreateEmployee1(),
+                CreateEmployee2(),
+                CreateEmployee3()
+            };
+
+            using (IEmployeeRepository employeeRepository = new EmployeeRepository(this.CreateContext()))
+            {
+                employeeRepository.AddRange(employees);
+                employeeRepository.Save();
+            }
+
+            // Act
+            using (IEmployeeRepository employeeRepository = new EmployeeRepository(this.CreateContext()))
+            {
+                foreach (var employee in employees)
+                {
+                    employeeRepository.SoftDelete(employee);
+                }
+
+                await employeeRepository.SaveAsync();
+            }
+
+            // Assert
+            using (IEmployeeReadOnlyRepository employeeRepository = new EmployeeReadOnlyRepository(this.CreateContext()))
+            {
+                var allEmployees = employeeRepository.GetAll();
+                foreach (var employee in allEmployees)
+                {
+                    employee.IsDeleted.Should().BeTrue();
+                }
             }
         }
 

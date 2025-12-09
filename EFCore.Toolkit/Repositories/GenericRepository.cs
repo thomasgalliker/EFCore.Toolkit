@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace EFCore.Toolkit
 {
@@ -157,6 +153,14 @@ namespace EFCore.Toolkit
         {
             this.DbSet.RemoveRange(entities);
             return entities;
+        }
+
+        /// <inheritdoc />
+        public TDeletable SoftDelete<TDeletable>(TDeletable entity) where TDeletable : IDeletable, T
+        {
+            entity.IsDeleted = true;
+            this.Update(entity);
+            return entity;
         }
 
         /// <inheritdoc />

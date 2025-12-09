@@ -72,6 +72,8 @@ namespace EFCore.Toolkit.Abstractions
         /// </remarks>
         T Remove(T entity);
 
+        TDeletable SoftDelete<TDeletable>(TDeletable entity) where TDeletable : T, IDeletable;
+
         IEnumerable<T> RemoveRange(IEnumerable<T> entities);
     }
 }

@@ -177,6 +177,14 @@ namespace EFCore.Toolkit
             }
         }
 
+        /// <inheritdoc />
+        public TDeletable SoftDelete<TDeletable>(TDeletable entity) where TDeletable : IDeletable, T
+        {
+            entity.IsDeleted = true;
+            return entity;
+
+        }
+
         public IContext Context { get; }
     }
 }
