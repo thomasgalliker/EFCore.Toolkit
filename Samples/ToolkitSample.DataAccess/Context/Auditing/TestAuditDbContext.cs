@@ -1,6 +1,5 @@
 ﻿using System;
 using EFCore.Toolkit;
-using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Auditing;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.Model;

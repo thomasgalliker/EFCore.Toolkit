@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace EFCore.Toolkit.Abstractions
+﻿namespace EFCore.Toolkit.Abstractions
 {
     public interface IAuditContext : IContext
     {

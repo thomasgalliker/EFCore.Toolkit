@@ -1,8 +1,7 @@
 ﻿using System;
-using Microsoft.Data.SqlClient;
 using EFCore.Toolkit.Testing;
 using FluentAssertions;
-
+using Microsoft.Data.SqlClient;
 using Xunit;
 
 namespace EFCore.Toolkit.Tests.Testing

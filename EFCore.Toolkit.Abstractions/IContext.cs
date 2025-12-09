@@ -1,11 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
-
-namespace EFCore.Toolkit.Abstractions
-{    
-     /// <summary>
-     /// IContext is the database-independant abstraction of a data access context.
-     /// </summary>
+﻿namespace EFCore.Toolkit.Abstractions
+{
+    /// <summary>
+    /// IContext is the database-independant abstraction of a data access context.
+    /// </summary>
     public interface IContext : IDisposable
     {
         /// <summary>

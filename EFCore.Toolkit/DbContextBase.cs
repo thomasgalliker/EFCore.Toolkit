@@ -15,7 +15,7 @@ namespace EFCore.Toolkit
         private static readonly IList<TContext> InitializerLock = new List<TContext>();
         private readonly IDatabaseInitializer<TContext>? databaseInitializer;
 
-        private Action<string> log;
+        private readonly Action<string> log;
 
         /// <summary>
         ///     Empty constructor is used for 'update-database' command-line command.

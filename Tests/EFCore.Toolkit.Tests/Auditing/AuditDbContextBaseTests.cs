@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
-using EFCore.Toolkit.Auditing;
 using EFCore.Toolkit.Abstractions.Auditing;
+using EFCore.Toolkit.Auditing;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
 using EFCore.Toolkit.Utils;

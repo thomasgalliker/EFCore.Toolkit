@@ -39,7 +39,7 @@ namespace EFCore.Toolkit.Extensions
                         newIdValue = sqlNewIdValue;
                     }
 
-                    Console.WriteLine($"HasDefaultValueForSql extension={extensionType.Name} -> newIdValue=\"{ newIdValue ?? "<null>"}\"");
+                    Console.WriteLine($"HasDefaultValueForSql extension={extensionType.Name} -> newIdValue=\"{newIdValue ?? "<null>"}\"");
                     return newIdValue;
                 }).Where(s => !string.IsNullOrEmpty(s));
 

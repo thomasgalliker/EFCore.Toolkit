@@ -1,9 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace EFCore.Toolkit.Extensions
+﻿namespace EFCore.Toolkit.Extensions
 {
     internal static class AsyncEnumerableExtensions
     {

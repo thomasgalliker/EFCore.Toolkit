@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace EFCore.Toolkit.Abstractions
+﻿namespace EFCore.Toolkit.Abstractions
 {
     public interface IReadOnlyRepository<T> : IRepository
     {

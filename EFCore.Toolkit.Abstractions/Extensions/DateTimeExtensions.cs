@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EFCore.Toolkit.Abstractions.Extensions
+﻿namespace EFCore.Toolkit.Abstractions.Extensions
 {
     public static class DateTimeExtensions
     {
@@ -16,7 +14,8 @@ namespace EFCore.Toolkit.Abstractions.Extensions
 
                 case DateTimeKind.Local:
                     return value.ToKindLocal();
-   ;         }
+                    ;
+            }
 
             throw new InvalidOperationException($"Cannot convert to DateTimeKind.{kind}");
         }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace EFCore.Toolkit.Abstractions.Extensions
+﻿namespace EFCore.Toolkit.Abstractions.Extensions
 {
     public static class GenericRepositoryExtensions
     {

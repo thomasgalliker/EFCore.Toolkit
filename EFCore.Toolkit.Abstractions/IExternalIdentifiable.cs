@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EFCore.Toolkit.Abstractions
+﻿namespace EFCore.Toolkit.Abstractions
 {
     public interface IExternalIdentifiable
     {

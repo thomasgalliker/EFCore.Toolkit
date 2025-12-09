@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
+﻿using System.Configuration;
 using EFCore.Toolkit.Auditing.ConfigFile;
 using EFCore.Toolkit.Utils;
 

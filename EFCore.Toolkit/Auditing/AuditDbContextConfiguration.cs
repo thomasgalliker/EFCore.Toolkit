@@ -1,8 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-
-namespace EFCore.Toolkit.Auditing
+﻿namespace EFCore.Toolkit.Auditing
 {
     public class AuditDbContextConfiguration
     {

@@ -34,13 +34,14 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public ChangeSet Save()
         {
-            return ChangeSet.Empty;
+            return new ChangeSet(this.GetType(), Array.Empty<IChange>());
         }
 
         /// <inheritdoc />
         public Task<ChangeSet> SaveAsync()
         {
-            return Task.FromResult(ChangeSet.Empty);
+            var changeSet = this.Save();
+            return Task.FromResult(changeSet);
         }
 
         /// <inheritdoc />

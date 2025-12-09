@@ -1,5 +1,3 @@
-using System;
-
 namespace EFCore.Toolkit.Abstractions.Auditing
 {
     /// <summary>

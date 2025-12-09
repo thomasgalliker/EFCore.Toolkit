@@ -6,7 +6,7 @@ namespace EFCore.Toolkit.Auditing.ConfigFile
     {
         internal EntityElement this[int index]
         {
-            get { return (EntityElement) this.BaseGet(index); }
+            get { return (EntityElement)this.BaseGet(index); }
 
             set
             {
@@ -26,7 +26,7 @@ namespace EFCore.Toolkit.Auditing.ConfigFile
 
         protected override object GetElementKey(ConfigurationElement element)
         {
-            return ((EntityElement) element).EntityType;
+            return ((EntityElement)element).EntityType;
         }
     }
 }

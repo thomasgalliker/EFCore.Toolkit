@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EFCore.Toolkit.Abstractions.Auditing
+﻿namespace EFCore.Toolkit.Abstractions.Auditing
 {
     /// <summary>
     ///     Base class for audit entities.
@@ -19,7 +17,7 @@ namespace EFCore.Toolkit.Abstractions.Auditing
         ///     Gets or sets the user who updated the entity
         ///     Will be automatically set by AuditDbContext on SaveChanges.
         /// </summary>
-        public virtual string AuditUser { get; set; }
+        public virtual string AuditUser { get; set; } = null!;
 
         /// <summary>
         ///     Gets or sets the type of audit. 0 for update, 1 for deletion.

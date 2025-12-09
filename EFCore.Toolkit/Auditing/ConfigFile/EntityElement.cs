@@ -10,7 +10,7 @@ namespace EFCore.Toolkit.Auditing.ConfigFile
         [ConfigurationProperty(EntityTypeElementName, IsRequired = false)]
         internal string EntityType
         {
-            get { return (string) this[EntityTypeElementName]; }
+            get { return (string)this[EntityTypeElementName]; }
 
             set { this[EntityTypeElementName] = value; }
         }
@@ -18,7 +18,7 @@ namespace EFCore.Toolkit.Auditing.ConfigFile
         [ConfigurationProperty(AuditEntityTypeElementName, IsRequired = false)]
         internal string AuditEntityType
         {
-            get { return (string) this[AuditEntityTypeElementName]; }
+            get { return (string)this[AuditEntityTypeElementName]; }
 
             set { this[AuditEntityTypeElementName] = value; }
         }
