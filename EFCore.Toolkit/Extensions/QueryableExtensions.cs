@@ -41,7 +41,7 @@ namespace EFCore.Toolkit.Extensions
         }
 
         /// <summary>
-        ///     Includes navigation properties.
+        /// Includes navigation properties.
         /// </summary>
         /// <typeparam name="T">Generic type T.</typeparam>
         /// <param name="queryable">Queryable</param>
@@ -63,7 +63,7 @@ namespace EFCore.Toolkit.Extensions
         }
 
         /// <summary>
-        ///     Includes navigation properties.
+        /// Includes navigation properties.
         /// </summary>
         /// <typeparam name="T">Generic type T.</typeparam>
         /// <typeparam name="TProperty">Generic property type TProperty.</typeparam>
