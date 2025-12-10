@@ -107,15 +107,15 @@ namespace EFCore.Toolkit.Extensions
         }
 
         /// <summary>
-        ///     Adds an entity (if newly created) or update (if has non-default Id).
+        /// Adds an entity (if newly created) or update (if has non-default Id).
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="context">The db context.</param>
         /// <param name="entity">The entity.</param>
         /// <returns></returns>
         /// <remarks>
-        ///     Will not work for HasDatabaseGeneratedOption(DatabaseGeneratedOption.None).
-        ///     Will not work for composite keys.
+        /// Will not work for HasDatabaseGeneratedOption(DatabaseGeneratedOption.None).
+        /// Will not work for composite keys.
         /// </remarks>
         public static T AddOrUpdate<T>(this IDbContext context, T entity) where T : class
         {
@@ -143,15 +143,16 @@ namespace EFCore.Toolkit.Extensions
             {
                 throw new Exception($"{t.FullName} does not have a primary key specified. Unable to exec AddOrUpdate call.");
             }
-            var keyVal = primaryKeyField.GetValue(entity);
-            var dbVal = context.Set<T>().Find(keyVal);
+            var primaryKeyValue = primaryKeyField.GetValue(entity);
+            var dbSet = context.Set<T>();
+            var existingEntity = dbSet.Find(primaryKeyValue);
 
-            if (dbVal != null)
+            if (existingEntity != null)
             {
-                context.Entry(dbVal).CurrentValues.SetValues(entity);
-                context.Set<T>().Update(dbVal);
+                context.Entry(existingEntity).CurrentValues.SetValues(entity);
+                context.Set<T>().Update(existingEntity);
 
-                entity = dbVal;
+                entity = existingEntity;
             }
             else
             {
