@@ -13,7 +13,7 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EFCore.Toolkit.Tests
+namespace EFCore.Toolkit.Tests.Extensions
 {
     public class DbContextExtensionsTests : ContextTestBase<EmployeeContext>
     {
@@ -65,8 +65,8 @@ namespace EFCore.Toolkit.Tests
             // Act
             using (IEmployeeContext employeeContext = this.CreateContext())
             {
-                employeeContext.AddOrUpdate<Country>(c => c.Id, countries);
-                employeeContext.AddOrUpdate<Country>(c => c.Id, countries);
+                employeeContext.AddOrUpdate(c => c.Id, countries);
+                employeeContext.AddOrUpdate(c => c.Id, countries);
 
                 await employeeContext.SaveChangesAsync();
             }

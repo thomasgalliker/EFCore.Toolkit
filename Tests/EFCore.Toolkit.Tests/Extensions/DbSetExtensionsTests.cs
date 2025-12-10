@@ -1,0 +1,52 @@
+﻿using System.Linq;
+using System.Threading.Tasks;
+using EFCore.Toolkit.Extensions;
+using EFCore.Toolkit.Testing;
+using EFCore.Toolkit.Tests.Stubs;
+
+using FluentAssertions;
+using ToolkitSample.DataAccess.Context;
+using ToolkitSample.Model;
+
+using Xunit;
+using Xunit.Abstractions;
+
+namespace EFCore.Toolkit.Tests.Extensions
+{
+    public class DbSetExtensionsTests : ContextTestBase<EmployeeContext>
+    {
+        private readonly ITestOutputHelper testOutputHelper;
+
+        public DbSetExtensionsTests(ITestOutputHelper testOutputHelper)
+            : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
+                  databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+                   log: testOutputHelper.WriteLine)
+        {
+            this.testOutputHelper = testOutputHelper;
+        }
+
+        [Fact]
+        public async Task ShouldAddOrUpdate()
+        {
+            // Arrange
+            var countries = Testdata.Countries.GetAll().ToArray();
+
+            // Act
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var dbSet = employeeContext.Set<Country>();
+                dbSet.AddOrUpdate(countries);
+                dbSet.AddOrUpdate(countries);
+
+                await employeeContext.SaveChangesAsync();
+            }
+
+            // Assert
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var allCountries = employeeContext.Set<Country>().ToArray();
+                allCountries.Should().HaveCount(countries.Length);
+            }
+        }
+    }
+}
