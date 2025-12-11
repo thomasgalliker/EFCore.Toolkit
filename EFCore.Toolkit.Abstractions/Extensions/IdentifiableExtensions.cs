@@ -4,7 +4,10 @@
     {
         public static int? FindIdByExternalId<T>(this IQueryable<T> repository, Guid externalId) where T : IExternalIdentifiable, IIdentifiable
         {
-            var id = repository.Select(x => new { x.Id, x.ExternalId }).SingleOrDefault(i => i.ExternalId == externalId)?.Id;
+            var id = repository
+                .Select(x => new { x.Id, x.ExternalId })
+                .SingleOrDefault(i => i.ExternalId == externalId)?.Id;
+
             return id;
         }
 

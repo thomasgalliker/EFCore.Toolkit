@@ -26,7 +26,7 @@ namespace EFCore.Toolkit.Tests.Extensions
         }
 
         [Fact]
-        public async Task ShouldAddOrUpdate()
+        public async Task ShouldAddOrUpdate_UsingPrimaryKeyComparison()
         {
             // Arrange
             var countries = Testdata.Countries.GetAll().ToArray();
@@ -36,8 +36,61 @@ namespace EFCore.Toolkit.Tests.Extensions
             {
                 var dbSet = employeeContext.Set<Country>();
                 dbSet.AddOrUpdate(countries);
-                dbSet.AddOrUpdate(countries);
+                await employeeContext.SaveChangesAsync();
 
+                dbSet.AddOrUpdate(countries);
+                await employeeContext.SaveChangesAsync();
+            }
+
+            // Assert
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var allCountries = employeeContext.Set<Country>().ToArray();
+                allCountries.Should().HaveCount(countries.Length);
+            }
+        }
+        
+
+        [Fact]
+        public async Task ShouldAddOrUpdate_FilterDeletedItems()
+        {
+            // Arrange
+            var country = Testdata.Countries.GetAll().ToArray()[0];
+
+            // Act
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var dbSet = employeeContext.Set<Country>();
+                country = dbSet.AddOrUpdate(country);
+                country.IsDeleted = true;
+                await employeeContext.SaveChangesAsync();
+
+                dbSet.AddOrUpdate(country);
+                await employeeContext.SaveChangesAsync();
+            }
+
+            // Assert
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var allCountries = employeeContext.Set<Country>().ToArray();
+                allCountries.Should().HaveCount(1);
+            }
+        }
+
+        [Fact]
+        public async Task ShouldAddOrUpdate_UsingCustomKeyComparison()
+        {
+            // Arrange
+            var countries = Testdata.Countries.GetAll().ToArray();
+
+            // Act
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var dbSet = employeeContext.Set<Country>();
+                dbSet.AddOrUpdate(countries, c => c.Name);
+                await employeeContext.SaveChangesAsync();
+
+                dbSet.AddOrUpdate(countries, c => c.Name);
                 await employeeContext.SaveChangesAsync();
             }
 

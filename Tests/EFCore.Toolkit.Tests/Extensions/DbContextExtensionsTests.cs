@@ -65,9 +65,10 @@ namespace EFCore.Toolkit.Tests.Extensions
             // Act
             using (IEmployeeContext employeeContext = this.CreateContext())
             {
-                employeeContext.AddOrUpdate(c => c.Id, countries);
-                employeeContext.AddOrUpdate(c => c.Id, countries);
+                employeeContext.AddOrUpdate(countries, c => c.Id);
+                await employeeContext.SaveChangesAsync();
 
+                employeeContext.AddOrUpdate(countries, c => c.Id);
                 await employeeContext.SaveChangesAsync();
             }
 
