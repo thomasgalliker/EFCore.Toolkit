@@ -73,7 +73,6 @@ namespace EFCore.Toolkit.Extensions
 
             foreach (var entity in entities)
             {
-
                 // Try to find tracked entity first (avoids dual instance issues)
                 var trackedEntity = context.ChangeTracker.Entries<TEntity>()
                     .Select(e => e.Entity)
@@ -86,9 +85,6 @@ namespace EFCore.Toolkit.Extensions
                     .FirstOrDefault(e =>
                         keys.All(k =>
                             k.GetValue(e)?.Equals(k.GetValue(entity)) == true));
-
-                //var existingEntity = existingEntities.SingleOrDefault(e =>
-                //    keys.All(k => k.GetValue(e)?.Equals(k.GetValue(entity)) == true));
 
                 if (existingEntity == null)
                 {

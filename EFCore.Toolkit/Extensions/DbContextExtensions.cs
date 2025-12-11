@@ -24,20 +24,6 @@ namespace EFCore.Toolkit.Extensions
             return !total.Except(applied).Any();
         }
 
-        public static void Seed(this DbContext context, IEnumerable<IDataSeed> dataSeeds)
-        {
-            foreach (var dataSeed in dataSeeds)
-            {
-                var predicate = dataSeed.GetAddOrUpdateExpression();
-
-                ReflectionHelper.InvokeGenericMethod(
-                    null,
-                    () => DbContextExtensions.AddOrUpdate<object>((DbContext)null!, null!, null!),
-                    dataSeed.EntityType,
-                    new object[] { context, predicate, dataSeed.GetAllObjects() });
-            }
-        }
-
         public static TEntity[] AddOrUpdate<TEntity>(this DbContext context, params TEntity[] entities) where TEntity : class
         {
             return DbSetExtensions.AddOrUpdateInternal(context, context.Set<TEntity>(), entities, null);
@@ -48,14 +34,22 @@ namespace EFCore.Toolkit.Extensions
             return DbSetExtensions.AddOrUpdateInternal(context, context.Set<TEntity>(), entities, keySelector);
         }
 
+        public static TEntity[] AddOrUpdate<TEntity>(this IContext context, TEntity[] entities, Expression<Func<TEntity, object>> keySelector) where TEntity : class
+        {
+            var dbContext = (DbContext)context;
+            return DbSetExtensions.AddOrUpdateInternal(dbContext, dbContext.Set<TEntity>(), entities, keySelector);
+        }
+
         public static TEntity[] AddOrUpdate<TEntity>(this IDbContext context, TEntity[] entities) where TEntity : class
         {
-            return DbSetExtensions.AddOrUpdateInternal((DbContext)context, context.Set<TEntity>(), entities, null);
+            var dbContext = (DbContext)context;
+            return DbSetExtensions.AddOrUpdateInternal(dbContext, dbContext.Set<TEntity>(), entities, null);
         }
 
         public static TEntity[] AddOrUpdate<TEntity>(this IDbContext context, TEntity[] entities, Expression<Func<TEntity, object>> keySelector) where TEntity : class
         {
-            return DbSetExtensions.AddOrUpdateInternal((DbContext)context, context.Set<TEntity>(), entities, keySelector);
+            var dbContext = (DbContext)context;
+            return DbSetExtensions.AddOrUpdateInternal(dbContext, dbContext.Set<TEntity>(), entities, keySelector);
         }
 
         /// <summary>

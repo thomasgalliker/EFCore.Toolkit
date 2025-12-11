@@ -2,8 +2,8 @@
 
 namespace EFCore.Toolkit
 {
-    public interface IDatabaseInitializer<T>
+    public interface IDatabaseInitializer<TContext> where TContext : DbContext
     {
-        void Initialize(DbContext context, bool force);
+        void Initialize(DbContextBase<TContext> context, bool force);
     }
 }

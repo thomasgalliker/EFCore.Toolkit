@@ -11,10 +11,7 @@ namespace ToolkitSample.DataAccess.Seed
     {
         public override Expression<Func<Department, object>> AddOrUpdateExpression
         {
-            get
-            {
-                return department => department.Name;
-            }
+            get => department => department.Name;
         }
 
         public override Department[] GetAll()

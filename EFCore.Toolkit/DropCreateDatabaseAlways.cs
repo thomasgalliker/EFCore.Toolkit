@@ -2,9 +2,9 @@
 
 namespace EFCore.Toolkit
 {
-    public class DropCreateDatabaseAlways<T> : IDatabaseInitializer<T>
+    public class DropCreateDatabaseAlways<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
     {
-        public void Initialize(DbContext context, bool force)
+        public void Initialize(DbContextBase<TContext> context, bool force)
         {
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();

@@ -2,9 +2,9 @@
 
 namespace EFCore.Toolkit
 {
-    public class CreateDatabaseIfNotExists<T> : IDatabaseInitializer<T>
+    public class CreateDatabaseIfNotExists<TContext> : IDatabaseInitializer<TContext> where TContext : DbContext
     {
-        public void Initialize(DbContext context, bool force)
+        public void Initialize(DbContextBase<TContext> context, bool force)
         {
             context.Database.EnsureCreated();
         }

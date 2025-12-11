@@ -18,14 +18,17 @@ namespace ToolkitSample.DataAccess
             this.dataSeeds = dataSeeds;
         }
 
-        public void Initialize(DbContext context, bool force)
+        public void Initialize(DbContextBase<EmployeeContext> context, bool force)
         {
             context.Database.EnsureCreated();
             if (context.AllMigrationsApplied())
             {
                 if (!context.Set<Employee>().Any())
                 {
-                    context.Seed(this.dataSeeds);
+                    foreach (var dataSeed in this.dataSeeds)
+                    {
+                        dataSeed.Seed(context);
+                    }
                     context.SaveChanges();
                 }
             }
