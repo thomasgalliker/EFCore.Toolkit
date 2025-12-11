@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Linq.Expressions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,15 +10,15 @@ namespace EFCore.Toolkit.Extensions
         /// <summary>
         /// Filters the elements of an System.Linq.IQueryable based on a specified <paramref name="type"/>.
         /// </summary>
-        /// <typeparam name="T">The entity type.</typeparam>
+        /// <typeparam name="TEntity">The entity type.</typeparam>
         /// <param name="queryable">An System.Linq.IQueryable whose elements to filter.</param>
         /// <param name="type">The type to filter the elements of the sequence on.</param>
         /// <returns>A collection that contains the elements from source that have <paramref name="type"/>.</returns>
-        public static IQueryable<T> OfType<T>(this IQueryable<T> queryable, Type type)
+        public static IQueryable<TEntity> OfType<TEntity>(this IQueryable<TEntity> queryable, Type type)
         {
             // TODO Check if type is subclass of T
 
-            var ofTypeQueryable = (IQueryable<T>)ReflectionHelper.InvokeGenericMethod(
+            var ofTypeQueryable = (IQueryable<TEntity>)ReflectionHelper.InvokeGenericMethod(
                           null,
                           () => Queryable.OfType<object>(null),
                           type,
@@ -26,38 +27,55 @@ namespace EFCore.Toolkit.Extensions
             return ofTypeQueryable;
         }
 
-        [Obsolete("Use Include method instead.")]
-        public static IQueryable<T> Include2<T>(this IQueryable<T> queryable, params Expression<Func<T, object>>[] properties) where T : class
+        /// <summary>
+        /// Includes one or more navigation properties specified by lambda expressions.
+        /// Supports nested collection navigation using <c>Select</c>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type of the queryable.</typeparam>
+        /// <param name="queryable">The source queryable.</param>
+        /// <param name="navigationPropertyPaths">Lambda expressions specifying navigation properties to include.</param>
+        /// <returns>A queryable with the specified navigation properties included.</returns>
+        public static IQueryable<TEntity> IncludeNested<TEntity>([NotNull] this IQueryable<TEntity> queryable, [NotNull] params Expression<Func<TEntity, object>>[] navigationPropertyPaths) where TEntity : class
         {
             if (queryable == null)
             {
                 throw new ArgumentNullException(nameof(queryable));
             }
 
-            foreach (var property in properties)
+            foreach (var navigationPropertyPath in navigationPropertyPaths)
             {
-                queryable = QueryableExtensions.Include2<T, object>(queryable, property);
+                queryable = IncludeNested(queryable, navigationPropertyPath);
             }
 
             return queryable;
         }
 
-        [Obsolete("Use Include method instead.")]
-        public static IQueryable<T> Include2<T, TProperty>(this IQueryable<T> queryable, Expression<Func<T, TProperty>> pathExpression) where T : class
+        /// <summary>
+        /// Includes a single navigation property specified by a lambda expression.
+        /// Supports nested collection navigation using <c>Select</c>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type of the queryable.</typeparam>
+        /// <typeparam name="TProperty">The property type of the navigation property.</typeparam>
+        /// <param name="queryable">The source queryable.</param>
+        /// <param name="navigationPropertyPath">Lambda expression specifying the navigation property.</param>
+        /// <returns>A queryable with the specified navigation property included.</returns>
+        public static IQueryable<TEntity> IncludeNested<TEntity, TProperty>([NotNull] this IQueryable<TEntity> queryable, [NotNull] Expression<Func<TEntity, TProperty>> navigationPropertyPath) where TEntity : class
         {
             if (queryable == null)
             {
                 throw new ArgumentNullException(nameof(queryable));
             }
 
-            if (pathExpression == null)
+            if (navigationPropertyPath == null)
             {
-                throw new ArgumentNullException(nameof(pathExpression));
+                throw new ArgumentNullException(nameof(navigationPropertyPath));
             }
 
-            if (!DbHelpers.TryParsePath(pathExpression.Body, out var path) || path == null)
+            if (!DbHelpers.TryParsePath(navigationPropertyPath.Body, out var path) || path == null)
             {
-                throw new ArgumentException("A specified Include path is not valid. The given path expression may contains invalid elements.", nameof(pathExpression));
+                throw new ArgumentException(
+                    "A specified Include path is not valid. The given path expression may contains invalid elements.",
+                    nameof(navigationPropertyPath));
             }
 
             return queryable.Include(path);
