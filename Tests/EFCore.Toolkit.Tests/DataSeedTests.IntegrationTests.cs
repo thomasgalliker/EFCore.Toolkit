@@ -14,6 +14,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests
 {
+    [Collection("DbContextTests")]
     public class DataSeedIntegrationTests : ContextTestBase<EmployeeContext>
     {
         public DataSeedIntegrationTests(ITestOutputHelper testOutputHelper)

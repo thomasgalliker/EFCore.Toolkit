@@ -27,6 +27,7 @@ namespace EFCore.Toolkit.Tests.Repositories
     /// <summary>
     ///     Repository tests using <see cref="EmployeeContextTestDbConnection" /> as database connection.
     /// </summary>
+    [Collection("DbContextTests")]
     public class GenericRepositoryTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         private readonly ITestOutputHelper testOutputHelper;

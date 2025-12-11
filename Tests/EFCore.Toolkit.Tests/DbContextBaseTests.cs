@@ -16,6 +16,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests
 {
+    [Collection("DbContextTests")]
     public class DbContextBaseTests : ContextTestBase<EmployeeContext>
     {
         public DbContextBaseTests()

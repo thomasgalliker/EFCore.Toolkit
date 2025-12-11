@@ -13,6 +13,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Extensions
 {
+    [Collection("DbContextTests")]
     public class DbSetExtensionsTests : ContextTestBase<EmployeeContext>
     {
         private readonly ITestOutputHelper testOutputHelper;

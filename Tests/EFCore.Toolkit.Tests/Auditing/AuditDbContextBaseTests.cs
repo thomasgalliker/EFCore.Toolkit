@@ -16,6 +16,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Auditing
 {
+    [Collection("DbContextTests")]
     public class AuditDbContextBaseTests : ContextTestBase<TestAuditDbContext>
     {
         private const string TestAuditUser = "TestAuditUser";

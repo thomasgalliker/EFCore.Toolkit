@@ -6,7 +6,6 @@ using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
 
 using FluentAssertions;
-using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
 
@@ -15,6 +14,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Extensions
 {
+    [Collection("DbContextTests")]
     public class DbContextExtensionsTests : ContextTestBase<EmployeeContext>
     {
         private readonly ITestOutputHelper testOutputHelper;

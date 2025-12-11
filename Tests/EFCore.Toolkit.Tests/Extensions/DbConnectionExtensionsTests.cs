@@ -10,6 +10,7 @@
 
 //namespace EFCore.Toolkit.Tests.Extensions
 //{
+//    [Collection("DbContextTests")]
 //    public class DbConnectionExtensionsTests : ContextTestBase<EmployeeContext>
 //    {
 //        private static readonly IDbConnection dbConnection = new EmployeeContextTestDbConnection();

@@ -18,6 +18,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Repositories
 {
+    [Collection("DbContextTests")]
     public class PersonRepositoryTests : ContextTestBase<EmployeeContext>
     {
         public PersonRepositoryTests(ITestOutputHelper testOutputHelper)

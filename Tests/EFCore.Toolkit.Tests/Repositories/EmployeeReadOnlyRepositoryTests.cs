@@ -17,6 +17,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Repositories
 {
+    [Collection("DbContextTests")]
     public class EmployeeReadOnlyRepositoryTests : ContextTestBase<EmployeeContext>
     {
         public EmployeeReadOnlyRepositoryTests(ITestOutputHelper testOutputHelper)
