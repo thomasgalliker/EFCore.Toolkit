@@ -18,7 +18,7 @@ namespace EFCore.Toolkit
         private readonly Action<string> log;
 
         /// <summary>
-        ///     Empty constructor is used for 'update-database' command-line command.
+        /// Empty constructor is used for 'update-database' command-line command.
         /// </summary>
         protected DbContextBase()
         {
@@ -294,7 +294,7 @@ namespace EFCore.Toolkit
         }
 
         /// <summary>
-        ///     Determines the changes that are transferred to the persistence layer.
+        /// Determines the changes that are transferred to the persistence layer.
         /// </summary>
         /// <returns>ChangeSet.</returns>
         private ChangeSet GetChangeSet()

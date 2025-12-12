@@ -4,7 +4,7 @@ namespace EFCore.Toolkit.Abstractions.Extensions
 {
     public static class ReadOnlyRepositoryExtensions
     {  /// <summary>
-       ///     Finds entities with the given <paramref name="predicate"/>.
+       /// Finds entities with the given <paramref name="predicate"/>.
        /// </summary>
        /// <param name="predicate">The search predicate.</param>
        /// <returns>A collection of entities matching the search predicate.</returns>
@@ -15,7 +15,7 @@ namespace EFCore.Toolkit.Abstractions.Extensions
         }
 
         /// <summary>
-        ///     Indicates whether an entity with the given primary key value exists.
+        /// Indicates whether an entity with the given primary key value exists.
         /// </summary>
         /// <param name="ids">The primary keys of the entity to be found.</param>
         /// <returns>true, if an entity with given primary key exists; otherwise, false.</returns>
@@ -25,7 +25,7 @@ namespace EFCore.Toolkit.Abstractions.Extensions
         }
 
         /// <summary>
-        ///     Indicates whether an entity which matches the given predicate exists.
+        /// Indicates whether an entity which matches the given predicate exists.
         /// </summary>
         /// <param name="predicate">The predicate to filter the entity.</param>
         /// <returns>true, if an entity exists for given predicate; otherwise, false.</returns>

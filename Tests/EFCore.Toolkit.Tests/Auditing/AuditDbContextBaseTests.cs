@@ -265,8 +265,8 @@ namespace EFCore.Toolkit.Tests.Auditing
 
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = @"INSERT INTO Customers(CustomerId, FirstName,Updated,UpdateUser) VALUES (1, 'Unit Test', '2012-01-01 12:00:00', 'UnitTest')";
-        ////        cmd.ExecuteNonQuery();
+        ////    cmd.CommandText = @"INSERT INTO Customers(CustomerId, FirstName,Updated,UpdateUser) VALUES (1, 'Unit Test', '2012-01-01 12:00:00', 'UnitTest')";
+        ////    cmd.ExecuteNonQuery();
         ////    }
 
         ////    Customer customer = context.Customers.Find(1);
@@ -276,33 +276,33 @@ namespace EFCore.Toolkit.Tests.Auditing
         ////    // Chech the audit records has been created.
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = "select * from customeraudits";
-        ////        using (var r = cmd.ExecuteReader())
+        ////    cmd.CommandText = "select * from customeraudits";
+        ////    using (var r = cmd.ExecuteReader())
+        ////    {
+        ////        int records = 0;
+        ////        while (r.Read())
         ////        {
-        ////            int records = 0;
-        ////            while (r.Read())
-        ////            {
-        ////                records++;
-        ////            }
-        ////            Assert.Equal(1, records);
+        ////            records++;
         ////        }
+        ////        Assert.Equal(1, records);
+        ////    }
         ////    }
 
         ////    // Check the audit fields.
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = "select * from customeraudits";
-        ////        using (var r = cmd.ExecuteReader())
-        ////        {
-        ////            r.Read();
-        ////            Assert.Equal(1, r["CustomerAuditId"]);
-        ////            Assert.Equal(1, r["CustomerId"]);
-        ////            Assert.Equal(user, r["UpdateUser"]);
-        ////            //Assert.Equal(updated, r["Updated"]);
-        ////            Assert.Equal("Unit Test", r["FirstName"]);
-        ////            Assert.Equal(user, r["AuditUser"]);
-        ////            Assert.Equal(0, r["AuditType"]);
-        ////        }
+        ////    cmd.CommandText = "select * from customeraudits";
+        ////    using (var r = cmd.ExecuteReader())
+        ////    {
+        ////        r.Read();
+        ////        Assert.Equal(1, r["CustomerAuditId"]);
+        ////        Assert.Equal(1, r["CustomerId"]);
+        ////        Assert.Equal(user, r["UpdateUser"]);
+        ////        //Assert.Equal(updated, r["Updated"]);
+        ////        Assert.Equal("Unit Test", r["FirstName"]);
+        ////        Assert.Equal(user, r["AuditUser"]);
+        ////        Assert.Equal(0, r["AuditType"]);
+        ////    }
         ////    }
         ////}
 
@@ -329,41 +329,41 @@ namespace EFCore.Toolkit.Tests.Auditing
 
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = "select * from customers";
-        ////        using (var r = cmd.ExecuteReader())
+        ////    cmd.CommandText = "select * from customers";
+        ////    using (var r = cmd.ExecuteReader())
+        ////    {
+        ////        int records = 0;
+        ////        while (r.Read())
         ////        {
-        ////            int records = 0;
-        ////            while (r.Read())
-        ////            {
-        ////                records++;
-        ////            }
-        ////            Assert.Equal(0, records);
+        ////            records++;
         ////        }
+        ////        Assert.Equal(0, records);
+        ////    }
         ////    }
 
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = "select * from customeraudits";
-        ////        using (var r = cmd.ExecuteReader())
+        ////    cmd.CommandText = "select * from customeraudits";
+        ////    using (var r = cmd.ExecuteReader())
+        ////    {
+        ////        int records = 0;
+        ////        while (r.Read())
         ////        {
-        ////            int records = 0;
-        ////            while (r.Read())
-        ////            {
-        ////                records++;
-        ////            }
-        ////            Assert.Equal(1, records);
+        ////            records++;
         ////        }
+        ////        Assert.Equal(1, records);
+        ////    }
         ////    }
 
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = "select * from customeraudits";
-        ////        using (var r = cmd.ExecuteReader())
-        ////        {
-        ////            r.Read();
-        ////            Assert.Equal(user, r["AuditUser"]);
-        ////            Assert.Equal(1, r["AuditType"]);
-        ////        }
+        ////    cmd.CommandText = "select * from customeraudits";
+        ////    using (var r = cmd.ExecuteReader())
+        ////    {
+        ////        r.Read();
+        ////        Assert.Equal(user, r["AuditUser"]);
+        ////        Assert.Equal(1, r["AuditType"]);
+        ////    }
         ////    }
         ////}
 

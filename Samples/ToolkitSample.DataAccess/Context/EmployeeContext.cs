@@ -10,7 +10,7 @@ namespace ToolkitSample.DataAccess.Context
         private static readonly AuditDbContextConfiguration AuditDbContextConfiguration = new AuditDbContextConfiguration(auditEnabled: true, auditDateTimeKind: DateTimeKind.Utc);
 
         /// <summary>
-        ///     Empty constructor is used for 'update-database' command-line command.
+        /// Empty constructor is used for 'update-database' command-line command.
         /// </summary>
         public EmployeeContext()
         {

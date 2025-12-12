@@ -1,31 +1,31 @@
 namespace EFCore.Toolkit.Abstractions
 {
     /// <summary>
-    ///     Interface for changed objects and object properties.
+    /// Interface for changed objects and object properties.
     /// </summary>
     public interface IChange
     {
         /// <summary>
-        ///     Gets the changed object.
+        /// Gets the changed object.
         /// </summary>
         /// <value>
-        ///     See <see cref="object" />.
+        /// See <see cref="object" />.
         /// </value>
         object ChangedEntity { get; }
 
         /// <summary>
-        ///     Gets the names of the properties that have been changed.
+        /// Gets the names of the properties that have been changed.
         /// </summary>
         /// <value>
-        ///     The names of the properties that have been changed.
+        /// The names of the properties that have been changed.
         /// </value>
         IEnumerable<PropertyChangeInfo> ChangedProperties { get; }
 
         /// <summary>
-        ///     Gets the state of the changed object.
+        /// Gets the state of the changed object.
         /// </summary>
         /// <value>
-        ///     See <see cref="EntityState" />.
+        /// See <see cref="EntityState" />.
         /// </value>
         ChangeState State { get; }
     }

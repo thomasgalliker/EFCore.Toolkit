@@ -56,8 +56,6 @@ namespace EFCore.Toolkit.Extensions
                 throw new ArgumentNullException(nameof(entities));
             }
 
-            entities = entities.Where(x => x != null).ToArray();
-
             if (entities.Length == 0)
             {
                 return entities;

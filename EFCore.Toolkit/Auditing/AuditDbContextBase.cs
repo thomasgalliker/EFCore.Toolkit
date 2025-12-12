@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace EFCore.Toolkit.Auditing
 {
     /// <summary>
-    ///     AuditDbContextBase adds auditing capabilities to the DbContextBase.
-    ///     Auditing is enabled by default but may be disabled (AuditEnabled=false) if needed.
+    /// AuditDbContextBase adds auditing capabilities to the DbContextBase.
+    /// Auditing is enabled by default but may be disabled (AuditEnabled=false) if needed.
     /// </summary>
     public abstract class AuditDbContextBase<TContext> : DbContextBase<TContext>, IAuditContext where TContext : DbContext
     {
@@ -34,7 +34,7 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <summary>
-        ///     Empty constructor is used for 'update-database' command-line command.
+        /// Empty constructor is used for 'update-database' command-line command.
         /// </summary>
         protected AuditDbContextBase()
         {
@@ -61,7 +61,7 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <summary>
-        ///     Initializes static members of the AuditDbContext class.
+        /// Initializes static members of the AuditDbContext class.
         /// </summary>
         protected void ConfigureAuditingFromAppConfig()
         {
@@ -86,25 +86,25 @@ namespace EFCore.Toolkit.Auditing
         public DateTimeKind AuditDateTimeKind { get; protected set; }
 
         /// <summary>
-        ///     Gets a value indicating whether this context is using proxies.
+        /// Gets a value indicating whether this context is using proxies.
         /// </summary>
         ////public bool Proxies
         ////{
         ////    get
         ////    {
-        ////        if (this.auditTypes.Count > 0)
-        ////        {
-        ////            var f = this.auditTypes.First();
-        ////            var e = this.Set(f.Value.AuditableEntityType).Create();
-        ////            return e.GetType().Namespace != f.Value.AuditableEntityType.Namespace;
-        ////        }
+        ////    if (this.auditTypes.Count > 0)
+        ////    {
+        ////        var f = this.auditTypes.First();
+        ////        var e = this.Set(f.Value.AuditableEntityType).Create();
+        ////        return e.GetType().Namespace != f.Value.AuditableEntityType.Namespace;
+        ////    }
 
-        ////        return this.Database.Configuration.ProxyCreationEnabled;
+        ////    return this.Database.Configuration.ProxyCreationEnabled;
         ////    }
         ////}
 
         /// <summary>
-        ///     Registers and type for auditing.
+        /// Registers and type for auditing.
         /// </summary>
         /// <param name="auditTypeInfo"></param>
         public void RegisterAuditType(AuditTypeInfo auditTypeInfo)
@@ -144,8 +144,8 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <summary>
-        ///     Reloads the entity from the database overwriting any property values with values from the database.
-        ///     The entity will be in the Unchanged state after calling this method.
+        /// Reloads the entity from the database overwriting any property values with values from the database.
+        /// The entity will be in the Unchanged state after calling this method.
         /// </summary>
         /// <param name="entity">The entity object to reload.</param>
         public void Reload(object entity)
@@ -154,8 +154,8 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <summary>
-        ///     Saves all changes made in this context to the underlying database
-        ///     using the current windows user for auditing.
+        /// Saves all changes made in this context to the underlying database
+        /// using the current windows user for auditing.
         /// </summary>
         /// <returns>The number of objects written to the underlying database.</returns>
         public override ChangeSet SaveChanges()
@@ -167,8 +167,8 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <summary>
-        ///     Saves all changes made in this context to the underlying database
-        ///     using the user parameter passed for auditing.
+        /// Saves all changes made in this context to the underlying database
+        /// using the user parameter passed for auditing.
         /// </summary>
         /// <param name="username">User name for auditing.</param>
         /// <returns>The number of objects written to the underlying database.</returns>
@@ -205,8 +205,8 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <summary>
-        ///     Saves all changes made in this context to the underlying database
-        ///     using the user parameter passed for auditing.
+        /// Saves all changes made in this context to the underlying database
+        /// using the user parameter passed for auditing.
         /// </summary>
         /// <param name="username">User name for auditing.</param>
         /// <returns>The number of objects written to the underlying database.</returns>

@@ -11,20 +11,20 @@ namespace EFCore.Toolkit.Abstractions
         }
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="Change" /> class.
+        /// Initializes a new instance of the <see cref="Change" /> class.
         /// </summary>
         /// <param name="changedEntity">
-        ///     The changed object.
+        /// The changed object.
         /// </param>
         /// <param name="changedProperties">
-        ///     The List of the properties that have been changed.
+        /// The List of the properties that have been changed.
         /// </param>
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if the specified <paramref name="changedEntity" /> is null.
+        /// Thrown if the specified <paramref name="changedEntity" /> is null.
         /// </exception>
         /// .
         /// <exception cref="ArgumentNullException">
-        ///     Thrown if the specified <paramref name="changedProperties" /> is null.
+        /// Thrown if the specified <paramref name="changedProperties" /> is null.
         /// </exception>
         private Change(object changedEntity, ChangeState state, IEnumerable<PropertyChangeInfo> changedProperties)
         {

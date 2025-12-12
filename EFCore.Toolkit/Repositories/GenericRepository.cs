@@ -12,7 +12,7 @@ namespace EFCore.Toolkit
         private readonly IUserContext<TUserKey> userContext;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="GenericRepository{TEntity, TUserKey}" /> class.
+        /// Initializes a new instance of the <see cref="GenericRepository{TEntity, TUserKey}" /> class.
         /// </summary>
         public GenericRepository(IDbContext context, IUserContext<TUserKey> userContext) : base(context)
         {
@@ -44,7 +44,7 @@ namespace EFCore.Toolkit
     }
 
     /// <summary>
-    ///     Implementation of a generic repository.
+    /// Implementation of a generic repository.
     /// </summary>
     /// <typeparam name="T"></typeparam>
     public class GenericRepository<T> : IGenericRepository<T>
@@ -56,7 +56,7 @@ namespace EFCore.Toolkit
         private bool isDisposed;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="GenericRepository{T}" /> class.
+        /// Initializes a new instance of the <see cref="GenericRepository{T}" /> class.
         /// </summary>
         public GenericRepository(IDbContext context)
         {

@@ -25,7 +25,7 @@ using static EFCore.Toolkit.Tests.Stubs.Testdata.Employees;
 namespace EFCore.Toolkit.Tests.Repositories
 {
     /// <summary>
-    ///     Repository tests using <see cref="EmployeeContextTestDbConnection" /> as database connection.
+    /// Repository tests using <see cref="EmployeeContextTestDbConnection" /> as database connection.
     /// </summary>
     [Collection("DbContextTests")]
     public class GenericRepositoryTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
