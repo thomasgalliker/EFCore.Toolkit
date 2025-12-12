@@ -3,7 +3,6 @@ using System.Linq;
 using EFCore.Toolkit;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
-using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
 
@@ -21,6 +20,7 @@ namespace ToolkitSample.DataAccess
         public void Initialize(DbContextBase<EmployeeContext> context, bool force)
         {
             context.Database.EnsureCreated();
+
             if (context.AllMigrationsApplied())
             {
                 if (!context.Set<Employee>().Any())
@@ -29,6 +29,7 @@ namespace ToolkitSample.DataAccess
                     {
                         dataSeed.Seed(context);
                     }
+
                     context.SaveChanges();
                 }
             }

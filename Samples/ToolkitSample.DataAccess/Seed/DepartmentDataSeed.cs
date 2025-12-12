@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 using EFCore.Toolkit;
@@ -14,13 +15,10 @@ namespace ToolkitSample.DataAccess.Seed
             get => department => department.Name;
         }
 
-        public override Department[] GetAll()
+        public override IEnumerable<Department> GetAll()
         {
-            return new[]
-            {
-                new Department {Name = "Administration"},
-                new Department {Name = "Human Resources"}
-            };
+            yield return new Department { Name = "Administration" };
+            yield return new Department { Name = "Human Resources" };
         }
     }
 }

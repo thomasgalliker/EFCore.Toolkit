@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 
 using EFCore.Toolkit;
@@ -11,13 +12,10 @@ namespace ToolkitSample.DataAccess.Seed
     {
         public override Expression<Func<Country, object>> AddOrUpdateExpression
         {
-            get
-            {
-                return applicationSetting => applicationSetting.Id;
-            }
+            get => applicationSetting => applicationSetting.Id;
         }
 
-        public override Country[] GetAll()
+        public override IEnumerable<Country> GetAll()
         {
             return new[]
             {
