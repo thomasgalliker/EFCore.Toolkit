@@ -36,8 +36,6 @@ namespace EFCore.Toolkit.Tests.Repositories
                   log: testOutputHelper.WriteLine)
         {
             this.testOutputHelper = testOutputHelper;
-
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]

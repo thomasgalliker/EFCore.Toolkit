@@ -21,17 +21,8 @@ namespace EFCore.Toolkit.Auditing
         private const string AuditTypeColumnName = nameof(IAuditEntity.AuditType);
 
         private static readonly IList<DbContext> ConfigFileLock = new List<DbContext>();
-        private static readonly AuditDbContextConfiguration AuditDbContextConfiguration;
 
         private readonly Dictionary<Type, AuditTypeInfo> auditTypes = new Dictionary<Type, AuditTypeInfo>();
-
-        static AuditDbContextBase()
-        {
-            lock (ConfigFileLock)
-            {
-                AuditDbContextConfiguration = AuditDbContextConfigurationManager.GetAuditDbContextConfigurationFromXml();
-            }
-        }
 
         /// <summary>
         /// Empty constructor is used for 'update-database' command-line command.
@@ -58,14 +49,6 @@ namespace EFCore.Toolkit.Auditing
         protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer? databaseInitializer, Action<string>? log)
             : base(dbContextOptions, databaseInitializer, log)
         {
-        }
-
-        /// <summary>
-        /// Initializes static members of the AuditDbContext class.
-        /// </summary>
-        protected void ConfigureAuditingFromAppConfig()
-        {
-            this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
         protected void ConfigureAuditing(AuditDbContextConfiguration configuration)

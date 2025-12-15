@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Concurrency;
 using EFCore.Toolkit.Testing;
-using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Stubs;
-using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
@@ -22,7 +20,6 @@ namespace EFCore.Toolkit.Tests
         public DbContextBaseTests()
             : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>())
         {
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]

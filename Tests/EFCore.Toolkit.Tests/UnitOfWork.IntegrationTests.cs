@@ -4,16 +4,11 @@ using System.Linq;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Testing;
-using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Stubs;
-using EFCore.Toolkit.Utils;
 using FluentAssertions;
-
 using Moq;
-
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
-
 using Xunit;
 using Xunit.Abstractions;
 
@@ -26,7 +21,6 @@ namespace EFCore.Toolkit.Tests
             : base(databaseInitializer: new CreateDatabaseIfNotExists(),
                 log: testOutputHelper.WriteLine)
         {
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]

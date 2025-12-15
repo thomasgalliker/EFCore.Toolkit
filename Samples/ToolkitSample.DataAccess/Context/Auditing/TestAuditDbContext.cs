@@ -24,15 +24,11 @@ namespace ToolkitSample.DataAccess.Context.Auditing
         public TestAuditDbContext(DbContextOptions dbContextOptions, IDatabaseInitializer databaseInitializer)
             : base(dbContextOptions, databaseInitializer)
         {
-            //TODO this.Configuration.ProxyCreationEnabled = false;
-            this.ConfigureAuditingFromAppConfig();
         }
 
         public TestAuditDbContext(DbContextOptions dbContextOptions, IDatabaseInitializer databaseInitializer, Action<string> log)
             : base(dbContextOptions, databaseInitializer, log)
         {
-            //TODO this.Configuration.ProxyCreationEnabled = false;
-            this.ConfigureAuditingFromAppConfig();
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

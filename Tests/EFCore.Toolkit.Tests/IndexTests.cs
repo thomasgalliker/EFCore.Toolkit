@@ -23,7 +23,6 @@ namespace EFCore.Toolkit.Tests
             : base(databaseInitializer: new CreateDatabaseIfNotExists(),
                   log: testOutputHelper.WriteLine)
         {
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]

@@ -20,7 +20,6 @@ namespace EFCore.Toolkit.Tests.Interceptors
              : base(databaseInitializer: new CreateDatabaseIfNotExists(),
                    log: testOutputHelper.WriteLine)
         {
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]

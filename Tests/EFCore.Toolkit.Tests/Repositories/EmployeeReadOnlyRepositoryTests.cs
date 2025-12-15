@@ -25,7 +25,6 @@ namespace EFCore.Toolkit.Tests.Repositories
                   databaseInitializer: new CreateDatabaseIfNotExists(),
                   log: testOutputHelper.WriteLine)
         {
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
