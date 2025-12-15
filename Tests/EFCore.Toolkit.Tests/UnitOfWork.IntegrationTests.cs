@@ -22,13 +22,6 @@ namespace EFCore.Toolkit.Tests
     [Collection("DbContextTests")]
     public class UnitOfWorkIntegrationTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
-        //public UnitOfWorkIntegrationTests(ITestOutputHelper testOutputHelper)
-        //    : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
-        //           log: testOutputHelper.WriteLine)
-        //{
-        //    AssemblyLoader.Current = new TestAssemblyLoader();
-        //}
-
         public UnitOfWorkIntegrationTests(ITestOutputHelper testOutputHelper)
             : base(databaseInitializer: new CreateDatabaseIfNotExists(),
                 log: testOutputHelper.WriteLine)

@@ -13,6 +13,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Interceptors
 {
+    [Collection("DbContextTests")]
     public class UpdateAuditableInterceptorTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         public UpdateAuditableInterceptorTests(ITestOutputHelper testOutputHelper)

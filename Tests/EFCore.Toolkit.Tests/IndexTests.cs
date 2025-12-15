@@ -16,6 +16,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests
 {
+    [Collection("DbContextTests")]
     public class IndexTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         public IndexTests(ITestOutputHelper testOutputHelper)
