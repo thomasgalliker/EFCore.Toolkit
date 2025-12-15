@@ -35,14 +35,6 @@ namespace ToolkitSample.DataAccess.Context
             this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            base.OnConfiguring(optionsBuilder);
-
-            optionsBuilder.AddInterceptors(new UpdateAuditableInterceptor());
-            optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

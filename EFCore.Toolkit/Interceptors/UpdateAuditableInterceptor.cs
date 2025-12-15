@@ -42,20 +42,10 @@ namespace EFCore.Toolkit.Interceptors
         private void UpdateAuditableEntities(DbContext context)
         {
             var date = DateTime.UtcNow.ToKind(this.dateTimeKind);
-            var entities = context.ChangeTracker.Entries<IUpdatedDate>().ToList();
+            var entities = context.ChangeTracker.Entries().ToList();
 
             foreach (var entry in entities)
             {
-                //if (entry.Entity is ICreatedDate creatableEntity && entry.State == EntityState.Added)
-                //{
-                //    creatableEntity.CreatedDate = utcNow;
-                //}
-                //else if (entry.Entity is IUpdatedDate updatableEntity && entry.State == EntityState.Modified)
-                //{
-                //    updatableEntity.UpdatedDate = utcNow;
-                //}
-
-
                 var creatableEntity = entry.Entity as ICreatedDate;
                 if (entry.State == EntityState.Added && creatableEntity != null)
                 {

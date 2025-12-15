@@ -4,6 +4,7 @@ using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Concurrency;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Extensions;
+using EFCore.Toolkit.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -61,7 +62,8 @@ namespace EFCore.Toolkit
         {
             this.log($"{this.Name}.OnConfiguring");
 
-
+            optionsBuilder.AddInterceptors(new UpdateAuditableInterceptor());
+            optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
         }
 
         /// <inheritdoc />

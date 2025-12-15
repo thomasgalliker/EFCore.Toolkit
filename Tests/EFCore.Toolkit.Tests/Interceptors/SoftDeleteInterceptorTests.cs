@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
@@ -8,14 +7,11 @@ using EFCore.Toolkit.Tests.Extensions;
 using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using ToolkitSample.DataAccess.Context;
-using ToolkitSample.DataAccess.Contracts.Repository;
-using ToolkitSample.DataAccess.Repository;
 using ToolkitSample.Model;
 
 using Xunit;
 using Xunit.Abstractions;
 using static EFCore.Toolkit.Tests.Stubs.Testdata;
-using static EFCore.Toolkit.Tests.Stubs.Testdata.Employees;
 
 namespace EFCore.Toolkit.Tests.Repositories
 {
