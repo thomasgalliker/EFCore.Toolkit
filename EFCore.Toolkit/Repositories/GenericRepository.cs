@@ -46,7 +46,6 @@ namespace EFCore.Toolkit
     /// <summary>
     /// Implementation of a generic repository.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class GenericRepository<T> : IGenericRepository<T>
         where T : class
     {

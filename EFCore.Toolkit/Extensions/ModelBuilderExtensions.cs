@@ -87,9 +87,6 @@ namespace EFCore.Toolkit.Extensions
         /// <summary>
         /// Configures all strings with a default <paramref name="maxLength"/>.
         /// </summary>
-        /// <param name="modelBuilder"></param>
-        /// <param name="maxLength"></param>
-        /// <param name="includeEntityTypeFilter"></param>
         public static void SetDefaultStringMaxLength(this ModelBuilder modelBuilder, int? maxLength = 4000, Func<IMutableEntityType, bool>? includeEntityTypeFilter = null)
         {
             foreach (var p in modelBuilder.Properties<string>())

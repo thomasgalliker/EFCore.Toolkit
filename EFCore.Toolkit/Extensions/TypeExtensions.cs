@@ -26,7 +26,6 @@ namespace EFCore.Toolkit.Extensions
         /// <remarks>
         /// Has been introduced to allow casting objects without breaking the fluent API.
         /// </remarks>
-        /// <typeparam name="TTo"></typeparam>
         public static TTo? As<TTo>(this object subject)
         {
             if (subject is TTo to)

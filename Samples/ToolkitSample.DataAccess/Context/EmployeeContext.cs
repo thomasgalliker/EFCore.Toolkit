@@ -1,15 +1,11 @@
 ﻿using System;
 using EFCore.Toolkit;
-using EFCore.Toolkit.Auditing;
-using EFCore.Toolkit.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class EmployeeContext : AuditDbContextBase, IEmployeeContext
+    public class EmployeeContext : DbContextBase, IEmployeeContext
     {
-        private static readonly AuditDbContextConfiguration AuditDbContextConfiguration = new AuditDbContextConfiguration(auditEnabled: true, auditDateTimeKind: DateTimeKind.Utc);
-
         /// <summary>
         /// Empty constructor is used for 'update-database' command-line command.
         /// </summary>
@@ -20,19 +16,16 @@ namespace ToolkitSample.DataAccess.Context
         public EmployeeContext(DbContextOptions dbContextOptions, IDatabaseInitializer initializer)
           : base(dbContextOptions, initializer, null)
         {
-            this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
         public EmployeeContext(DbContextOptions dbContextOptions, Action<string> log)
            : base(dbContextOptions, null, log)
         {
-            this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
         public EmployeeContext(DbContextOptions dbContextOptions, IDatabaseInitializer initializer, Action<string> log = null)
            : base(dbContextOptions, initializer, log)
         {
-            this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

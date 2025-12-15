@@ -10,7 +10,6 @@ namespace EFCore.Toolkit.Testing
         /// <param name="connectionString">The original connection string.</param>
         /// <param name="randomTokenLength">The length of the generated random number.</param>
         /// <param name="prefix">A prefix attach between database name and random token.</param>
-        /// <returns></returns>
         public static string RandomizeDatabaseName(this string connectionString, int randomTokenLength = 5, string prefix = "_")
         {
             var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
@@ -38,8 +37,6 @@ namespace EFCore.Toolkit.Testing
         /// <summary>
         /// Generates a random upper-invariant string of <paramref name="randomTokenLength"/>.
         /// </summary>
-        /// <param name="randomTokenLength"></param>
-        /// <returns></returns>
         private static string GetRandomToken(int randomTokenLength)
         {
             if (randomTokenLength > 32)

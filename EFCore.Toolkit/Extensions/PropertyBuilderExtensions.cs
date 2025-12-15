@@ -8,9 +8,6 @@ namespace EFCore.Toolkit.Extensions
         /// <summary>
         /// Marks the property as optional (IsRequired(required: false)).
         /// </summary>
-        /// <typeparam name="TProperty"></typeparam>
-        /// <param name="propertyBuilder"></param>
-        /// <returns></returns>
         public static PropertyBuilder<TProperty> IsOptional<TProperty>(this PropertyBuilder<TProperty> propertyBuilder)
         {
             return propertyBuilder.IsRequired(required: false);

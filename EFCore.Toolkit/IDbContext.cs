@@ -17,8 +17,6 @@ namespace EFCore.Toolkit
         /// <summary>
         /// The generic DbSet of type <typeparamref name="TEntity"/>.
         /// </summary>
-        /// <typeparam name="TEntity"></typeparam>
-        /// <returns></returns>
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 
         public EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;

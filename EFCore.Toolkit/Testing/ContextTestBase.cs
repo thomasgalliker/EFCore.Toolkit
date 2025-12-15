@@ -4,38 +4,38 @@ using Microsoft.EntityFrameworkCore;
 namespace EFCore.Toolkit.Testing
 {
     /// <summary>
-    /// ContextTestBase for context <typeparam name="TContext"/> using IDbConnection <typeparam name="TDbConnection"/>
+    /// ContextTestBase for context <typeparam name="TContext"/> using IDbConnection <typeparam name="TDbContextOptionsBuilder"/>
     /// </summary>
     /// <typeparam name="TContext">The database context.</typeparam>
-    /// <typeparam name="TDbConnection">The database connection.</typeparam>
-    public abstract class ContextTestBase<TContext, TDbConnection> : ContextTestBase<TContext>
-        where TContext : DbContextBase where TDbConnection : DbContextOptionsBuilder, new()
+    /// <typeparam name="TDbContextOptionsBuilder">The database connection.</typeparam>
+    public abstract class ContextTestBase<TContext, TDbContextOptionsBuilder> : ContextTestBase<TContext>
+        where TContext : DbContextBase where TDbContextOptionsBuilder : DbContextOptionsBuilder, new()
     {
-        protected ContextTestBase() : base(new TDbConnection().Options)
+        protected ContextTestBase() : base(new TDbContextOptionsBuilder().Options)
         {
         }
 
-        protected ContextTestBase(bool deleteDatabaseOnDispose) : base(new TDbConnection().Options, deleteDatabaseOnDispose)
+        protected ContextTestBase(bool deleteDatabaseOnDispose) : base(new TDbContextOptionsBuilder().Options, deleteDatabaseOnDispose)
         {
         }
 
-        protected ContextTestBase(Action<string> log) : base(new TDbConnection().Options, log)
+        protected ContextTestBase(Action<string> log) : base(new TDbContextOptionsBuilder().Options, log)
         {
         }
 
-        protected ContextTestBase(Action<string> log, bool deleteDatabaseOnDispose) : base(new TDbConnection().Options, log, deleteDatabaseOnDispose)
+        protected ContextTestBase(Action<string> log, bool deleteDatabaseOnDispose) : base(new TDbContextOptionsBuilder().Options, log, deleteDatabaseOnDispose)
         {
         }
 
-        protected ContextTestBase(IDatabaseInitializer databaseInitializer) : base(new TDbConnection().Options, databaseInitializer)
+        protected ContextTestBase(IDatabaseInitializer databaseInitializer) : base(new TDbContextOptionsBuilder().Options, databaseInitializer)
         {
         }
 
-        protected ContextTestBase(IDatabaseInitializer databaseInitializer, Action<string> log) : base(new TDbConnection().Options, databaseInitializer, log)
+        protected ContextTestBase(IDatabaseInitializer databaseInitializer, Action<string> log) : base(new TDbContextOptionsBuilder().Options, databaseInitializer, log)
         {
         }
 
-        protected ContextTestBase(IDatabaseInitializer databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose) : base(new TDbConnection().Options, databaseInitializer, log, deleteDatabaseOnDispose)
+        protected ContextTestBase(IDatabaseInitializer databaseInitializer, Action<string> log, bool deleteDatabaseOnDispose) : base(new TDbContextOptionsBuilder().Options, databaseInitializer, log, deleteDatabaseOnDispose)
         {
         }
     }
@@ -142,6 +142,7 @@ namespace EFCore.Toolkit.Testing
             {
                 databaseInitializer = this.EnsureDatabaseInitializer(this.databaseInitializer);
             }
+
             args.Add(databaseInitializer);
 
             if (this.Log != null)
