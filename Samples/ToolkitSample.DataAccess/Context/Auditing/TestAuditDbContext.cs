@@ -37,7 +37,7 @@ namespace ToolkitSample.DataAccess.Context.Auditing
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.ApplyConfiguration(new PersonEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeAuditEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new TestEntityEntityTypeConfiguration());
@@ -45,7 +45,7 @@ namespace ToolkitSample.DataAccess.Context.Auditing
             modelBuilder.ApplyConfiguration(new StudentEntityConfiguration());
             modelBuilder.ApplyConfiguration(new DepartmentEntityConfiguration());
             modelBuilder.ApplyConfiguration(new RoomEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new CountryEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new CountryEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ApplicationSettingEntityTypeConfiguration());
         }
     }

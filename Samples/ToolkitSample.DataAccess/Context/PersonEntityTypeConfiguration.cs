@@ -2,14 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
+using EFCore.Toolkit.Extensions;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class PersonEntityConfiguration : IEntityTypeConfiguration<Person>
+    public class PersonEntityTypeConfiguration : IEntityTypeConfiguration<Person>
     {
         public void Configure(EntityTypeBuilder<Person> entity)
         {
-            entity.HasKey(d => d.Id);
+            entity.HasId();
 
             entity.Property(e => e.LastName).IsRequired().HasMaxLength(255);
 

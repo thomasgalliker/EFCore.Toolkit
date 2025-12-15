@@ -86,24 +86,6 @@ namespace EFCore.Toolkit.Auditing
         public DateTimeKind AuditDateTimeKind { get; protected set; }
 
         /// <summary>
-        /// Gets a value indicating whether this context is using proxies.
-        /// </summary>
-        ////public bool Proxies
-        ////{
-        ////    get
-        ////    {
-        ////    if (this.auditTypes.Count > 0)
-        ////    {
-        ////        var f = this.auditTypes.First();
-        ////        var e = this.Set(f.Value.AuditableEntityType).Create();
-        ////        return e.GetType().Namespace != f.Value.AuditableEntityType.Namespace;
-        ////    }
-
-        ////    return this.Database.Configuration.ProxyCreationEnabled;
-        ////    }
-        ////}
-
-        /// <summary>
         /// Registers and type for auditing.
         /// </summary>
         /// <param name="auditTypeInfo"></param>
@@ -254,46 +236,20 @@ namespace EFCore.Toolkit.Auditing
         private IEnumerable<AuditedEntity> AuditChanges(string username)
         {
             // Use the same datetime for all updates in this transaction, retrieved from server when first used.
-            DateTime? dateTimeNow = null;
+            var date = DateTime.UtcNow.ToKind(this.AuditDateTimeKind);
 
             // Process any auditable objects.
-            var trackedEntries = this.ChangeTracker.Entries().ToList();
-            foreach (var entry in trackedEntries)
+            var auditableEntries = this.ChangeTracker.Entries()
+                .Where(e => e.Entity is not IAuditEntity && e.State != EntityState.Detached && e.State != EntityState.Unchanged)
+                .ToList();
+
+            foreach (var entry in auditableEntries)
             {
-                if (entry.Entity is IAuditEntity || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
-                {
-                    continue;
-                }
-
-                if (dateTimeNow.HasValue == false)
-                {
-                    dateTimeNow = DateTime.UtcNow.ToKind(this.AuditDateTimeKind);
-                }
-
-                var creatableEntity = entry.Entity as ICreatedDate;
-                if (entry.State == EntityState.Added && creatableEntity != null)
-                {
-                    creatableEntity.CreatedDate = dateTimeNow.Value;
-                }
-
-                if (entry.State == EntityState.Modified)
-                {
-                    if (creatableEntity != null)
-                    {
-                        entry.Property(nameof(ICreatedDate.CreatedDate)).IsModified = false;
-                    }
-
-                    if (entry.Entity is IUpdatedDate updateableEntity)
-                    {
-                        updateableEntity.UpdatedDate = dateTimeNow.Value;
-                    }
-                }
-
                 var entityType = entry.GetEntityType();
                 var auditTypeInfo = this.GetAuditTypeInfo(entityType);
                 if (auditTypeInfo != null)
                 {
-                    var auditEntity = this.AuditEntity(entry, auditTypeInfo, dateTimeNow.Value, username);
+                    var auditEntity = this.AuditEntity(entry, auditTypeInfo, date, username);
                     yield return auditEntity;
                 }
             }

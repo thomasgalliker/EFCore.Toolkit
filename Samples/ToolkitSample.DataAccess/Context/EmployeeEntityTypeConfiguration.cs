@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
+using EFCore.Toolkit.Extensions;
 
 namespace ToolkitSample.DataAccess.Context
 {
@@ -10,8 +11,7 @@ namespace ToolkitSample.DataAccess.Context
         {
             entity.HasBaseType<Person>();
 
-            entity.Property(e => e.EmployementDate)
-                .IsRequired(false);
+            entity.Property(e => e.EmployementDate).IsOptional();
 
             entity.HasOne(e => e.Department)
                 .WithMany(d => d.Employees)

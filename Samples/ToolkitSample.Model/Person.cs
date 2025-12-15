@@ -6,7 +6,7 @@ using EFCore.Toolkit.Abstractions.Auditing;
 namespace ToolkitSample.Model
 {
     [DebuggerDisplay("Person: Id={Id}, FirstName={FirstName}, LastName={LastName}")]
-    public class Person : IIdentifiable, ICreatedDate, IUpdatedDate, IDeletable
+    public class Person : IIdentifiable, ICreatedDate, IUpdatedDate
     {
         public int Id { get; set; }
 
@@ -25,7 +25,5 @@ namespace ToolkitSample.Model
         public DateTime CreatedDate { get; set; }
 
         public DateTime? UpdatedDate { get; set; }
-
-        public bool IsDeleted { get; set; }
     }
 }

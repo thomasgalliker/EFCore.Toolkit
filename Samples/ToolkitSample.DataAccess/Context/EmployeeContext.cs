@@ -1,6 +1,7 @@
 ﻿using System;
 using EFCore.Toolkit;
 using EFCore.Toolkit.Auditing;
+using EFCore.Toolkit.Interceptors;
 using Microsoft.EntityFrameworkCore;
 
 namespace ToolkitSample.DataAccess.Context
@@ -37,6 +38,9 @@ namespace ToolkitSample.DataAccess.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
+
+            optionsBuilder.AddInterceptors(new UpdateAuditableInterceptor());
+            optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -45,13 +49,13 @@ namespace ToolkitSample.DataAccess.Context
 
             //this.Database.KillConnectionsToTheDatabase();
 
-            modelBuilder.ApplyConfiguration(new PersonEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new PersonEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new EmployeeAuditEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new StudentEntityConfiguration());
             modelBuilder.ApplyConfiguration(new DepartmentEntityConfiguration());
             modelBuilder.ApplyConfiguration(new RoomEntityTypeConfiguration());
-            modelBuilder.ApplyConfiguration(new CountryEntityConfiguration());
+            modelBuilder.ApplyConfiguration(new CountryEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ApplicationSettingEntityTypeConfiguration());
 
             //this.AutoConfigure(modelBuilder);

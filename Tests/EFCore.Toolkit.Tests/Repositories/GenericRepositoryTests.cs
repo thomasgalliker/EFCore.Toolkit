@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Extensions;
 using EFCore.Toolkit.Exceptions;
@@ -47,7 +46,7 @@ namespace EFCore.Toolkit.Tests.Repositories
             // Arrange
             var employee = CreateEmployee1();
             employee.Department = Testdata.Departments.CreateDepartmentHumanResources();
-            employee.Country = Testdata.Countries.CreateCountrySwitzerland();
+            employee.Country = Testdata.Countries.Switzerland();
 
             ChangeSet committedChangeSet;
 
@@ -97,6 +96,8 @@ namespace EFCore.Toolkit.Tests.Repositories
             {
                 var allEmployees = employeeRepository.GetAll().ToList();
                 allEmployees.Should().HaveCount(3);
+                allEmployees.Select(e => e.CreatedDate).All(d => d > DateTime.MinValue).Should().BeTrue();
+                allEmployees.Select(e => e.UpdatedDate).All(d => d == null).Should().BeTrue();
             }
         }
 
@@ -117,7 +118,8 @@ namespace EFCore.Toolkit.Tests.Repositories
             ChangeSet committedChangeSet;
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
-                removedEmployee = employeeRepository.Remove(employees.ElementAt(0));
+                var employeeToRemove = employees.ElementAt(0);
+                removedEmployee = employeeRepository.Remove(employeeToRemove);
                 committedChangeSet = employeeRepository.Save();
             }
 
@@ -178,7 +180,12 @@ namespace EFCore.Toolkit.Tests.Repositories
         public void ShouldRemoveAllEmployees()
         {
             // Arrange
-            var employees = new List<Employee> { CreateEmployee1(), CreateEmployee2(), CreateEmployee3() };
+            var employees = new List<Employee>
+            {
+                CreateEmployee1(),
+                CreateEmployee2(),
+                CreateEmployee3()
+            };
 
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
@@ -311,45 +318,6 @@ namespace EFCore.Toolkit.Tests.Repositories
         }
 
         [Fact]
-        public async Task ShouldSoftDeletePerson()
-        {
-            // Arrange
-            var employees = new List<Employee>
-            {
-                CreateEmployee1(),
-                CreateEmployee2(),
-                CreateEmployee3()
-            };
-
-            using (IEmployeeRepository employeeRepository = new EmployeeRepository(this.CreateContext()))
-            {
-                employeeRepository.AddRange(employees);
-                employeeRepository.Save();
-            }
-
-            // Act
-            using (IEmployeeRepository employeeRepository = new EmployeeRepository(this.CreateContext()))
-            {
-                foreach (var employee in employees)
-                {
-                    employeeRepository.SoftDelete(employee);
-                }
-
-                await employeeRepository.SaveAsync();
-            }
-
-            // Assert
-            using (IEmployeeReadOnlyRepository employeeRepository = new EmployeeReadOnlyRepository(this.CreateContext()))
-            {
-                var allEmployees = employeeRepository.GetAll();
-                foreach (var employee in allEmployees)
-                {
-                    employee.IsDeleted.Should().BeTrue();
-                }
-            }
-        }
-
-        [Fact]
         public void ShouldAddOrUpdateExistingEmployee_UpdateIfExists()
         {
             // Arrange
@@ -390,7 +358,7 @@ namespace EFCore.Toolkit.Tests.Repositories
             // Arrange
             var employee1Update = CreateEmployee1();
             employee1Update.FirstName = "Added " + employee1Update.FirstName;
-            employee1Update.Country = Testdata.Countries.CreateCountrySwitzerland();
+            employee1Update.Country = Testdata.Countries.Switzerland();
 
             // Act
             ChangeSet committedChangeSet;
@@ -421,7 +389,7 @@ namespace EFCore.Toolkit.Tests.Repositories
             var expectedEmployementDate = new DateTime(2000, 1, 1);
 
             var departmentHr = Testdata.Departments.CreateDepartmentHumanResources();
-            var countryCH = Testdata.Countries.CreateCountrySwitzerland();
+            var countryCH = Testdata.Countries.Switzerland();
 
             Employee employee1;
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
@@ -469,7 +437,7 @@ namespace EFCore.Toolkit.Tests.Repositories
         {
             // Arrange
             var departmentHr = Testdata.Departments.CreateDepartmentHumanResources();
-            var countryCH = Testdata.Countries.CreateCountrySwitzerland();
+            var countryCH = Testdata.Countries.Switzerland();
 
             Employee employee1;
             Employee employee2;

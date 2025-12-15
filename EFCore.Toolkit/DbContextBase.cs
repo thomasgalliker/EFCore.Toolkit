@@ -330,9 +330,10 @@ namespace EFCore.Toolkit
                 .Where(e => e.State == EntityState.Deleted && e.Entity != null)
                 .Select(n => Change.CreateDeleteChange(n.Entity));
 
-            var allChanges = new List<IChange>(addChanges);
-            allChanges.AddRange(deleteChanges);
-            allChanges.AddRange(updateChanges);
+            var allChanges = addChanges
+                .Concat(updateChanges)
+                .Concat(deleteChanges)
+                .ToArray();
 
             return new ChangeSet(this.GetType(), allChanges);
         }

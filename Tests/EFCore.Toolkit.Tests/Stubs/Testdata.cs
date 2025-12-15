@@ -92,18 +92,38 @@ namespace EFCore.Toolkit.Tests.Stubs
 
         public static class Countries
         {
-            public static Country CreateCountrySwitzerland()
+            public static Country Switzerland()
             {
                 return new Country
                 {
-                    Id = "CH",
+                    Id = "ch",
                     Name = "Switzerland"
+                };
+            }
+            
+            public static Country Germany()
+            {
+                return new Country
+                {
+                    Id = "de",
+                    Name = "Germany"
+                };
+            }
+            
+            public static Country USA()
+            {
+                return new Country
+                {
+                    Id = "us",
+                    Name = "USA"
                 };
             }
 
             public static IEnumerable<Country> GetAll()
             {
-                yield return CreateCountrySwitzerland();
+                yield return Switzerland();
+                yield return Germany();
+                yield return USA();
             }
         }
 

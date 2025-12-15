@@ -107,7 +107,7 @@ namespace EFCore.Toolkit.Tests
             var transactionMock = new Mock<ITransaction>();
             var contextMock = new Mock<IContext>();
             contextMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
-            var changeSet = new ChangeSet(contextMock.GetType(), new List<IChange> { Change.CreateAddedChange(new object()) });
+            var changeSet = new ChangeSet(contextMock.GetType(), new[] { Change.CreateAddedChange(new object()) });
             contextMock.Setup(c => c.SaveChanges()).Returns(changeSet);
 
             unitOfWork.RegisterContext(contextMock.Object);

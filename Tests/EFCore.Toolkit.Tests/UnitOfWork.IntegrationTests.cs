@@ -45,7 +45,7 @@ namespace EFCore.Toolkit.Tests
             {
                 var context1 = this.CreateContext();
                 var contextMock2 = new Mock<ISampleContextTwo>();
-                contextMock2.Setup(m => m.SaveChanges()).Returns(new ChangeSet(typeof(ISampleContextTwo), new List<IChange> { Change.CreateAddedChange(new Person()) }));
+                contextMock2.Setup(m => m.SaveChanges()).Returns(new ChangeSet(typeof(ISampleContextTwo), new[] { Change.CreateAddedChange(new Person()) }));
                 var context2 = contextMock2.Object;
 
                 context1.Set<Employee>().Add(Testdata.Employees.CreateEmployee1());
