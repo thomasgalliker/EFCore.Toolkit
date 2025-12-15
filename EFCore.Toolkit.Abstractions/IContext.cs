@@ -48,7 +48,21 @@
         /// </summary>
         /// <returns>The number of objects written to the underlying database.</returns>
         /// <exception cref="System.InvalidOperationException">Thrown if the context has been disposed.</exception>
+        ChangeSet SaveChanges(bool acceptAllChangesOnSuccess);
+
+        /// <summary>
+        /// Saves all changes made in this context to the underlying database.
+        /// </summary>
+        /// <returns>The number of objects written to the underlying database.</returns>
+        /// <exception cref="System.InvalidOperationException">Thrown if the context has been disposed.</exception>
         Task<ChangeSet> SaveChangesAsync();
+
+        /// <summary>
+        /// Saves all changes made in this context to the underlying database.
+        /// </summary>
+        /// <returns>The number of objects written to the underlying database.</returns>
+        /// <exception cref="System.InvalidOperationException">Thrown if the context has been disposed.</exception>
+        Task<ChangeSet> SaveChangesAsync(bool acceptAllChangesOnSuccess);
 
         ITransaction BeginTransaction();
 

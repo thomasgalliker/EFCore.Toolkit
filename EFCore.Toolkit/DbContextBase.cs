@@ -20,11 +20,8 @@ namespace EFCore.Toolkit
         /// Empty constructor is used for 'update-database' command-line command.
         /// </summary>
         protected DbContextBase()
+            : this(dbContextOptions: new DbContextOptions<DbContext>(), databaseInitializer: null, log: null)
         {
-            this.log ??= s => Debug.WriteLine(s);
-            //TryInitializeDatabase(this, null);
-
-            this.Name = this.GetType().GetFormattedName();
         }
 
         protected DbContextBase(DbContextOptions dbContextOptions)
@@ -45,9 +42,9 @@ namespace EFCore.Toolkit
         protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer? databaseInitializer, Action<string>? log)
             : base(dbContextOptions)
         {
-            log ??= s => Debug.WriteLine(s);
+            this.log = log ?? (s => Debug.WriteLine(s));
 
-            this.log = log;
+            this.Name = this.GetType().GetFormattedName();
 
             this.log($"Initializing DbContext '{this.Name}' with NameOrConnectionString = \"{this.GetConnectionString()}\" and IDatabaseInitializer =\"{databaseInitializer?.GetType().GetFormattedName()}\"");
 
@@ -64,17 +61,7 @@ namespace EFCore.Toolkit
         {
             this.log($"{this.Name}.OnConfiguring");
 
-            //if (this.GetConnectionString() is string connectionString && connectionString != null)
-            //{
-            //    optionsBuilder.UseSqlServer(connectionString);
-            //}
 
-            //if (!optionsBuilder.Options.Extensions.Any(extension => extension.GetType().Name == "InMemoryOptionsExtension"))
-            //{
-            //    optionsBuilder.UseSqlServer(connectionString);
-            //}
-
-            //optionsBuilder.UseLoggerFactory(new Consol)
         }
 
         /// <inheritdoc />
@@ -210,6 +197,12 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public new virtual ChangeSet SaveChanges()
         {
+            return this.SaveChanges(acceptAllChangesOnSuccess: true);
+        }
+
+        /// <inheritdoc />
+        public virtual ChangeSet SaveChanges(bool acceptAllChangesOnSuccess)
+        {
             //this.ApplyCreatedBy(() => this.userContext.GetCurrentUserId());
 
             var changeSet = this.GetChangeSet();
@@ -233,7 +226,13 @@ namespace EFCore.Toolkit
         public IConcurrencyResolveStrategy ConcurrencyResolveStrategy { get; set; } = new RethrowConcurrencyResolveStrategy();
 
         /// <inheritdoc />
-        public virtual async Task<ChangeSet> SaveChangesAsync()
+        public virtual Task<ChangeSet> SaveChangesAsync()
+        {
+            return this.SaveChangesAsync(acceptAllChangesOnSuccess: true);
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<ChangeSet> SaveChangesAsync(bool acceptAllChangesOnSuccess)
         {
             var changeSet = this.GetChangeSet();
             try
