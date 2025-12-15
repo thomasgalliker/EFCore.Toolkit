@@ -3,11 +3,12 @@
 namespace EFCore.Toolkit.Abstractions.Extensions
 {
     public static class ReadOnlyRepositoryExtensions
-    {  /// <summary>
-       /// Finds entities with the given <paramref name="predicate"/>.
-       /// </summary>
-       /// <param name="predicate">The search predicate.</param>
-       /// <returns>A collection of entities matching the search predicate.</returns>
+    {
+        /// <summary>
+        /// Finds entities with the given <paramref name="predicate"/>.
+        /// </summary>
+        /// <param name="predicate">The search predicate.</param>
+        /// <returns>A collection of entities matching the search predicate.</returns>
         public static IEnumerable<T> FindBy<T>(this IReadOnlyRepository<T> repository, Expression<Func<T, bool>> predicate)
         {
             var query = repository.Get().Where(predicate).AsEnumerable();

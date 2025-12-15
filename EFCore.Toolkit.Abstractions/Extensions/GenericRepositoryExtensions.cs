@@ -15,26 +15,45 @@
         /// </remarks>
         public static TEntity RemoveById<TEntity>(this IGenericRepository<TEntity> repository, params object[] ids)
         {
-            var entity = repository.FindById(ids);
-            if (entity == null)
+            if (ids == null)
             {
-                throw new ArgumentOutOfRangeException(nameof(ids));
+                throw new ArgumentNullException(nameof(ids));
             }
 
-            return repository.Remove(entity);
+            var entityToRemove = repository.FindById(ids);
+            if (entityToRemove == null)
+            {
+                throw new ArgumentException($"RemoveById could not find entity with ID=[{string.Join(",", ids)}]", nameof(ids));
+            }
+
+            return repository.Remove(entityToRemove);
         }
 
-        public static IEnumerable<TEntity> RemoveByExternalId<TEntity>(this IGenericRepository<TEntity> queryable, Guid externalId) where TEntity : IExternalIdentifiable
+        public static TEntity RemoveById<TEntity>(this IGenericRepository<TEntity> repository, int id) where TEntity : IIdentifiable
         {
-            return queryable.RemoveAll(i => i.ExternalId == externalId);
+            var entityToRemove = repository.Get().FindById(id);
+            if (entityToRemove == null)
+            {
+                throw new ArgumentException($"RemoveByExternalId could not find entity with id={id}", nameof(id));
+            }
+
+            return repository.Remove(entityToRemove);
+        }
+
+        public static TEntity RemoveByExternalId<TEntity>(this IGenericRepository<TEntity> repository, Guid externalId) where TEntity : IExternalIdentifiable
+        {
+            var entityToRemove = repository.Get().FindByExternalId(externalId);
+            if (entityToRemove == null)
+            {
+                throw new ArgumentException($"RemoveByExternalId could not find entity with externalId={externalId}", nameof(externalId));
+            }
+
+            return repository.Remove(entityToRemove);
         }
 
         /// <summary>Removes all entities that match the conditions defined by the given predicate.</summary>
         /// <returns>The removed entities.</returns>
         /// <param name="predicate">The expression that defines the conditions of the elements to remove.</param>
-        /// <exception cref="T:System.ArgumentNullException">
-        /// <paramref name="predicate" /> is null.
-        /// </exception>
         public static IEnumerable<TEntity> RemoveAll<TEntity>(this IGenericRepository<TEntity> repository, Func<TEntity, bool>? predicate = null)
         {
             IEnumerable<TEntity> query = repository.Get();

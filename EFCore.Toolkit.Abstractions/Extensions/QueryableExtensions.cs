@@ -22,12 +22,12 @@
                 .Select(x => new { x.Id, x.ExternalId })
                 .SingleOrDefault(i => i.ExternalId == externalId);
 
-            if (entity == null)
-            {
-                return null;
-            }
+            return entity?.Id;
+        }
 
-            return entity.Id;
+        public static TEntity FindById<TEntity>(this IQueryable<TEntity> queryable, int id) where TEntity : IIdentifiable
+        {
+            return queryable.SingleOrDefault(i => i.Id == id);
         }
 
         public static TEntity FindByExternalId<TEntity>(this IQueryable<TEntity> queryable, Guid externalId) where TEntity : IExternalIdentifiable
