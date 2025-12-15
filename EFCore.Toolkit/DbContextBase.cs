@@ -68,8 +68,6 @@ namespace EFCore.Toolkit
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             this.log($"{this.Name}.OnModelCreating");
-
-            ////modelBuilder.Remove<PluralizingTableNameConvention>();
         }
 
         /// <inheritdoc />
