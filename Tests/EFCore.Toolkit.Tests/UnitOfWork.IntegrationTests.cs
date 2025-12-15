@@ -30,7 +30,7 @@ namespace EFCore.Toolkit.Tests
         //}
 
         public UnitOfWorkIntegrationTests(ITestOutputHelper testOutputHelper)
-            : base(databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+            : base(databaseInitializer: new CreateDatabaseIfNotExists(),
                 log: testOutputHelper.WriteLine)
         {
             AssemblyLoader.Current = new TestAssemblyLoader();
@@ -68,7 +68,7 @@ namespace EFCore.Toolkit.Tests
         public void ShouldFailToCommitMultipleContexts()
         {
             // Arrange
-            var databaseInitializer = new DropCreateDatabaseAlways<EmployeeContext>();
+            var databaseInitializer = new DropCreateDatabaseAlways();
             IUnitOfWork unitOfWork = new UnitOfWork();
 
             var context1 = this.CreateContext(databaseInitializer);

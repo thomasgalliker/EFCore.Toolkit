@@ -1,9 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.Toolkit.Abstractions;
+using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.Toolkit
 {
-    public interface IDatabaseInitializer<TContext> where TContext : DbContext
+    public interface IDatabaseInitializer
     {
-        void Initialize(DbContextBase<TContext> context, bool force);
+        void Initialize(DbContextBase context, bool force);
     }
 }

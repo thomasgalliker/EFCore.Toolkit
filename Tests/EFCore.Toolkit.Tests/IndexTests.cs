@@ -19,7 +19,7 @@ namespace EFCore.Toolkit.Tests
     public class IndexTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         public IndexTests(ITestOutputHelper testOutputHelper)
-            : base(databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+            : base(databaseInitializer: new CreateDatabaseIfNotExists(),
                   log: testOutputHelper.WriteLine)
         {
             AssemblyLoader.Current = new TestAssemblyLoader();

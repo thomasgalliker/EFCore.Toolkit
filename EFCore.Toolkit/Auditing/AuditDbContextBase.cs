@@ -14,13 +14,13 @@ namespace EFCore.Toolkit.Auditing
     /// AuditDbContextBase adds auditing capabilities to the DbContextBase.
     /// Auditing is enabled by default but may be disabled (AuditEnabled=false) if needed.
     /// </summary>
-    public abstract class AuditDbContextBase<TContext> : DbContextBase<TContext>, IAuditContext where TContext : DbContext
+    public abstract class AuditDbContextBase : DbContextBase, IAuditContext
     {
         private const string AuditUpdatedColumnName = nameof(IAuditEntity.AuditDate);
         private const string AuditUserColumnName = nameof(IAuditEntity.AuditUser);
         private const string AuditTypeColumnName = nameof(IAuditEntity.AuditType);
 
-        private static readonly IList<TContext> ConfigFileLock = new List<TContext>();
+        private static readonly IList<DbContext> ConfigFileLock = new List<DbContext>();
         private static readonly AuditDbContextConfiguration AuditDbContextConfiguration;
 
         private readonly Dictionary<Type, AuditTypeInfo> auditTypes = new Dictionary<Type, AuditTypeInfo>();
@@ -50,12 +50,12 @@ namespace EFCore.Toolkit.Auditing
         {
         }
 
-        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext>? databaseInitializer)
+        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer? databaseInitializer)
             : this(dbContextOptions, databaseInitializer, log: null)
         {
         }
 
-        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext>? databaseInitializer, Action<string>? log)
+        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer? databaseInitializer, Action<string>? log)
             : base(dbContextOptions, databaseInitializer, log)
         {
         }

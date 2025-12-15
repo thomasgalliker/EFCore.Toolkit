@@ -22,7 +22,7 @@ namespace EFCore.Toolkit.Tests.Repositories
     {
         public EmployeeReadOnlyRepositoryTests(ITestOutputHelper testOutputHelper)
             : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
-                  databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+                  databaseInitializer: new CreateDatabaseIfNotExists(),
                   log: testOutputHelper.WriteLine)
         {
             AssemblyLoader.Current = new TestAssemblyLoader();

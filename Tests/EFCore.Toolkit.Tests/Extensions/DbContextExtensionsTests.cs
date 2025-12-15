@@ -21,7 +21,7 @@ namespace EFCore.Toolkit.Tests.Extensions
 
         public DbContextExtensionsTests(ITestOutputHelper testOutputHelper)
             : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
-                  databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+                  databaseInitializer: new CreateDatabaseIfNotExists(),
                    log: testOutputHelper.WriteLine)
         {
             this.testOutputHelper = testOutputHelper;

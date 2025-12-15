@@ -11,7 +11,7 @@ namespace ToolkitSample.DataAccess.Context.Auditing
     /// This data context is used to demonstrate the auditing features.
     /// It is configured using the app.config.
     /// </summary>
-    public class TestAuditDbContext : AuditDbContextBase<TestAuditDbContext>
+    public class TestAuditDbContext : AuditDbContextBase
     {
         public DbSet<TestEntity> TestEntities { get; set; }
 
@@ -21,14 +21,14 @@ namespace ToolkitSample.DataAccess.Context.Auditing
 
         public DbSet<EmployeeAudit> EmployeeAudits { get; set; }
 
-        public TestAuditDbContext(DbContextOptions dbContextOptions, IDatabaseInitializer<TestAuditDbContext> databaseInitializer)
+        public TestAuditDbContext(DbContextOptions dbContextOptions, IDatabaseInitializer databaseInitializer)
             : base(dbContextOptions, databaseInitializer)
         {
             //TODO this.Configuration.ProxyCreationEnabled = false;
             this.ConfigureAuditingFromAppConfig();
         }
 
-        public TestAuditDbContext(DbContextOptions dbContextOptions, IDatabaseInitializer<TestAuditDbContext> databaseInitializer, Action<string> log)
+        public TestAuditDbContext(DbContextOptions dbContextOptions, IDatabaseInitializer databaseInitializer, Action<string> log)
             : base(dbContextOptions, databaseInitializer, log)
         {
             //TODO this.Configuration.ProxyCreationEnabled = false;

@@ -1,6 +1,7 @@
 ﻿using EFCore.Toolkit.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace EFCore.Toolkit
 {
@@ -22,5 +23,7 @@ namespace EFCore.Toolkit
         DbSet<TEntity> Set<TEntity>() where TEntity : class;
 
         public EntityEntry<TEntity> Entry<TEntity>(TEntity entity) where TEntity : class;
+
+        public DatabaseFacade Database { get; }
     }
 }

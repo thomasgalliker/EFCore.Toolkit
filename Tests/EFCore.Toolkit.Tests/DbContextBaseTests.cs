@@ -49,7 +49,7 @@ namespace EFCore.Toolkit.Tests
         public void ShouldRethrowConcurrencyUpdateExceptionAsDefault()
         {
             // Arrange
-            var databaseInitializer = new CreateDatabaseIfNotExists<EmployeeContext>();
+            var databaseInitializer = new CreateDatabaseIfNotExists();
             var initialEmployee = Testdata.Employees.CreateEmployee1();
 
             string firstNameChange1 = initialEmployee.FirstName + " from employeeContext1";
@@ -88,7 +88,7 @@ namespace EFCore.Toolkit.Tests
         public void ShouldResolveConcurrencyExceptionWithDatabaseWinsStrategy()
         {
             // Arrange
-            var databaseInitializer = new CreateDatabaseIfNotExists<EmployeeContext>();
+            var databaseInitializer = new CreateDatabaseIfNotExists();
             IConcurrencyResolveStrategy concurrencyResolveStrategy = new DatabaseWinsConcurrencyResolveStrategy();
             var initialEmployee = Testdata.Employees.CreateEmployee1();
 
@@ -133,8 +133,8 @@ namespace EFCore.Toolkit.Tests
         [Fact]
         public void ShouldResolveConcurrencyExceptionWithClientWinsStrategy()
         {
-            // Arrange
-            var databaseInitializer = new CreateDatabaseIfNotExists<EmployeeContext>();
+            // Arrange  
+            var databaseInitializer = new CreateDatabaseIfNotExists();
             IConcurrencyResolveStrategy concurrencyResolveStrategy = new ClientWinsConcurrencyResolveStrategy();
             var initialEmployee = Testdata.Employees.CreateEmployee1();
 

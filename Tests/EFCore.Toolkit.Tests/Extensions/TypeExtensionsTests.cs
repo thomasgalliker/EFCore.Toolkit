@@ -71,7 +71,7 @@ namespace EFCore.Toolkit.Tests.Extensions
             var args = new object[]
             {
                 EmployeeContextTestDbConnection.CreateDbContextOptions<TestAuditDbContext>(),
-                new DropCreateDatabaseAlways<TestAuditDbContext>(),
+                new DropCreateDatabaseAlways(),
             };
 
             // Act
@@ -81,7 +81,7 @@ namespace EFCore.Toolkit.Tests.Extensions
             var contextCtorParameters = contextCtor.ConstructorInfo.GetParameters();
             contextCtorParameters.Should().HaveCount(2);
             contextCtorParameters.ElementAt(0).ParameterType.Should().Be(typeof(DbContextOptions));
-            contextCtorParameters.ElementAt(1).ParameterType.Should().Be(typeof(IDatabaseInitializer<TestAuditDbContext>));
+            contextCtorParameters.ElementAt(1).ParameterType.Should().Be(typeof(IDatabaseInitializer));
 
             var testContext = contextCtor.Invoke();
             testContext.Should().BeOfType<TestAuditDbContext>();

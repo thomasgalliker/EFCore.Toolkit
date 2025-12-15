@@ -3,12 +3,12 @@ using System.Linq;
 using EFCore.Toolkit;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
-using ToolkitSample.DataAccess.Context;
+using Microsoft.EntityFrameworkCore;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess
 {
-    public class EmployeeContextDatabaseInitializer : IDatabaseInitializer<EmployeeContext>
+    public class EmployeeContextDatabaseInitializer : IDatabaseInitializer
     {
         private readonly IEnumerable<IDataSeed> dataSeeds;
 
@@ -17,20 +17,21 @@ namespace ToolkitSample.DataAccess
             this.dataSeeds = dataSeeds;
         }
 
-        public void Initialize(DbContextBase<EmployeeContext> context, bool force)
+        public void Initialize(DbContextBase dbContext, bool force)
         {
-            context.Database.EnsureCreated();
 
-            if (context.AllMigrationsApplied())
+            dbContext.Database.EnsureCreated();
+
+            if (dbContext.AllMigrationsApplied())
             {
-                if (!context.Set<Employee>().Any())
+                if (!dbContext.Set<Employee>().Any())
                 {
                     foreach (var dataSeed in this.dataSeeds)
                     {
-                        dataSeed.Seed(context);
+                        dataSeed.Seed(dbContext);
                     }
 
-                    context.SaveChanges();
+                    dbContext.SaveChanges();
                 }
             }
         }

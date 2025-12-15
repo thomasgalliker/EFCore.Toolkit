@@ -23,7 +23,7 @@ namespace EFCore.Toolkit.Tests.Auditing
 
         public AuditDbContextBaseTests(ITestOutputHelper testOutputHelper)
             : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<TestAuditDbContext>(),
-                databaseInitializer: new CreateDatabaseIfNotExists<TestAuditDbContext>(),
+                databaseInitializer: new CreateDatabaseIfNotExists(),
                 log: testOutputHelper.WriteLine)
         {
             AssemblyLoader.Current = new TestAssemblyLoader();

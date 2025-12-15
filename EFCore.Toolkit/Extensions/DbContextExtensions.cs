@@ -53,9 +53,9 @@ namespace EFCore.Toolkit.Extensions
         /// <summary>
         /// Returns the number of table rows per database table.
         /// </summary>
-        public static async Task<List<TableRowCounts>> GetTableRowCountsAsync<T>(this DbContextBase<T> c) where T : DbContext
+        public static async Task<List<TableRowCounts>> GetTableRowCountsAsync(this DbContextBase context)
         {
-            var rawSqlQuery = c.ExecuteQuery<TableRowCounts>(
+            var rawSqlQuery = context.ExecuteQuery<TableRowCounts>(
                 @"CREATE TABLE #counts
                     (
                         TableName varchar(255),

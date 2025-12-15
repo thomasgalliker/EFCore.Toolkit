@@ -33,7 +33,7 @@ namespace EFCore.Toolkit.Tests.Repositories
         private readonly ITestOutputHelper testOutputHelper;
 
         public GenericRepositoryTests(ITestOutputHelper testOutputHelper)
-            : base(databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+            : base(databaseInitializer: new CreateDatabaseIfNotExists(),
                   log: testOutputHelper.WriteLine)
         {
             this.testOutputHelper = testOutputHelper;

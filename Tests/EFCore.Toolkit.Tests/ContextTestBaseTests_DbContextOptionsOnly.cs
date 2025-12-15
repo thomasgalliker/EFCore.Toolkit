@@ -23,9 +23,9 @@ namespace EFCore.Toolkit.Tests
             testContext.Should().BeOfType<TestContext>();
         }
 
-        public class TestContext : DbContextBase<TestContext>
+        public class TestContext : DbContextBase
         {
-            public TestContext(DbContextOptions dbContextOptions, IDatabaseInitializer<TestContext> databaseInitializer)
+            public TestContext(DbContextOptions dbContextOptions, IDatabaseInitializer databaseInitializer)
                 : base(dbContextOptions, databaseInitializer)
             {
             }

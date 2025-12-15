@@ -9,11 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EFCore.Toolkit
 {
-    public abstract class DbContextBase<TContext> : DbContext, IDbContext
-        where TContext : DbContext
+    public abstract class DbContextBase : DbContext, IDbContext
     {
-        private static readonly IList<TContext> InitializerLock = new List<TContext>();
-        private readonly IDatabaseInitializer<TContext>? databaseInitializer;
+        private static readonly IList<DbContext> InitializerLock = new List<DbContext>();
+        private readonly IDatabaseInitializer? databaseInitializer;
 
         private readonly Action<string> log;
 
@@ -24,6 +23,8 @@ namespace EFCore.Toolkit
         {
             this.log ??= s => Debug.WriteLine(s);
             //TryInitializeDatabase(this, null);
+
+            this.Name = this.GetType().GetFormattedName();
         }
 
         protected DbContextBase(DbContextOptions dbContextOptions)
@@ -31,7 +32,7 @@ namespace EFCore.Toolkit
         {
         }
 
-        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer)
+        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer databaseInitializer)
             : this(dbContextOptions, databaseInitializer, log: null)
         {
         }
@@ -41,7 +42,7 @@ namespace EFCore.Toolkit
         {
         }
 
-        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext>? databaseInitializer, Action<string>? log)
+        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer? databaseInitializer, Action<string>? log)
             : base(dbContextOptions)
         {
             log ??= s => Debug.WriteLine(s);
@@ -85,7 +86,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public string Name { get; } = typeof(TContext).GetFormattedName();
+        public string Name { get; private set; }
 
         private void TryInitializeDatabase(bool force = false)
         {
@@ -336,7 +337,7 @@ namespace EFCore.Toolkit
             allChanges.AddRange(deleteChanges);
             allChanges.AddRange(updateChanges);
 
-            return new ChangeSet(typeof(TContext), allChanges);
+            return new ChangeSet(this.GetType(), allChanges);
         }
 
         /// <inheritdoc />

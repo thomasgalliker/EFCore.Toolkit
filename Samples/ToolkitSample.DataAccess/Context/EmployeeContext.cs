@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class EmployeeContext : AuditDbContextBase<EmployeeContext>, IEmployeeContext
+    public class EmployeeContext : AuditDbContextBase, IEmployeeContext
     {
         private static readonly AuditDbContextConfiguration AuditDbContextConfiguration = new AuditDbContextConfiguration(auditEnabled: true, auditDateTimeKind: DateTimeKind.Utc);
 
@@ -16,7 +16,7 @@ namespace ToolkitSample.DataAccess.Context
         {
         }
 
-        public EmployeeContext(DbContextOptions dbContextOptions, IDatabaseInitializer<EmployeeContext> initializer)
+        public EmployeeContext(DbContextOptions dbContextOptions, IDatabaseInitializer initializer)
           : base(dbContextOptions, initializer, null)
         {
             this.ConfigureAuditing(AuditDbContextConfiguration);
@@ -28,7 +28,7 @@ namespace ToolkitSample.DataAccess.Context
             this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
-        public EmployeeContext(DbContextOptions dbContextOptions, IDatabaseInitializer<EmployeeContext> initializer, Action<string> log = null)
+        public EmployeeContext(DbContextOptions dbContextOptions, IDatabaseInitializer initializer, Action<string> log = null)
            : base(dbContextOptions, initializer, log)
         {
             this.ConfigureAuditing(AuditDbContextConfiguration);
