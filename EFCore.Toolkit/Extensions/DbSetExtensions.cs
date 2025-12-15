@@ -104,21 +104,66 @@ namespace EFCore.Toolkit.Extensions
         {
             PropertyInfo[] propertyInfos;
 
-            var body = keySelector.Body is UnaryExpression u ? u.Operand : keySelector.Body;
+            var body = keySelector.Body;
 
-            if (body is MemberExpression member)
+            // Handle boxing: x => (object)x.Prop
+            if (body is UnaryExpression unary && unary.NodeType == ExpressionType.Convert)
+            {
+                body = unary.Operand;
+            }
+
+            if (body is MemberExpression memberExpression)
             {
                 // Single property selector: x => x.Id
-                propertyInfos = new[] { (PropertyInfo)member.Member };
+                propertyInfos = new[] { (PropertyInfo)memberExpression.Member };
             }
-            else if (body is NewExpression anon)
+            else if (body is NewExpression newExpression)
             {
-                // Composite key selector: x => new { x.Code, x.Type }
-                propertyInfos = anon.Members.Cast<PropertyInfo>().ToArray();
+                // Composite key selector: x => new { x.Id1, x.Id2 }
+                var properties = new List<PropertyInfo>();
+
+                foreach (var arg in newExpression.Arguments)
+                {
+                    if (arg is not MemberExpression m || m.Member is not PropertyInfo prop)
+                    {
+                        throw new InvalidOperationException(
+                            "Composite key selector must consist of entity properties only.");
+                    }
+
+                    properties.Add(prop);
+                }
+
+                propertyInfos = properties.ToArray();
+            }
+            else if (body is NewArrayExpression newArrayExpression)
+            {
+                // Composite key selector: x => new object[] { x.Prop1, x.Prop2 }
+                var properties = new List<PropertyInfo>();
+
+                foreach (var expression in newArrayExpression.Expressions)
+                {
+                    var expr = expression;
+
+                    while (expr is UnaryExpression u && u.NodeType == ExpressionType.Convert)
+                    {
+                        expr = u.Operand;
+                    }
+
+                    if (expr is not MemberExpression member ||
+                        member.Member is not PropertyInfo prop)
+                    {
+                        throw new InvalidOperationException(
+                            "Composite key selector must consist only of entity properties.");
+                    }
+
+                    properties.Add(prop);
+                }
+
+                propertyInfos = properties.ToArray();
             }
             else
             {
-                throw new ArgumentException("Invalid key selector expression.", nameof(keySelector));
+                throw new ArgumentException($"Invalid key selector expression: {body.GetType().Name}", nameof(keySelector));
             }
 
             return propertyInfos;

@@ -50,7 +50,7 @@ namespace EFCore.Toolkit.Tests.Extensions
                 allCountries.Should().HaveCount(countries.Length);
             }
         }
-        
+
 
         [Fact]
         public async Task ShouldAddOrUpdate_FilterDeletedItems()
@@ -79,7 +79,7 @@ namespace EFCore.Toolkit.Tests.Extensions
         }
 
         [Fact]
-        public async Task ShouldAddOrUpdate_UsingCustomKeyComparison()
+        public async Task ShouldAddOrUpdate_UsingCustomKeyComparison_SingleKey()
         {
             // Arrange
             var countries = Testdata.Countries.GetAll().ToArray();
@@ -92,6 +92,31 @@ namespace EFCore.Toolkit.Tests.Extensions
                 await employeeContext.SaveChangesAsync();
 
                 dbSet.AddOrUpdate(countries, c => c.Name);
+                await employeeContext.SaveChangesAsync();
+            }
+
+            // Assert
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var allCountries = employeeContext.Set<Country>().ToArray();
+                allCountries.Should().HaveCount(countries.Length);
+            }
+        }
+
+        [Fact]
+        public async Task ShouldAddOrUpdate_UsingCustomKeyComparison_CompositeKey()
+        {
+            // Arrange
+            var countries = Testdata.Countries.GetAll().ToArray();
+
+            // Act
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var dbSet = employeeContext.Set<Country>();
+                dbSet.AddOrUpdate(countries, c => new { c.Id, c.Name }); // NewExpression
+                await employeeContext.SaveChangesAsync();
+
+                dbSet.AddOrUpdate(countries, c => new[] { c.Id, c.Name }); // NewArrayExpression
                 await employeeContext.SaveChangesAsync();
             }
 
