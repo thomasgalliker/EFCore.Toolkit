@@ -53,17 +53,18 @@ namespace EFCore.Toolkit.Auditing
 
         protected void ConfigureAuditing(AuditDbContextConfiguration configuration)
         {
-            this.AuditEnabled = configuration.AuditEnabled;
             this.AuditDateTimeKind = configuration.AuditDateTimeKind;
 
             foreach (var auditTypeInfo in configuration.AuditTypeInfos)
             {
                 this.RegisterAuditType(auditTypeInfo);
             }
+
+            this.AuditEnabled = configuration.AuditTypeInfos.Any();
         }
 
         /// <inheritdoc />
-        public bool AuditEnabled { get; protected set; } = true;
+        public bool AuditEnabled { get; protected set; }
 
         /// <inheritdoc />
         public DateTimeKind AuditDateTimeKind { get; protected set; }

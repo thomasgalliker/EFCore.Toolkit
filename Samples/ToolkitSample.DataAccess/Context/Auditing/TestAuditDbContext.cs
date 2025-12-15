@@ -13,6 +13,12 @@ namespace ToolkitSample.DataAccess.Context.Auditing
     /// </summary>
     public class TestAuditDbContext : AuditDbContextBase
     {
+        private static readonly AuditDbContextConfiguration AuditDbContextConfiguration = new AuditDbContextConfiguration(
+            new[]
+            {
+                new AuditTypeInfo(typeof(Employee), typeof(EmployeeAudit))
+            });
+
         public DbSet<TestEntity> TestEntities { get; set; }
 
         public DbSet<TestEntityAudit> TestEntityAudits { get; set; }
@@ -24,11 +30,13 @@ namespace ToolkitSample.DataAccess.Context.Auditing
         public TestAuditDbContext(DbContextOptions dbContextOptions, IDatabaseInitializer databaseInitializer)
             : base(dbContextOptions, databaseInitializer)
         {
+            this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
         public TestAuditDbContext(DbContextOptions dbContextOptions, IDatabaseInitializer databaseInitializer, Action<string> log)
             : base(dbContextOptions, databaseInitializer, log)
         {
+            this.ConfigureAuditing(AuditDbContextConfiguration);
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
