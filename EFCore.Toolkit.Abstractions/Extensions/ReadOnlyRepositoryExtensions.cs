@@ -8,6 +8,7 @@ namespace EFCore.Toolkit.Abstractions.Extensions
         /// Finds entities with the given <paramref name="predicate"/>.
         /// </summary>
         /// <param name="predicate">The search predicate.</param>
+        /// <param name="repository">The repository.</param>
         /// <returns>A collection of entities matching the search predicate.</returns>
         public static IEnumerable<T> FindBy<T>(this IReadOnlyRepository<T> repository, Expression<Func<T, bool>> predicate)
         {
@@ -18,6 +19,7 @@ namespace EFCore.Toolkit.Abstractions.Extensions
         /// <summary>
         /// Indicates whether an entity with the given primary key value exists.
         /// </summary>
+        /// <param name="repository">The repository.</param>
         /// <param name="ids">The primary keys of the entity to be found.</param>
         /// <returns>true, if an entity with given primary key exists; otherwise, false.</returns>
         public static bool Any<T>(this IReadOnlyRepository<T> repository, params object[] ids)
@@ -28,6 +30,7 @@ namespace EFCore.Toolkit.Abstractions.Extensions
         /// <summary>
         /// Indicates whether an entity which matches the given predicate exists.
         /// </summary>
+        /// <param name="repository">The repository.</param>
         /// <param name="predicate">The predicate to filter the entity.</param>
         /// <returns>true, if an entity exists for given predicate; otherwise, false.</returns>
         public static bool Any<T>(this IReadOnlyRepository<T> repository, Func<T, bool> predicate)
