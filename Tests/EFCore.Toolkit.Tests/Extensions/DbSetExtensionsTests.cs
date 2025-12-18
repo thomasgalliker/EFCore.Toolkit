@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using EFCore.Toolkit.Extensions;
+﻿using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
 
@@ -57,20 +55,23 @@ namespace EFCore.Toolkit.Tests.Extensions
         {
             // Arrange
             var country = Testdata.Countries.GetAll().ToArray()[0];
+            Country? deletedCountry;
 
             // Act
             using (IEmployeeContext employeeContext = this.CreateContext())
             {
                 var dbSet = employeeContext.Set<Country>();
-                country = dbSet.AddOrUpdate(country);
+                country = dbSet.AddOrUpdate(country)!;
                 country.IsDeleted = true;
                 await employeeContext.SaveChangesAsync();
 
-                dbSet.AddOrUpdate(country);
+                deletedCountry = dbSet.AddOrUpdate(country);
                 await employeeContext.SaveChangesAsync();
             }
 
             // Assert
+            deletedCountry.Should().BeNull();
+
             using (IEmployeeContext employeeContext = this.CreateContext())
             {
                 var allCountries = employeeContext.Set<Country>().ToArray();

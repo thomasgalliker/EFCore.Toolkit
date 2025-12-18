@@ -7,20 +7,20 @@ namespace EFCore.Toolkit.Extensions
 {
     public static class DbSetExtensions
     {
-        public static TEntity AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity entity) where TEntity : class
+        public static TEntity? AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity entity) where TEntity : class
         {
             ArgumentNullException.ThrowIfNull(entity);
 
             var entities = new[] { entity };
-            return AddOrUpdateInternal(dbSet.GetContext(), dbSet, entities, keySelector: null).Single();
+            return AddOrUpdateInternal(dbSet.GetContext(), dbSet, entities, keySelector: null).SingleOrDefault();
         }
 
-        public static TEntity AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity entity, Expression<Func<TEntity, object?>> keySelector) where TEntity : class
+        public static TEntity? AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity entity, Expression<Func<TEntity, object?>> keySelector) where TEntity : class
         {
             ArgumentNullException.ThrowIfNull(entity);
 
             var entities = new[] { entity };
-            return AddOrUpdateInternal(dbSet.GetContext(), dbSet, entities, keySelector).Single();
+            return AddOrUpdateInternal(dbSet.GetContext(), dbSet, entities, keySelector).SingleOrDefault();
         }
 
         public static TEntity[] AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity[] entities) where TEntity : class
