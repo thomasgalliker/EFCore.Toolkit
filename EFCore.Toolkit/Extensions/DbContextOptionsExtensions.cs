@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.SqlServer.Infrastructure.Internal;
@@ -39,7 +40,7 @@ namespace EFCore.Toolkit.Extensions
                         newIdValue = sqlNewIdValue;
                     }
 
-                    Console.WriteLine($"HasDefaultValueForSql extension={extensionType.Name} -> newIdValue=\"{newIdValue ?? "<null>"}\"");
+                    Debug.WriteLine($"HasDefaultValueForSql extension={extensionType.Name} -> newIdValue=\"{newIdValue ?? "<null>"}\"");
                     return newIdValue;
                 }).Where(s => !string.IsNullOrEmpty(s));
 

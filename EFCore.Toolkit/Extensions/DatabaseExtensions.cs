@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
@@ -41,7 +42,7 @@ namespace EFCore.Toolkit.Extensions
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Trace.WriteLine(ex);
             }
         }
     }

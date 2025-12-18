@@ -1,6 +1,6 @@
-﻿using System;
-using EFCore.Toolkit;
+﻿using EFCore.Toolkit;
 using Microsoft.EntityFrameworkCore;
+using EFCore.Toolkit.Extensions;
 
 namespace ToolkitSample.DataAccess.Context
 {
@@ -42,6 +42,9 @@ namespace ToolkitSample.DataAccess.Context
             modelBuilder.ApplyConfiguration(new RoomEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new CountryEntityTypeConfiguration());
             modelBuilder.ApplyConfiguration(new ApplicationSettingEntityTypeConfiguration());
+
+            modelBuilder.SetDefaultDecimalPrecision(18, 10);
+            modelBuilder.SetDefaultStringMaxLength(maxLength: 256);
 
             //this.AutoConfigure(modelBuilder);
             //modelBuilder.Configurations.AddFromAssembly(this.GetType().Assembly);

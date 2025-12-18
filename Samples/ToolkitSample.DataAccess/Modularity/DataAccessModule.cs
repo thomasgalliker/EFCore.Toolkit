@@ -20,7 +20,7 @@ namespace ToolkitSample.DataAccess.Modularity
             builder.RegisterType<EmployeeContextDatabaseInitializer>().As<IDatabaseInitializer>().SingleInstance();
 
             // Finally, register the context all the repositories as InstancePerDependency
-            builder.RegisterType<EmployeeContext>().As<IEmployeeContext>()
+            builder.RegisterType<EmployeeContext>().As<IEmployeeContext>().AsSelf()
                 .WithParameter("dbContextOptions", EmployeeContextDbContextOptions.Create<EmployeeContext>())
                 .InstancePerDependency();
             builder.RegisterType<EmployeeRepository>().As<IEmployeeRepository>().InstancePerDependency();

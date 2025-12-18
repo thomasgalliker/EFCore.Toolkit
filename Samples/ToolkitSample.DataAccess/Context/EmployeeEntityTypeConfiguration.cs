@@ -20,8 +20,7 @@ namespace ToolkitSample.DataAccess.Context
 
             entity.Property(e => e.PropertyA);
             entity.Property(e => e.PropertyB);
-
-            //this.Unique(e => e.PropertyA, e => e.PropertyB);
+            entity.Property(e => e.Salary);
         }
     }
 }

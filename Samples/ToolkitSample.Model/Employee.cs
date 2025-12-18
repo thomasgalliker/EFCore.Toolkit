@@ -15,6 +15,8 @@ namespace ToolkitSample.Model
         public string? PropertyA { get; set; }
 
         public string? PropertyB { get; set; }
+
+        public decimal? Salary { get; set; }
     }
 
     // Hint: https://msdn.microsoft.com/en-us/library/bb399739(v=vs.100).aspx

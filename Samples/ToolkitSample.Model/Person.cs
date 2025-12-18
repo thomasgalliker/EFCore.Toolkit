@@ -1,4 +1,3 @@
-using System;
 using System.Diagnostics;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Auditing;

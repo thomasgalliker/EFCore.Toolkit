@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -17,6 +17,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\EFCore.Toolkit.Abstractions\EFCore.Toolkit.Abstractions.csproj" />
+    <ProjectReference Include="..\..\EFCore.Toolkit\EFCore.Toolkit.csproj" />
     <ProjectReference Include="..\ToolkitSample.DataAccess.Contracts\ToolkitSample.DataAccess.Contracts.csproj" />
     <ProjectReference Include="..\ToolkitSample.DataAccess\ToolkitSample.DataAccess.csproj" />
     <ProjectReference Include="..\ToolkitSample.Model\ToolkitSample.Model.csproj" />

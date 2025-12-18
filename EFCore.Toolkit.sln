@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.14.36717.8 d17.14
+VisualStudioVersion = 17.14.36717.8
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{533683F1-B92C-4149-A2AD-6045623BC6D8}"
 EndProject
@@ -17,8 +17,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
 		.gitignore = .gitignore
-		logo.png = logo.png
 		azure-pipelines.yml = azure-pipelines.yml
+		logo.png = logo.png
 		README.md = README.md
 		ReleaseNotes.txt = ReleaseNotes.txt
 	EndProjectSection
@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitSample.DataAccess", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitSample.Model", "Samples\ToolkitSample.Model\ToolkitSample.Model.csproj", "{C167C359-24B5-42A5-A47D-0A945BA14D08}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitSample.Console", "Samples\ToolkitSample.Console\ToolkitSample.Console.csproj", "{9C9DD3AA-DE94-436C-A2E7-82E221E830E6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitSample.ConsoleApp", "Samples\ToolkitSample.Console\ToolkitSample.ConsoleApp.csproj", "{9C9DD3AA-DE94-436C-A2E7-82E221E830E6}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ToolkitSample.DataAccess.Contracts", "Samples\ToolkitSample.DataAccess.Contracts\ToolkitSample.DataAccess.Contracts.csproj", "{AA2A8369-7199-4F71-A96E-151324C44F1A}"
 EndProject
