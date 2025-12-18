@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 namespace EFCore.Toolkit.Testing
 {
     /// <summary>
-    /// ContextTestBase for context <typeparam name="TContext"/> using IDbConnection <typeparam name="TDbContextOptionsBuilder"/>
+    /// ContextTestBase for context <typeparamref name="TContext"/> using IDbConnection <typeparam name="TDbContextOptionsBuilder"/>
     /// </summary>
     /// <typeparam name="TContext">The database context.</typeparam>
     /// <typeparam name="TDbContextOptionsBuilder">The database connection.</typeparam>
