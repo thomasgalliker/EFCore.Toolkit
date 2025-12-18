@@ -41,7 +41,7 @@ namespace EFCore.Toolkit.Extensions
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
                     string name = reader.GetName(i);
-                    PropertyInfo prop = lstColumns.FirstOrDefault(a => Equals(name, a.GetColumnName()));
+                    var prop = lstColumns.FirstOrDefault(a => Equals(name, a.GetColumnName()));
                     if (prop == null)
                     {
                         continue;

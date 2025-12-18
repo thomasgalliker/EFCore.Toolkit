@@ -39,7 +39,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             // Act
             using (var context = this.CreateContext())
             {
-                var customer = context.Employees.Find(1);
+                var customer = context.Employees.Find(1)!;
                 for (var i = 0; i < 10; i++)
                 {
                     customer.FirstName = customer.FirstName + " " + i;
@@ -50,7 +50,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             // Assert
             using (var context = this.CreateContext())
             {
-                var customer = context.Employees.Find(1);
+                var customer = context.Employees.Find(1)!;
                 customer.FirstName.Should().Be("Thomas 0 1 2 3 4 5 6 7 8 9");
 
                 var employeeAudits = context.EmployeeAudits.ToList();
@@ -73,7 +73,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             // Act
             using (var context = this.CreateContext())
             {
-                var customer = context.Employees.Find(1);
+                var customer = context.Employees.Find(1)!;
                 context.Remove(customer);
                 context.SaveChanges();
             }

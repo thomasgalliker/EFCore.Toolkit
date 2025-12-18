@@ -10,7 +10,7 @@ namespace EFCore.Toolkit.Utils
         /// into a dot-separated string path suitable for EF Core string-based Include.
         /// Supports nested collections using Select.
         /// </summary>
-        internal static bool TryParsePath(Expression expression, out string? path)
+        internal static bool TryParsePath(Expression? expression, out string? path)
         {
             path = null;
 

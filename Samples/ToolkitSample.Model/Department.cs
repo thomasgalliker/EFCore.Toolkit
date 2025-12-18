@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace ToolkitSample.Model
 {
@@ -9,17 +8,18 @@ namespace ToolkitSample.Model
         public Department()
         {
             this.Employees = new HashSet<Employee>();
+            this.RowVersion = Array.Empty<byte>();
         }
 
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         public int? LeaderId { get; set; }
 
-        public virtual Person Leader { get; set; }
+        public Person? Leader { get; set; }
 
-        public virtual ICollection<Employee> Employees { get; set; }
+        public ICollection<Employee> Employees { get; set; }
 
         public byte[] RowVersion { get; set; }
     }

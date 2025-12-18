@@ -63,7 +63,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public TEntity FindById(params object[] ids)
+        public TEntity? FindById(params object[] ids)
         {
             var intIds = ids.Select(i => int.Parse($"{i}"));
 

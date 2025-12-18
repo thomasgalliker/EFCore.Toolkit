@@ -77,7 +77,7 @@ namespace EFCore.Toolkit.Tests
             var ex = action.Should().Throw<UnitOfWorkException>();
             ex.Which.Message.Should().Contain("failed to commit.");
             ex.WithInnerException<InvalidOperationException>();
-            ex.Which.InnerException.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
+            ex.Which.InnerException!.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
 
             sampleContextOneMock.Verify(x => x.SaveChanges(), Times.Once);
             sampleContextTwoMock.Verify(x => x.SaveChanges(), Times.Once);

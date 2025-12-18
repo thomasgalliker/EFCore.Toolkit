@@ -9,11 +9,11 @@ namespace ToolkitSample.Model.Auditing
 
         public DateTime? Updated { get; set; }
 
-        public string UpdateUser { get; set; }
+        public string? UpdateUser { get; set; }
 
         public DateTime AuditDate { get; set; }
 
-        public string AuditUser { get; set; }
+        public string? AuditUser { get; set; }
 
         public AuditEntityState AuditType { get; set; }
 

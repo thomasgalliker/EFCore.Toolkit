@@ -67,7 +67,7 @@ namespace EFCore.Toolkit.Tests.Interceptors
             using (var employeeContext = this.CreateContext())
             {
                 var employeeSet = employeeContext.Set<Employee>();
-                var updateEmployee = employeeSet.Find(initialEmployee.Id);
+                var updateEmployee = employeeSet.Find(initialEmployee.Id)!;
                 updateEmployee.CreatedDate = DateTime.MinValue;
                 employeeSet.Update(updateEmployee);
                 employeeContext.SaveChanges();
@@ -100,7 +100,7 @@ namespace EFCore.Toolkit.Tests.Interceptors
             using (var employeeContext = this.CreateContext())
             {
                 var roomSet = employeeContext.Set<Room>();
-                var updateRoom = roomSet.Find(initialRoom.Id);
+                var updateRoom = roomSet.Find(initialRoom.Id)!;
                 updateRoom.CreatedDate = manipulatedCreatedDate;
                 roomSet.Update(updateRoom);
                 employeeContext.SaveChanges();

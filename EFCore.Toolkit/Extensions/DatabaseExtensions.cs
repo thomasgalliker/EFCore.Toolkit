@@ -32,7 +32,7 @@ namespace EFCore.Toolkit.Extensions
                     command.CommandText = sql;
                     command.CommandType = CommandType.Text;
 
-                    command.Connection.Open();
+                    command.Connection!.Open();
 
                     command.ExecuteNonQuery();
 

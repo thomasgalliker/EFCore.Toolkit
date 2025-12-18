@@ -80,7 +80,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public T FindById(params object[] ids)
+        public T? FindById(params object[] ids)
         {
             return this.DbSet.Find(ids);
         }
@@ -101,7 +101,7 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public virtual T AddOrUpdate(T entity)
         {
-            return ((DbContext)this.context).AddOrUpdate(entity).SingleOrDefault();
+            return ((DbContext)this.context).AddOrUpdate(entity).Single();
         }
 
         /// <inheritdoc />

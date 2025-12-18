@@ -7,6 +7,6 @@ namespace ToolkitSample.Model
     {
         public int Id { get { return 1; } set { } }
 
-        public string Path { get; set; }
+        public string? Path { get; set; }
     }
 }

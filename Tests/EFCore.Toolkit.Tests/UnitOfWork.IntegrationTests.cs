@@ -74,7 +74,7 @@ namespace EFCore.Toolkit.Tests
             var ex = action.Should().Throw<UnitOfWorkException>();
             ex.Which.Message.Should().Contain("failed to commit.");
             ex.WithInnerException<InvalidOperationException>();
-            ex.Which.InnerException.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
+            ex.Which.InnerException!.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
 
             var context = this.CreateContext(databaseInitializer);
             context.Set<Employee>().ToList().Should().HaveCount(0);

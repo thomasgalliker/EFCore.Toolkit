@@ -23,7 +23,7 @@ namespace ToolkitSample.DataAccess.Context
         {
         }
 
-        public EmployeeContext(DbContextOptions dbContextOptions, IDatabaseInitializer initializer, Action<string> log = null)
+        public EmployeeContext(DbContextOptions dbContextOptions, IDatabaseInitializer initializer, Action<string>? log = null)
            : base(dbContextOptions, initializer, log)
         {
         }

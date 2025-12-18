@@ -123,7 +123,7 @@ namespace EFCore.Toolkit.Tests.Repositories
             var expectedId = employees[0].Id;
 
             // Act
-            Employee foundEmployee;
+            Employee? foundEmployee;
             using (IEmployeeReadOnlyRepository employeeRepository = new EmployeeReadOnlyRepository(this.CreateContext()))
             {
                 foundEmployee = employeeRepository.FindById(expectedId);
@@ -131,7 +131,7 @@ namespace EFCore.Toolkit.Tests.Repositories
 
             // Assert
             foundEmployee.Should().NotBeNull();
-            foundEmployee.Id.Should().Be(expectedId);
+            foundEmployee!.Id.Should().Be(expectedId);
         }
 
         [Fact]

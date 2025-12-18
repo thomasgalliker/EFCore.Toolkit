@@ -201,7 +201,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public virtual ChangeSet SaveChanges(bool acceptAllChangesOnSuccess)
+        public new virtual ChangeSet SaveChanges(bool acceptAllChangesOnSuccess)
         {
             //this.ApplyCreatedBy(() => this.userContext.GetCurrentUserId());
 
@@ -290,7 +290,7 @@ namespace EFCore.Toolkit
             // Update the original values with the database values and 
             // the current values with whatever the user choose. 
             entry.OriginalValues.SetValues(databaseValues);
-            entry.CurrentValues.SetValues(resolvedValuesAsObject);
+            entry.CurrentValues.SetValues(resolvedValuesAsObject!);
         }
 
         /// <summary>

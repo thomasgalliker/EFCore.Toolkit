@@ -22,7 +22,7 @@ namespace EFCore.Toolkit.Testing
             return new TestAsyncEnumerable<TElement>(expression);
         }
 
-        public object Execute(Expression expression)
+        public object? Execute(Expression expression)
         {
             return this.innerQueryProvider.Execute(expression);
         }
@@ -32,25 +32,25 @@ namespace EFCore.Toolkit.Testing
             return this.innerQueryProvider.Execute<TResult>(expression);
         }
 
-        public TResult? ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = new CancellationToken())
+        public TResult ExecuteAsync<TResult>(Expression expression, CancellationToken cancellationToken = new CancellationToken())
         {
             var result = this.Execute(expression);
 
             var expectedResultType = typeof(TResult).GetGenericArguments()?.FirstOrDefault();
             if (expectedResultType == null)
             {
-                return default;
+                return default!;
             }
 
-            return (TResult?)typeof(Task).GetMethod(nameof(Task.FromResult))
+            return (TResult)typeof(Task).GetMethod(nameof(Task.FromResult))
                 ?.MakeGenericMethod(expectedResultType)
-                .Invoke(null, new[] { result });
+                .Invoke(null, new[] { result })!;
         }
 
 
         public Task<object> ExecuteAsync(Expression expression, CancellationToken cancellationToken)
         {
-            return Task.FromResult(this.Execute(expression));
+            return Task.FromResult(this.Execute(expression)!);
         }
     }
 }

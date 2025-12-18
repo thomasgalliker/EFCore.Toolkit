@@ -256,7 +256,7 @@ namespace EFCore.Toolkit.Auditing
         {
             // Create audit entity.
             dynamic dbSet = this.Set(auditTypeInfo.AuditEntityType);
-            dynamic auditEntity = (IAuditEntity)Activator.CreateInstance(auditTypeInfo.AuditEntityType);
+            dynamic auditEntity = (IAuditEntity)Activator.CreateInstance(auditTypeInfo.AuditEntityType)!;
             dbSet.Add(auditEntity);
 
             // Store all temporary values (e.g. not-yet generated primary keys) for later update

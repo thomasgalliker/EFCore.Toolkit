@@ -9,6 +9,6 @@ namespace ToolkitSample.Model.Auditing
 
         public DateTime? UpdatedDate { get; set; }
 
-        public string UpdateUser { get; set; }
+        public string? UpdateUser { get; set; }
     }
 }

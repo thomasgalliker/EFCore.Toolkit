@@ -20,9 +20,9 @@ namespace EFCore.Toolkit.Extensions
 
             var ofTypeQueryable = (IQueryable<TEntity>)ReflectionHelper.InvokeGenericMethod(
                           null,
-                          () => Queryable.OfType<object>(null),
+                          () => Queryable.OfType<object>(null!),
                           type,
-                          new object[] { queryable });
+                          new object[] { queryable })!;
 
             return ofTypeQueryable;
         }
@@ -35,7 +35,7 @@ namespace EFCore.Toolkit.Extensions
         /// <param name="queryable">The source queryable.</param>
         /// <param name="navigationPropertyPaths">Lambda expressions specifying navigation properties to include.</param>
         /// <returns>A queryable with the specified navigation properties included.</returns>
-        public static IQueryable<TEntity> IncludeNested<TEntity>([NotNull] this IQueryable<TEntity> queryable, [NotNull] params Expression<Func<TEntity, object>>[] navigationPropertyPaths) where TEntity : class
+        public static IQueryable<TEntity> IncludeNested<TEntity>([NotNull] this IQueryable<TEntity> queryable, [NotNull] params Expression<Func<TEntity, object?>>[] navigationPropertyPaths) where TEntity : class
         {
             if (queryable == null)
             {
@@ -59,7 +59,7 @@ namespace EFCore.Toolkit.Extensions
         /// <param name="queryable">The source queryable.</param>
         /// <param name="navigationPropertyPath">Lambda expression specifying the navigation property.</param>
         /// <returns>A queryable with the specified navigation property included.</returns>
-        public static IQueryable<TEntity> IncludeNested<TEntity, TProperty>([NotNull] this IQueryable<TEntity> queryable, [NotNull] Expression<Func<TEntity, TProperty>> navigationPropertyPath) where TEntity : class
+        public static IQueryable<TEntity> IncludeNested<TEntity, TProperty>([NotNull] this IQueryable<TEntity> queryable, [NotNull] Expression<Func<TEntity, TProperty?>> navigationPropertyPath) where TEntity : class
         {
             if (queryable == null)
             {

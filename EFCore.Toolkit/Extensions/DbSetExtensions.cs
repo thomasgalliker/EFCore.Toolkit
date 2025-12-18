@@ -7,26 +7,20 @@ namespace EFCore.Toolkit.Extensions
 {
     public static class DbSetExtensions
     {
-        public static TEntity? AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity entity) where TEntity : class
+        public static TEntity AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity entity) where TEntity : class
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entities = new[] { entity };
-            return AddOrUpdateInternal(dbSet.GetContext(), dbSet, entities, keySelector: null).SingleOrDefault();
+            return AddOrUpdateInternal(dbSet.GetContext(), dbSet, entities, keySelector: null).Single();
         }
 
-        public static TEntity? AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity entity, Expression<Func<TEntity, object>> keySelector) where TEntity : class
+        public static TEntity AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity entity, Expression<Func<TEntity, object?>> keySelector) where TEntity : class
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
             var entities = new[] { entity };
-            return AddOrUpdateInternal(dbSet.GetContext(), dbSet, entities, keySelector).SingleOrDefault();
+            return AddOrUpdateInternal(dbSet.GetContext(), dbSet, entities, keySelector).Single();
         }
 
         public static TEntity[] AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity[] entities) where TEntity : class
@@ -34,27 +28,16 @@ namespace EFCore.Toolkit.Extensions
             return AddOrUpdateInternal(dbSet.GetContext(), dbSet, entities, null);
         }
 
-        public static TEntity[] AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity[] entities, Expression<Func<TEntity, object>>? keySelector) where TEntity : class
+        public static TEntity[] AddOrUpdate<TEntity>(this DbSet<TEntity> dbSet, TEntity[] entities, Expression<Func<TEntity, object?>>? keySelector) where TEntity : class
         {
             return AddOrUpdateInternal(dbSet.GetContext(), dbSet, entities, keySelector);
         }
 
-        internal static TEntity[] AddOrUpdateInternal<TEntity>(DbContext context, DbSet<TEntity> dbSet, TEntity[] entities, Expression<Func<TEntity, object>>? keySelector) where TEntity : class
+        internal static TEntity[] AddOrUpdateInternal<TEntity>(DbContext context, DbSet<TEntity> dbSet, TEntity[] entities, Expression<Func<TEntity, object?>>? keySelector) where TEntity : class
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (dbSet == null)
-            {
-                throw new ArgumentNullException(nameof(dbSet));
-            }
-
-            if (entities == null)
-            {
-                throw new ArgumentNullException(nameof(entities));
-            }
+            ArgumentNullException.ThrowIfNull(context);
+            ArgumentNullException.ThrowIfNull(dbSet);
+            ArgumentNullException.ThrowIfNull(entities);
 
             if (entities.Length == 0)
             {
@@ -100,7 +83,7 @@ namespace EFCore.Toolkit.Extensions
             return updatedEntities.ToArray();
         }
 
-        private static PropertyInfo[] ExtractKeyProperties<TEntity>(Expression<Func<TEntity, object>> keySelector)
+        private static PropertyInfo[] ExtractKeyProperties<TEntity>(Expression<Func<TEntity, object?>> keySelector)
         {
             PropertyInfo[] propertyInfos;
 
@@ -171,11 +154,10 @@ namespace EFCore.Toolkit.Extensions
 
         private static PropertyInfo[] GetPrimaryKeyProperties(DbContext context, Type entityType)
         {
-            return context.Model.FindEntityType(entityType)
-                .FindPrimaryKey()
+            return context.Model.FindEntityType(entityType)?.FindPrimaryKey()?
                 .Properties
-                .Select(p => entityType.GetProperty(p.Name))
-                .ToArray();
+                .Select(p => entityType.GetProperty(p.Name)!)
+                .ToArray() ?? Array.Empty<PropertyInfo>();
         }
 
         internal static DbContext GetContext<TEntity>(this DbSet<TEntity> dbSet) where TEntity : class

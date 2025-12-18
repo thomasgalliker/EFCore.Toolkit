@@ -27,7 +27,7 @@ namespace EFCore.Toolkit.Tests
         {
             // Arrange
             var initialEmployee = Testdata.Employees.CreateEmployee1();
-            ChangeSet changeSet = null;
+            ChangeSet? changeSet = null;
 
             // Act
             using (var employeeContext = this.CreateContext())

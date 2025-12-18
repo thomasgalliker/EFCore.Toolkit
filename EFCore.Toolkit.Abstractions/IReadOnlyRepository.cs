@@ -24,6 +24,6 @@
         /// </summary>
         /// <param name="ids">The values of the primary key for the entity to be found. </param>
         /// <returns> The entity found, or null. </returns>
-        T FindById(params object[] ids);
+        T? FindById(params object[] ids);
     }
 }

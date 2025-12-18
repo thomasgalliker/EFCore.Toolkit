@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 using EFCore.Toolkit;
 
@@ -10,7 +8,7 @@ namespace ToolkitSample.DataAccess.Seed
 {
     internal sealed class CountryDataSeed : DataSeedBase<Country>
     {
-        public override Expression<Func<Country, object>> AddOrUpdateExpression
+        public override Expression<Func<Country, object?>> AddOrUpdateExpression
         {
             get => applicationSetting => applicationSetting.Id;
         }

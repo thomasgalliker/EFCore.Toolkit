@@ -32,7 +32,7 @@ namespace ToolkitSample.DataAccess.Context
                 .IsRowVersion()
                 .IsRequired();
 
-            entity.HasBaseType((Type)null);
+            entity.HasBaseType((Type?)null);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace EFCore.Toolkit
     /// <typeparam name="TEntity">The entity type for which the implementor provides a seed.</typeparam>
     public abstract class DataSeedBase<TEntity> : IDataSeed<TEntity> where TEntity : class
     {
-        public abstract Expression<Func<TEntity, object>> AddOrUpdateExpression { get; }
+        public abstract Expression<Func<TEntity, object?>> AddOrUpdateExpression { get; }
 
         public abstract IEnumerable<TEntity> GetAll();
 

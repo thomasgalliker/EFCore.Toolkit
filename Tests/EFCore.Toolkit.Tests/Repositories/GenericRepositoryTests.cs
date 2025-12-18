@@ -60,8 +60,9 @@ namespace EFCore.Toolkit.Tests.Repositories
 
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
-                var returnedEmployee = employeeRepository.Get().SingleOrDefault(e => e.FirstName == employee.FirstName);
+                var returnedEmployee = employeeRepository.Get().SingleOrDefault(e => e.FirstName == employee.FirstName)!;
 
+                returnedEmployee.Should().NotBeNull();
                 returnedEmployee.ShouldBeEquivalentTo(CreateEmployee1());
                 returnedEmployee.CreatedDate.Should().BeAfter(DateTime.MinValue);
                 returnedEmployee.UpdatedDate.Should().BeNull();
@@ -414,8 +415,8 @@ namespace EFCore.Toolkit.Tests.Repositories
             // Assert
             committedChangeSet.Assert(expectedNumberOfAdded: 0, expectedNumberOfModified: 1, expectedNumberOfDeleted: 0);
             var changedProperties = committedChangeSet.Changes.Single().ChangedProperties.ToList();
-            changedProperties.Should().ContainSingle(p => p.PropertyName == "FirstName" && (string)p.CurrentValue == expectedFirstName);
-            changedProperties.Should().ContainSingle(p => p.PropertyName == "LastName" && (string)p.CurrentValue == expectedLastName);
+            changedProperties.Should().ContainSingle(p => p.PropertyName == "FirstName" && (string?)p.CurrentValue == expectedFirstName);
+            changedProperties.Should().ContainSingle(p => p.PropertyName == "LastName" && (string?)p.CurrentValue == expectedLastName);
 
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {

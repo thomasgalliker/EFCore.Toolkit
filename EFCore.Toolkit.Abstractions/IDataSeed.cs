@@ -25,7 +25,7 @@ namespace EFCore.Toolkit.Abstractions
         /// <remarks>The returned expression typically specifies the property or properties that uniquely
         /// identify an entity instance, such as a primary key. This expression is used in upsert operations to match
         /// entities in the data store.</remarks>
-        public abstract Expression<Func<TEntity, object>> AddOrUpdateExpression { get; }
+        public abstract Expression<Func<TEntity, object?>> AddOrUpdateExpression { get; }
 
         /// <summary>
         /// Returns all entities of type <typeparamref name="TEntity"/> which are used to seed the database.

@@ -14,7 +14,7 @@ namespace EFCore.Toolkit.Extensions
             var entityType = entry.Entity.GetType();
             if (entityType.Namespace == "System.Data.Entity.DynamicProxies")
             {
-                entityType = entityType.GetTypeInfo().BaseType;
+                entityType = entityType.GetTypeInfo().BaseType!;
             }
 
             return entityType;
@@ -89,7 +89,7 @@ namespace EFCore.Toolkit.Extensions
                         if (ctorParameterIndex >= args.Length)
                         {
                             var argsList = args.ToList();
-                            argsList.Add(ctorParameter.DefaultValue);
+                            argsList.Add(ctorParameter.DefaultValue!);
                             args = argsList.ToArray();
                         }
 

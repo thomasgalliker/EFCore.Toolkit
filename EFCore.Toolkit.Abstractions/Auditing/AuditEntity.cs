@@ -11,18 +11,18 @@
         /// Gets or sets the DateTime this audit entity was created.
         /// Will be automatically set by AuditDbContext on SaveChanges.
         /// </summary>
-        public virtual DateTime AuditDate { get; set; }
+        public DateTime AuditDate { get; set; }
 
         /// <summary>
         /// Gets or sets the user who updated the entity
         /// Will be automatically set by AuditDbContext on SaveChanges.
         /// </summary>
-        public virtual string AuditUser { get; set; } = null!;
+        public string? AuditUser { get; set; }
 
         /// <summary>
         /// Gets or sets the type of audit. 0 for update, 1 for deletion.
         /// Will be automatically set by AuditDbContext on SaveChanges.
         /// </summary>
-        public virtual AuditEntityState AuditType { get; set; }
+        public AuditEntityState AuditType { get; set; }
     }
 }

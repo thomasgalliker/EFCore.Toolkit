@@ -16,7 +16,7 @@ namespace EFCore.Toolkit.Tests.Utils
         public void ShouldParseStringMemberExpression()
         {
             // Arrange
-            Expression<Func<Company, string>> expr = c => c.Name;
+            Expression<Func<Company, string>> expr = c => c.Name!;
 
             // Act
             var isParsed = DbHelpers.TryParsePath(expr.Body, out var path);
@@ -30,7 +30,7 @@ namespace EFCore.Toolkit.Tests.Utils
         public void ShouldParseObjectMemberExpression()
         {
             // Arrange
-            Expression<Func<Company, object>> expr = c => c.BaseProperty;
+            Expression<Func<Company, object>> expr = c => c.BaseProperty!;
 
             // Act
             var isParsed = DbHelpers.TryParsePath(expr.Body, out var path);
@@ -44,7 +44,7 @@ namespace EFCore.Toolkit.Tests.Utils
         public void ShouldParseSelectCollectionMemberExpression()
         {
             // Arrange
-            Expression<Func<Company, object>> expr = c => c.Employees.Select(e => e.Department);
+            Expression<Func<Company, object>> expr = c => c.Employees!.Select(e => e.Department);
 
             // Act
             var isParsed = DbHelpers.TryParsePath(expr.Body, out var path);
@@ -58,7 +58,7 @@ namespace EFCore.Toolkit.Tests.Utils
         public void ShouldParseDeeplyNestedSelectCollections()
         {
             // Arrange
-            Expression<Func<Company, object>> expr = c => c.Employees.Select(e => e.Department.Employees.Select(d => d.FirstName));
+            Expression<Func<Company, object>> expr = c => c.Employees!.Select(e => e.Department!.Employees.Select(d => d.FirstName));
 
             // Act
             var isParsed = DbHelpers.TryParsePath(expr.Body, out var path);
@@ -100,7 +100,7 @@ namespace EFCore.Toolkit.Tests.Utils
         public void ShouldParseConvertExpression()
         {
             // Arrange
-            Expression<Func<Company, object>> expr = c => (object)c.Name;
+            Expression<Func<Company, object>> expr = c => (object)c.Name!;
 
             // Act
             var isParsed = DbHelpers.TryParsePath(expr.Body, out var path);
@@ -115,7 +115,7 @@ namespace EFCore.Toolkit.Tests.Utils
         public void ShouldFailUnsupportedMethodCall()
         {
             // Arrange
-            Expression<Func<Company, object>> expr = c => c.Employees.FirstOrDefault();
+            Expression<Func<Company, object>> expr = c => c.Employees!.FirstOrDefault()!;
 
             // Act
             var isParsed = DbHelpers.TryParsePath(expr.Body, out var path);
@@ -129,7 +129,7 @@ namespace EFCore.Toolkit.Tests.Utils
         public void ShouldParseChainedMemberSelectAndCast()
         {
             // Arrange
-            Expression<Func<Company, object>> expr = c => (object)c.Employees.Select(e => e.Department.Name);
+            Expression<Func<Company, object>> expr = c => (object)c.Employees!.Select(e => e.Department!.Name);
 
             // Act
             var isParsed = DbHelpers.TryParsePath(expr.Body, out var path);
@@ -142,7 +142,7 @@ namespace EFCore.Toolkit.Tests.Utils
 
     public class DerivedClass : BaseClass
     {
-        public object ObjectProperty { get; set; }
+        public object? ObjectProperty { get; set; }
     }
 
     public class BaseClass
@@ -151,10 +151,10 @@ namespace EFCore.Toolkit.Tests.Utils
 
     public class Company
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
-        public BaseClass BaseProperty { get; set; }
+        public BaseClass? BaseProperty { get; set; }
 
-        public ICollection<Employee> Employees { get; set; }
+        public ICollection<Employee>? Employees { get; set; }
     }
 }

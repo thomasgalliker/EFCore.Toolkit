@@ -27,7 +27,7 @@
         /// <remarks>
         /// Will be automatically set by AuditDbContext on SaveChanges.
         /// </remarks>
-        string AuditUser { get; set; }
+        string? AuditUser { get; set; }
 
         /// <summary>
         /// Gets or sets the type of audit.

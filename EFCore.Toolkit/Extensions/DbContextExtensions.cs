@@ -27,12 +27,12 @@ namespace EFCore.Toolkit.Extensions
             return DbSetExtensions.AddOrUpdateInternal(context, context.Set<TEntity>(), entities, null);
         }
 
-        public static TEntity[] AddOrUpdate<TEntity>(this DbContext context, TEntity[] entities, Expression<Func<TEntity, object>> keySelector) where TEntity : class
+        public static TEntity[] AddOrUpdate<TEntity>(this DbContext context, TEntity[] entities, Expression<Func<TEntity, object?>> keySelector) where TEntity : class
         {
             return DbSetExtensions.AddOrUpdateInternal(context, context.Set<TEntity>(), entities, keySelector);
         }
 
-        public static TEntity[] AddOrUpdate<TEntity>(this IContext context, TEntity[] entities, Expression<Func<TEntity, object>> keySelector) where TEntity : class
+        public static TEntity[] AddOrUpdate<TEntity>(this IContext context, TEntity[] entities, Expression<Func<TEntity, object?>> keySelector) where TEntity : class
         {
             var dbContext = (DbContext)context;
             return DbSetExtensions.AddOrUpdateInternal(dbContext, dbContext.Set<TEntity>(), entities, keySelector);
@@ -44,7 +44,7 @@ namespace EFCore.Toolkit.Extensions
             return DbSetExtensions.AddOrUpdateInternal(dbContext, dbContext.Set<TEntity>(), entities, null);
         }
 
-        public static TEntity[] AddOrUpdate<TEntity>(this IDbContext context, TEntity[] entities, Expression<Func<TEntity, object>> keySelector) where TEntity : class
+        public static TEntity[] AddOrUpdate<TEntity>(this IDbContext context, TEntity[] entities, Expression<Func<TEntity, object?>> keySelector) where TEntity : class
         {
             var dbContext = (DbContext)context;
             return DbSetExtensions.AddOrUpdateInternal(dbContext, dbContext.Set<TEntity>(), entities, keySelector);
@@ -72,24 +72,18 @@ namespace EFCore.Toolkit.Extensions
 
         public static IQueryable Set(this DbContext context, Type entityType)
         {
-            // Get the generic type definition
-            MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), new Type[] { });
-
-            // Build a method with the specific type argument you're interested in
+            var method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), new Type[] { })!;
             method = method.MakeGenericMethod(entityType);
 
-            return (IQueryable)method.Invoke(context, null);
+            return (IQueryable)method.Invoke(context, null)!;
         }
 
         public static IQueryable<T> Set<T>(this DbContext context)
         {
-            // Get the generic type definition 
-            MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), null);
-
-            // Build a method with the specific type argument you're interested in 
+            var method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), null!)!;
             method = method.MakeGenericMethod(typeof(T));
 
-            return (IQueryable<T>)method.Invoke(context, null);
+            return (IQueryable<T>)method.Invoke(context, null)!;
         }
     }
 }
