@@ -3,11 +3,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.Toolkit.Testing
 {
-    /// <summary>
-    /// ContextTestBase for context <typeparamref name="TContext"/> using IDbConnection <typeparamref name="TDbContextOptionsBuilder"/>
-    /// </summary>
-    /// <typeparam name="TContext">The database context.</typeparam>
-    /// <typeparam name="TDbContextOptionsBuilder">The database connection.</typeparam>
     public abstract class ContextTestBase<TContext, TDbContextOptionsBuilder> : ContextTestBase<TContext>
         where TContext : DbContextBase where TDbContextOptionsBuilder : DbContextOptionsBuilder, new()
     {
@@ -78,16 +73,6 @@ namespace EFCore.Toolkit.Testing
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ContextTestBase{TContext}" /> class.
-        /// </summary>
-        /// <param name="dbContextOptions">The <see cref="DbContextOptions" /> which is used to connect to the database.</param>
-        /// <param name="log">Log delegate used to write diagnostic log messages to.</param>
-        /// <param name="databaseInitializer">
-        /// The <see cref="IDatabaseInitializer{TContext}" /> which is used initialize the
-        /// database. (Default is <see cref="DropCreateDatabaseAlways{TContext}" />).
-        /// </param>
-        /// <param name="deleteDatabaseOnDispose">Determines if the database needs to be deleted on dispose. (Default is true).</param>
         protected ContextTestBase(DbContextOptions dbContextOptions, IDatabaseInitializer? databaseInitializer, Action<string>? log, bool deleteDatabaseOnDispose)
         {
             this.dbContextOptions = dbContextOptions;

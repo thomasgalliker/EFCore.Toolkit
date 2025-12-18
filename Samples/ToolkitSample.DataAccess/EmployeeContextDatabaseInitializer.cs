@@ -1,9 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using EFCore.Toolkit;
+﻿using EFCore.Toolkit;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
-using Microsoft.EntityFrameworkCore;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess

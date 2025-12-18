@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using EFCore.Toolkit.Abstractions;
-using EFCore.Toolkit.Abstractions.Extensions;
+﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
 using FluentAssertions;

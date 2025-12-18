@@ -18,7 +18,7 @@ namespace EFCore.Toolkit.Tests.Extensions
                                                                              .Excluding(e => e.UpdatedDate)
                                                                              .Excluding(e => e.RowVersion));
         }
-        
+
         internal static void ShouldBeEquivalentTo(this Student subject, Student expected)
         {
             subject.Should().BeEquivalentTo(expected, options => options.IncludingAllRuntimeProperties()

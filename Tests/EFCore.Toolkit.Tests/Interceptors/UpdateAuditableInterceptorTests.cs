@@ -1,10 +1,5 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using EFCore.Toolkit.Testing;
-using EFCore.Toolkit.Tests.Auditing;
+﻿using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
-using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;

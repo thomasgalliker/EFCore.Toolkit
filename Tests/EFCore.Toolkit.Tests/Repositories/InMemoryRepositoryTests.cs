@@ -1,6 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using EFCore.Toolkit.Tests.Stubs;
+﻿using EFCore.Toolkit.Tests.Stubs;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Contracts.Repository;

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using EFCore.Toolkit.Abstractions;
+﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Concurrency;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;

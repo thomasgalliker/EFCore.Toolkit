@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.Toolkit.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
-using EFCore.Toolkit.Extensions;
 
 namespace ToolkitSample.DataAccess.Context
 {

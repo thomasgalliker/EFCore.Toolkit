@@ -2,7 +2,7 @@
 {
     public static class EnumerableExtensions
     {
-       
+
         public static int GetNextId<T>(this IEnumerable<T> items) where T : IIdentifiable
         {
             if (items.Any())

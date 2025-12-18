@@ -20,7 +20,7 @@
             {
                 throw new ArgumentNullException(nameof(repository));
             }
-            
+
             if (ids == null)
             {
                 throw new ArgumentNullException(nameof(ids));

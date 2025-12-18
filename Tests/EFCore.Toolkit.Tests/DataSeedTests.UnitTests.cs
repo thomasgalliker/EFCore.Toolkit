@@ -1,9 +1,6 @@
-﻿using System.Linq;
-using EFCore.Toolkit.Abstractions;
-using FluentAssertions;
+﻿using FluentAssertions;
 
 using ToolkitSample.DataAccess.Seed;
-using ToolkitSample.Model;
 
 using Xunit;
 

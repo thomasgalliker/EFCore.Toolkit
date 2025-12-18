@@ -1,7 +1,6 @@
 ﻿using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace EFCore.Toolkit.Extensions
 {

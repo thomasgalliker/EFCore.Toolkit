@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using ToolkitSample.Model;
+﻿using ToolkitSample.Model;
 
 namespace EFCore.Toolkit.Tests.Stubs
 {
@@ -100,7 +98,7 @@ namespace EFCore.Toolkit.Tests.Stubs
                     Name = "Switzerland"
                 };
             }
-            
+
             public static Country Germany()
             {
                 return new Country
@@ -109,7 +107,7 @@ namespace EFCore.Toolkit.Tests.Stubs
                     Name = "Germany"
                 };
             }
-            
+
             public static Country USA()
             {
                 return new Country

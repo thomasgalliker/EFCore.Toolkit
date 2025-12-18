@@ -1,5 +1,4 @@
-﻿using System;
-using EFCore.Toolkit.Auditing;
+﻿using EFCore.Toolkit.Auditing;
 using FluentAssertions;
 
 using ToolkitSample.Model.Auditing;

@@ -47,4 +47,3 @@ namespace EFCore.Toolkit.Extensions
         }
     }
 }
-

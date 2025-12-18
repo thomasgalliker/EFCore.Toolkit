@@ -1,10 +1,6 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using EFCore.Toolkit.Abstractions;
+﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
-using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Extensions;
-using EFCore.Toolkit.Utils;
 using FluentAssertions;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
@@ -52,7 +48,7 @@ namespace EFCore.Toolkit.Tests.Repositories
             }
 
             // Assert
-            committedChangeSet.Assert(expectedNumberOfAdded: 0, expectedNumberOfModified:0 , expectedNumberOfDeleted: countries.Length);
+            committedChangeSet.Assert(expectedNumberOfAdded: 0, expectedNumberOfModified: 0, expectedNumberOfDeleted: countries.Length);
 
             using (IGenericRepository<Country> countryRepository = new GenericRepository<Country>(this.CreateContext()))
             {

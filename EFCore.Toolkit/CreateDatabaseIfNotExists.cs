@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace EFCore.Toolkit
+﻿namespace EFCore.Toolkit
 {
     public class CreateDatabaseIfNotExists : IDatabaseInitializer
     {

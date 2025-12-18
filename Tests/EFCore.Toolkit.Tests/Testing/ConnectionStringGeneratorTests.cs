@@ -1,5 +1,4 @@
-﻿using System;
-using EFCore.Toolkit.Testing;
+﻿using EFCore.Toolkit.Testing;
 using FluentAssertions;
 using Microsoft.Data.SqlClient;
 using Xunit;

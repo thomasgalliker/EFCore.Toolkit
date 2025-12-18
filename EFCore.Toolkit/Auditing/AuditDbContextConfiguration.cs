@@ -6,7 +6,7 @@
             : this(auditTypeInfos, DateTimeKind.Utc)
         {
         }
-        
+
         public AuditDbContextConfiguration(AuditTypeInfo[] auditTypeInfos, DateTimeKind auditDateTimeKind = DateTimeKind.Utc)
         {
             this.AuditDateTimeKind = auditDateTimeKind;

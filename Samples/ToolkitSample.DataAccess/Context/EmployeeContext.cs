@@ -1,6 +1,6 @@
 ﻿using EFCore.Toolkit;
-using Microsoft.EntityFrameworkCore;
 using EFCore.Toolkit.Extensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace ToolkitSample.DataAccess.Context
 {

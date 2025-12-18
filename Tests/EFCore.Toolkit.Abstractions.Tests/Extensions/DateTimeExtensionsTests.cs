@@ -1,5 +1,4 @@
-﻿using System;
-using EFCore.Toolkit.Abstractions.Extensions;
+﻿using EFCore.Toolkit.Abstractions.Extensions;
 using FluentAssertions;
 
 using Xunit;

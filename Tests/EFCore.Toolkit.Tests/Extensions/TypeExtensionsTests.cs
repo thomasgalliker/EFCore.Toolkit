@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EFCore.Toolkit.Extensions;
+﻿using EFCore.Toolkit.Extensions;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context.Auditing;

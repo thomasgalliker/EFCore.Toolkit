@@ -1,5 +1,4 @@
-﻿using System;
-using EFCore.Toolkit.Concurrency;
+﻿using EFCore.Toolkit.Concurrency;
 
 namespace ToolkitSample.DataAccess.Concurrency
 {

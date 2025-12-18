@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using EFCore.Toolkit.Abstractions.Auditing;
+﻿using EFCore.Toolkit.Abstractions.Auditing;
 using EFCore.Toolkit.Auditing;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;

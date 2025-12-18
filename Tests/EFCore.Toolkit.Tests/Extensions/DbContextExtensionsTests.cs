@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using EFCore.Toolkit.Extensions;
+﻿using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
 
