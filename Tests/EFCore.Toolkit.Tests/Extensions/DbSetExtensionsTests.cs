@@ -49,7 +49,6 @@ namespace EFCore.Toolkit.Tests.Extensions
             }
         }
 
-
         [Fact]
         public async Task ShouldAddOrUpdate_FilterDeletedItems()
         {

@@ -99,9 +99,9 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public virtual T AddOrUpdate(T entity)
+        public virtual T? AddOrUpdate(T entity)
         {
-            return ((DbContext)this.context).AddOrUpdate(entity).Single();
+            return ((DbContext)this.context).AddOrUpdate(entity).SingleOrDefault();
         }
 
         /// <inheritdoc />

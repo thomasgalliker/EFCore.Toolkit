@@ -27,7 +27,7 @@ namespace EFCore.Toolkit.Abstractions
         /// Adds or updates the given entity. If the entity is existing, it's going to be updated with the new values.
         /// If the entity does not exist in the context, it's going to be created.
         /// </summary>
-        T AddOrUpdate(T entity);
+        T? AddOrUpdate(T entity);
 
         /// <summary>
         /// Updates the given entity. This method checks if an entity exists before it tries to perform the update activity.

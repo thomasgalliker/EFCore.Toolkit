@@ -100,8 +100,11 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public TEntity AddOrUpdate(TEntity entity)
         {
-            this.Remove(entity);
-            this.Add(entity);
+            lock (this.items)
+            {
+                this.items.Remove(entity);
+                this.items.Add(entity);
+            }
 
             return entity;
         }
@@ -121,8 +124,11 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public void UpdateRange(IEnumerable<TEntity> entities)
         {
-            this.RemoveRange(entities);
-            this.AddRange(entities);
+            lock (this.items)
+            {
+                this.RemoveRange(entities);
+                this.AddRange(entities);
+            }
         }
 
         /// <inheritdoc />
