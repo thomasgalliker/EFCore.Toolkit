@@ -11,7 +11,7 @@ namespace EFCore.Toolkit.Abstractions
 
         /// <summary>
         /// Adds the given entity to the context underlying the set in the Added state such that it will
-        /// be inserted into the database when SaveChanges is called.
+        /// be inserted into the database when Save/SaveAsync is called.
         /// </summary>
         /// <param name="entity">The entity to add.</param>
         /// <returns> The entity.</returns>
@@ -55,7 +55,7 @@ namespace EFCore.Toolkit.Abstractions
         T UpdateProperty<TValue>(T entity, Expression<Func<T, TValue>> propertyExpression, TValue? value);
 
         /// <summary>
-        /// Marks the given entity as Deleted such that it will be deleted from the database when SaveChanges
+        /// Marks the given entity as Deleted such that it will be deleted from the database when Save/SaveAsync
         /// is called.  Note that the entity must exist in the context in some other state before this method
         /// is called.
         /// </summary>
@@ -67,8 +67,6 @@ namespace EFCore.Toolkit.Abstractions
         /// exist in the database such that trying to delete it does not make sense.
         /// </remarks>
         T Remove(T entity);
-
-        TDeletable SoftDelete<TDeletable>(TDeletable entity) where TDeletable : T, IDeletable;
 
         IEnumerable<T> RemoveRange(IEnumerable<T> entities);
     }

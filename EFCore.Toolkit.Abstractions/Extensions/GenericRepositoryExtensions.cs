@@ -4,7 +4,7 @@
     {
         /// <summary>
         /// Marks the entity with the specified primary key as <c>Deleted</c>, 
-        /// so that it will be removed from the database when <see cref="IGenericRepository{TEntity}.SaveChanges"/> is called.
+        /// so that it will be removed from the database when Save/SaveAsync is called.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity to remove.</typeparam>
         /// <param name="repository">The repository.</param>

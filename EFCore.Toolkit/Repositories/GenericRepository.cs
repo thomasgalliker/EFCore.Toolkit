@@ -156,14 +156,6 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public TDeletable SoftDelete<TDeletable>(TDeletable entity) where TDeletable : IDeletable, T
-        {
-            entity.IsDeleted = true;
-            this.Update(entity);
-            return entity;
-        }
-
-        /// <inheritdoc />
         public virtual ChangeSet Save()
         {
             return this.context.SaveChanges();
