@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
+using EFCore.Toolkit.Abstractions;
 
 namespace ToolkitSample.Model
 {
     [DebuggerDisplay("Department: Id={Id}, Name={Name}, Employees={this.Employees.Count}")]
-    public class Department
+    public class Department : IIdentifiable
     {
         public Department()
         {
@@ -14,6 +15,8 @@ namespace ToolkitSample.Model
         public int Id { get; set; }
 
         public string? Name { get; set; }
+
+        public string? Description { get; set; }
 
         public int? LeaderId { get; set; }
 

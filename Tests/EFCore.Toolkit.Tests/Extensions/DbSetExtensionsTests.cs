@@ -14,14 +14,11 @@ namespace EFCore.Toolkit.Tests.Extensions
     [Collection("DbContextTests")]
     public class DbSetExtensionsTests : ContextTestBase<EmployeeContext>
     {
-        private readonly ITestOutputHelper testOutputHelper;
-
         public DbSetExtensionsTests(ITestOutputHelper testOutputHelper)
             : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
                   databaseInitializer: new CreateDatabaseIfNotExists(),
                    log: testOutputHelper.WriteLine)
         {
-            this.testOutputHelper = testOutputHelper;
         }
 
         [Fact]
@@ -36,7 +33,11 @@ namespace EFCore.Toolkit.Tests.Extensions
                 var dbSet = employeeContext.Set<Country>();
                 dbSet.AddOrUpdate(countries);
                 await employeeContext.SaveChangesAsync();
-
+            }
+            
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var dbSet = employeeContext.Set<Country>();
                 dbSet.AddOrUpdate(countries);
                 await employeeContext.SaveChangesAsync();
             }
@@ -63,7 +64,11 @@ namespace EFCore.Toolkit.Tests.Extensions
                 country = dbSet.AddOrUpdate(country)!;
                 country.IsDeleted = true;
                 await employeeContext.SaveChangesAsync();
-
+            }
+            
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var dbSet = employeeContext.Set<Country>();
                 deletedCountry = dbSet.AddOrUpdate(country);
                 await employeeContext.SaveChangesAsync();
             }
@@ -90,7 +95,11 @@ namespace EFCore.Toolkit.Tests.Extensions
                 var dbSet = employeeContext.Set<Country>();
                 dbSet.AddOrUpdate(countries, c => c.Name);
                 await employeeContext.SaveChangesAsync();
+            }
 
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var dbSet = employeeContext.Set<Country>();
                 dbSet.AddOrUpdate(countries, c => c.Name);
                 await employeeContext.SaveChangesAsync();
             }
@@ -115,7 +124,11 @@ namespace EFCore.Toolkit.Tests.Extensions
                 var dbSet = employeeContext.Set<Country>();
                 dbSet.AddOrUpdate(countries, c => new { c.Id, c.Name }); // NewExpression
                 await employeeContext.SaveChangesAsync();
+            }
 
+            using (IEmployeeContext employeeContext = this.CreateContext())
+            {
+                var dbSet = employeeContext.Set<Country>();
                 dbSet.AddOrUpdate(countries, c => new[] { c.Id, c.Name }); // NewArrayExpression
                 await employeeContext.SaveChangesAsync();
             }

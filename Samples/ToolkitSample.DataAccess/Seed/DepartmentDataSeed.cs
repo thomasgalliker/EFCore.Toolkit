@@ -12,8 +12,9 @@ namespace ToolkitSample.DataAccess.Seed
 
         public override IEnumerable<Department> GetAll()
         {
-            yield return new Department { Name = "Administration" };
-            yield return new Department { Name = "Human Resources" };
+            yield return new Department { Id = 0, Name = "Administration" };
+            yield return new Department { Id = 0, Name = "Human Resources" };
+            //yield return new Department { Id = 0, Name = "Test", Description = $"Used for AddOrUpdate testing @ {DateTime.Now}"};
         }
     }
 }

@@ -1,7 +1,10 @@
 ﻿using System.Linq.Expressions;
 using System.Reflection;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace EFCore.Toolkit.Extensions
 {
@@ -44,43 +47,69 @@ namespace EFCore.Toolkit.Extensions
                 return entities;
             }
 
+            var entityType = context.Model.FindEntityType(typeof(TEntity))
+                ?? throw new InvalidOperationException($"Entity type {typeof(TEntity).Name} not found.");
+
+            var concurrencyTokenProperties = entityType.GetProperties()
+                  .Where(p => p.IsConcurrencyToken)
+                  .ToArray();
+
+            var primarykeys = GetPrimaryKeyProperties(typeof(TEntity), entityType);
+
             var keys = keySelector != null
                 ? ExtractKeyProperties(keySelector)
-                : GetPrimaryKeyProperties(context, typeof(TEntity));
+                : primarykeys;
 
-            var existingEntities = dbSet.AsNoTracking().ToList();
+            var existingEntities = dbSet.ToList()
+                .Select(e => (Entity: e, KeyValues: keys.Select(k => (Key: k, Value: k.GetValue(e)))))
+                .ToArray();
 
-            var updatedEntities = new List<TEntity>();
+            var updatedEntities = new List<TEntity>(entities.Length);
 
             foreach (var entity in entities)
             {
-                // Try to find tracked entity first (avoids dual instance issues)
-                var trackedEntity = context.ChangeTracker.Entries<TEntity>()
-                    .Select(e => e.Entity)
-                    .FirstOrDefault(e =>
-                        keys.All(k =>
-                            k.GetValue(e)?.Equals(k.GetValue(entity)) == true));
-
-                // Fallback to untracked entities loaded earlier
-                var existingEntity = trackedEntity ?? existingEntities
-                    .FirstOrDefault(e =>
-                        keys.All(k =>
-                            k.GetValue(e)?.Equals(k.GetValue(entity)) == true));
+                var existingEntity = existingEntities
+                    .FirstOrDefault(e => e.KeyValues.All(kv => kv.Value?.Equals(kv.Key.GetValue(entity)) == true)).Entity;
 
                 if (existingEntity == null)
                 {
                     dbSet.Add(entity);
                     updatedEntities.Add(entity);
+                    continue;
                 }
-                else if (!DeletableExtensions.IsDeleted(existingEntity))
+
+                if (existingEntity is IDeletable deletable && deletable.IsDeleted)
                 {
-                    context.Entry(existingEntity).CurrentValues.SetValues(entity);
-                    context.Entry(existingEntity).State = EntityState.Modified;
-                    updatedEntities.Add(entity);
+                    continue;
                 }
+
+                var entry = context.Entry(existingEntity);
+                RestorePrimaryKeys(entity, existingEntity, primarykeys);
+                entry.CurrentValues.SetValues(entity);
+                RestoreConcurrencyTokens(entry, concurrencyTokenProperties);
+                entry.State = EntityState.Modified;
+                updatedEntities.Add(existingEntity);
             }
 
             return updatedEntities.ToArray();
+        }
+
+
+        private static void RestorePrimaryKeys(object entity, object existingEntity, PropertyInfo[] primaryKeys)
+        {
+            foreach (var primaryKey in primaryKeys)
+            {
+                var value = primaryKey.GetValue(existingEntity);
+                primaryKey.SetValue(entity, value);
+            }
+        }
+
+        private static void RestoreConcurrencyTokens<TEntity>(EntityEntry<TEntity> entry, IProperty[] properties) where TEntity : class
+        {
+            foreach (var property in properties)
+            {
+                entry.CurrentValues[property.Name] = entry.OriginalValues[property.Name];
+            }
         }
 
         private static PropertyInfo[] ExtractKeyProperties<TEntity>(Expression<Func<TEntity, object?>> keySelector)
@@ -152,11 +181,11 @@ namespace EFCore.Toolkit.Extensions
             return propertyInfos;
         }
 
-        private static PropertyInfo[] GetPrimaryKeyProperties(DbContext context, Type entityType)
+        private static PropertyInfo[] GetPrimaryKeyProperties(Type type, IEntityType entityType)
         {
-            return context.Model.FindEntityType(entityType)?.FindPrimaryKey()?
+            return entityType.FindPrimaryKey()?
                 .Properties
-                .Select(p => entityType.GetProperty(p.Name)!)
+                .Select(p => type.GetProperty(p.Name)!)
                 .ToArray() ?? Array.Empty<PropertyInfo>();
         }
 
@@ -174,5 +203,4 @@ namespace EFCore.Toolkit.Extensions
             return dbContext ?? throw new InvalidOperationException("Unable to retrieve DbContext from DbSet.");
         }
     }
-
 }

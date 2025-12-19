@@ -367,9 +367,11 @@ namespace EFCore.Toolkit.Tests.Repositories
 
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
+                employee1Update.Should().NotBeNull();
+
                 var allEmployees = employeeRepository.GetAll().ToList();
                 allEmployees.Should().HaveCount(1);
-                allEmployees.ElementAt(0).Id.Should().Be(employee1Update.Id);
+                allEmployees.ElementAt(0).Id.Should().Be(employee1Update!.Id);
                 allEmployees.ElementAt(0).FirstName.Should().Contain("Added");
             }
         }

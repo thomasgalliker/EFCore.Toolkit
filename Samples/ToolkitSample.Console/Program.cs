@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using EFCore.Toolkit.Abstractions;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.DataAccess.Modularity;
 using ToolkitSample.Model;
@@ -37,6 +38,16 @@ namespace ToolkitSample.ConsoleApp
                 {
                     Console.WriteLine($"Id={employee.Id}, FirstName={employee.FirstName}, LastName={employee.LastName}");
                 }
+
+                //Console.WriteLine();
+                //Console.WriteLine();
+
+                //var countryRepository = scope.Resolve<IGenericRepository<Country>>();
+                //var countries = countryRepository.GetAll();
+                //foreach (var country in countries)
+                //{
+                //    Console.WriteLine($"Id={country.Id}, Name={country.Name}");
+                //}
             }
 
             Console.ReadKey();

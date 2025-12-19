@@ -12,12 +12,19 @@ namespace EFCore.Toolkit
     {
         public abstract Expression<Func<TEntity, object?>> AddOrUpdateExpression { get; }
 
+        public bool AutoSave { get; set; } = true;
+
         public abstract IEnumerable<TEntity> GetAll();
 
         public void Seed(IContext context)
         {
             var entities = this.GetAll().ToArray();
             context.AddOrUpdate(entities, this.AddOrUpdateExpression);
+
+            if (this.AutoSave)
+            {
+                context.SaveChanges();
+            }
         }
     }
 }

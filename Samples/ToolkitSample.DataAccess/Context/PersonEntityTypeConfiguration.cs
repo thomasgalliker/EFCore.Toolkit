@@ -23,10 +23,7 @@ namespace ToolkitSample.DataAccess.Context
                 .IsRequired(false);
 
             entity.Property(e => e.RowVersion)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasMaxLength(8)
-                .IsRowVersion()
-                .IsRequired();
+                .IsRowVersion();
 
             entity.HasBaseType((Type?)null);
         }

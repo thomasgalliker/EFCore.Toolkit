@@ -12,6 +12,8 @@ namespace EFCore.Toolkit.Abstractions
         /// Populates the specified <paramref name="context"/> with initial data required for application startup or testing.
         /// </summary>
         void Seed(IContext context);
+
+        bool AutoSave { get; set; }
     }
 
     /// <summary>

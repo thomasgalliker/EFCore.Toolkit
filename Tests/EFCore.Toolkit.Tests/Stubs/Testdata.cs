@@ -69,22 +69,42 @@ namespace EFCore.Toolkit.Tests.Stubs
         {
             public static Department CreateDepartmentHumanResources()
             {
-                return new Department { Name = "Human Resources", };
+                return new Department
+                {
+                    Name = "Human Resources",
+                };
             }
 
             public static Department CreateFacultyOfTheology()
             {
-                return new Department { Name = "Faculty of Theology", };
+                return new Department
+                {
+                    Name = "Faculty of Theology",
+                };
             }
 
             public static Department CreateFacultyOfLaw()
             {
-                return new Department { Name = "Faculty of Law", };
+                return new Department
+                {
+                    Name = "Faculty of Law",
+                };
             }
 
             public static Department CreateFacultyOfMedicine()
             {
-                return new Department { Name = "Faculty of Medicine", };
+                return new Department
+                {
+                    Name = "Faculty of Medicine",
+                };
+            }
+
+            public static IEnumerable<Department> GetAll()
+            {
+                yield return CreateDepartmentHumanResources();
+                yield return CreateFacultyOfTheology();
+                yield return CreateFacultyOfLaw();
+                yield return CreateFacultyOfMedicine();
             }
         }
 

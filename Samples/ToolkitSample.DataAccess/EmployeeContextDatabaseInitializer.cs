@@ -1,7 +1,8 @@
-﻿using EFCore.Toolkit;
+﻿using System.Diagnostics;
+using EFCore.Toolkit;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
-using ToolkitSample.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace ToolkitSample.DataAccess
 {
@@ -16,21 +17,22 @@ namespace ToolkitSample.DataAccess
 
         public void Initialize(DbContextBase dbContext, bool force)
         {
-
             dbContext.Database.EnsureCreated();
 
-            if (dbContext.AllMigrationsApplied())
-            {
-                if (!dbContext.Set<Employee>().Any())
-                {
-                    foreach (var dataSeed in this.dataSeeds)
-                    {
-                        dataSeed.Seed(dbContext);
-                    }
+            var connectionString = dbContext.Database.GetConnectionString();
+            Debug.WriteLine($"Initializing database with connectionString={connectionString}");
 
-                    dbContext.SaveChanges();
-                }
+            if (!dbContext.AllMigrationsApplied())
+            {
+                dbContext.Database.Migrate();
             }
+
+            foreach (var dataSeed in this.dataSeeds)
+            {
+                dataSeed.Seed(dbContext);
+            }
+
+            dbContext.SaveChanges();
         }
     }
 }

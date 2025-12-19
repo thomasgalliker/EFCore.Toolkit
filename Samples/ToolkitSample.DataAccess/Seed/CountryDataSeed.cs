@@ -8,10 +8,7 @@ namespace ToolkitSample.DataAccess.Seed
 {
     internal sealed class CountryDataSeed : DataSeedBase<Country>
     {
-        public override Expression<Func<Country, object?>> AddOrUpdateExpression
-        {
-            get => applicationSetting => applicationSetting.Id;
-        }
+        public override Expression<Func<Country, object?>> AddOrUpdateExpression => country => country.Id;
 
         public override IEnumerable<Country> GetAll()
         {
