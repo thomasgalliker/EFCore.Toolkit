@@ -35,7 +35,7 @@ namespace EFCore.Toolkit
         {
             if (filterByCurrentUser)
             {
-                var currentUserId = this.userContext.GetCurrentUserId();
+                var currentUserId = this.userContext.UserId;
                 return base.Get().WhereCreatedBy(currentUserId);
             }
 
