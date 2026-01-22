@@ -85,12 +85,6 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public IEnumerable<T> FindByIds(params int[] ids)
-        {
-            return this.DbSet.OfType<IIdentifiable>().Where(x => ids.Contains(x.Id)).OfType<T>();
-        }
-
-        /// <inheritdoc />
         public virtual T Add(T entity)
         {
             return this.DbSet.Add(entity).Entity;
