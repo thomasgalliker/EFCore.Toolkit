@@ -1,6 +1,6 @@
 ﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Auditing;
-using EFCore.Toolkit.Abstractions.Extensions;
+using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 

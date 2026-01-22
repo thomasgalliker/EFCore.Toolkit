@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Extensions;
+using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
 
 namespace EFCore.Toolkit

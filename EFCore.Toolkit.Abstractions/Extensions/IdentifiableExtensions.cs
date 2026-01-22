@@ -1,4 +1,6 @@
-﻿namespace EFCore.Toolkit.Abstractions.Extensions
+﻿using EFCore.Toolkit.Abstractions;
+
+namespace EFCore.Toolkit.Extensions
 {
     public static class IdentifiableExtensions
     {

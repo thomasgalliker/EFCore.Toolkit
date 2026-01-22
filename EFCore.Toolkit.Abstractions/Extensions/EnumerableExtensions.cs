@@ -1,4 +1,7 @@
-﻿namespace EFCore.Toolkit.Abstractions.Extensions
+﻿using EFCore.Toolkit.Abstractions;
+using EFCore.Toolkit.Abstractions.Extensions;
+
+namespace EFCore.Toolkit.Extensions
 {
     public static class EnumerableExtensions
     {

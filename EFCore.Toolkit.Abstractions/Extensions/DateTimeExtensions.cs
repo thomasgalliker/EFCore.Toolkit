@@ -1,4 +1,4 @@
-﻿namespace EFCore.Toolkit.Abstractions.Extensions
+﻿namespace EFCore.Toolkit.Extensions
 {
     public static class DateTimeExtensions
     {

@@ -1,4 +1,4 @@
-﻿using EFCore.Toolkit.Abstractions.Extensions;
+﻿using EFCore.Toolkit.Extensions;
 using FluentAssertions;
 
 using Xunit;

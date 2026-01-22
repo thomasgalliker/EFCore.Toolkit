@@ -1,5 +1,5 @@
 ﻿using EFCore.Toolkit.Abstractions;
-using EFCore.Toolkit.Abstractions.Extensions;
+using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
 using FluentAssertions;

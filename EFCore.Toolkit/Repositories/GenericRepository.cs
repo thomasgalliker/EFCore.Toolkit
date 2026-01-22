@@ -1,6 +1,5 @@
 ﻿using System.Linq.Expressions;
 using EFCore.Toolkit.Abstractions;
-using EFCore.Toolkit.Abstractions.Extensions;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
@@ -83,6 +82,12 @@ namespace EFCore.Toolkit
         public T? FindById(params object[] ids)
         {
             return this.DbSet.Find(ids);
+        }
+
+        /// <inheritdoc />
+        public IEnumerable<T> FindByIds(params int[] ids)
+        {
+            return this.DbSet.OfType<IIdentifiable>().Where(x => ids.Contains(x.Id)).OfType<T>();
         }
 
         /// <inheritdoc />

@@ -1,6 +1,8 @@
 ﻿using System.Linq.Expressions;
+using EFCore.Toolkit.Abstractions;
+using EFCore.Toolkit.Extensions;
 
-namespace EFCore.Toolkit.Abstractions.Extensions
+namespace EFCore.Toolkit.Extensions
 {
     public static class ReadOnlyRepositoryExtensions
     {

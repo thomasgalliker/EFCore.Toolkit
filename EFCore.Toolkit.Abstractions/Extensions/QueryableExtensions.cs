@@ -1,4 +1,7 @@
-﻿namespace EFCore.Toolkit.Abstractions.Extensions
+﻿using EFCore.Toolkit.Abstractions;
+using EFCore.Toolkit.Abstractions.Extensions;
+
+namespace EFCore.Toolkit.Extensions
 {
     public static class QueryableExtensions
     {
@@ -40,9 +43,29 @@
             return queryable.SingleOrDefault(i => i.Id == id);
         }
 
+        public static IQueryable<TEntity> FindByIds<TEntity>(IQueryable<TEntity> query, IEnumerable<int> ids) where TEntity : IIdentifiable
+        {
+            if (ids == null || !ids.Any())
+            {
+                return query.Where(t => false);
+            }
+
+            return query.Where(t => ids.Contains(t.Id));
+        }
+
         public static TEntity FindByExternalId<TEntity>(this IQueryable<TEntity> queryable, Guid externalId) where TEntity : IExternalIdentifiable
         {
             return queryable.SingleOrDefault(i => i.ExternalId == externalId);
+        }
+
+        public static IQueryable<TEntity> FindByExternalIds<TEntity>(IQueryable<TEntity> query, IEnumerable<Guid> externalIds) where TEntity : IExternalIdentifiable
+        {
+            if (externalIds == null || !externalIds.Any())
+            {
+                return query.Where(t => false);
+            }
+
+            return query.Where(t => externalIds.Contains(t.ExternalId));
         }
 
         public static int GetNextId<TEntity>(this ICollection<TEntity> items) where TEntity : IIdentifiable
