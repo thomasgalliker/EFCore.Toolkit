@@ -1,6 +1,6 @@
-﻿using EFCore.Toolkit.Extensions;
+﻿using EFCore.Toolkit.Abstractions;
 
-namespace EFCore.Toolkit.Abstractions.Extensions
+namespace EFCore.Toolkit.Extensions
 {
     public static class GenericRepositoryExtensions
     {
