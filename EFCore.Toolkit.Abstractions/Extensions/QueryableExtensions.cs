@@ -6,14 +6,24 @@
         /// Filters entities which implement <seealso cref="ICreatedBy{TKey}"/> and match the specified
         /// <paramref name="createdBy"/> value with <c>CreatedBy</c> property of <c>ICreatedBy</c>.
         /// </summary>
-        /// <typeparam name="T">The entity type.</typeparam>
+        /// <typeparam name="TEntity">The entity type.</typeparam>
         /// <typeparam name="TKey">Type of user ID which relates to the entity.</typeparam>
         /// <param name="queryable">The queryable to be filtered.</param>
         /// <param name="createdBy">The user ID for which queryable is filtered.</param>
         /// <returns>Queryable which contains only those entities which belong to user with ID <paramref name="createdBy"/>.</returns>
-        public static IQueryable<T> WhereCreatedBy<T, TKey>(this IQueryable<T> queryable, TKey createdBy) where T : class, ICreatedBy<TKey>
+        public static IQueryable<TEntity> WhereCreatedBy<TEntity, TKey>(this IQueryable<TEntity> queryable, TKey createdBy) where TEntity : class, ICreatedBy<TKey>
         {
             return queryable.Where(i => Equals(i.CreatedBy, createdBy));
+        }
+
+        public static IQueryable<TEntity> WhereCreatedByCurrentUser<TEntity, TKey>(this IQueryable<TEntity> query, IUserContext<TKey> userContext) where TEntity : class, ICreatedBy<TKey>
+        {
+            if (Equals(userContext.UserId, default(TKey)))
+            {
+                return query;
+            }
+
+            return query.WhereCreatedBy(userContext.UserId);
         }
 
         public static int? FindIdByExternalId<TEntity>(this IQueryable<TEntity> queryable, Guid externalId) where TEntity : IExternalIdentifiable, IIdentifiable
