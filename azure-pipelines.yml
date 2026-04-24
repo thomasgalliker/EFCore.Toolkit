@@ -98,7 +98,7 @@ steps:
   displayName: 'Run UnitTests'
   inputs:
     command: test
-    projects: '$(solution)'
+    projects: '**/*.Tests.csproj'
     arguments: >
       --no-restore --no-build 
       --configuration $(buildConfiguration) 
@@ -113,7 +113,7 @@ steps:
   displayName: 'Run IntegrationTests'
   inputs:
     command: test
-    projects: '$(solution)'
+    projects: '**/*.Tests.csproj'
     arguments: >
       --no-restore --no-build 
       --configuration $(buildConfiguration) 
