@@ -1,6 +1,6 @@
-﻿using System.Text;
+using System.Text;
 using EFCore.Toolkit.Abstractions;
-using FluentAssertions.Execution;
+using Xunit.Sdk;
 
 namespace EFCore.Toolkit.Tests.Extensions
 {
@@ -12,25 +12,25 @@ namespace EFCore.Toolkit.Tests.Extensions
             var numberOfModified = changeSet.Changes.Count(c => c.State == ChangeState.Modified);
             var numberOfDeleted = changeSet.Changes.Count(c => c.State == ChangeState.Deleted);
 
-            Func<string> getFailText = () =>
+            if (numberOfAdded == expectedNumberOfAdded &&
+                numberOfModified == expectedNumberOfModified &&
+                numberOfDeleted == expectedNumberOfDeleted)
             {
-                var stringBuilder = new StringBuilder();
-                stringBuilder.AppendLine("Expected ChangeSet to contain: ");
-                stringBuilder.AppendLine($" - Added = {expectedNumberOfAdded}");
-                stringBuilder.AppendLine($" - Modified = {expectedNumberOfModified}");
-                stringBuilder.AppendLine($" - Deleted = {expectedNumberOfDeleted}");
-                stringBuilder.AppendLine();
-                stringBuilder.AppendLine("but found:");
-                stringBuilder.AppendLine($" - Added = {numberOfAdded}");
-                stringBuilder.AppendLine($" - Modified = {numberOfModified}");
-                stringBuilder.AppendLine($" - Deleted = {numberOfDeleted}");
-                return stringBuilder.ToString();
-            };
+                return;
+            }
 
-            Execute.Assertion.ForCondition(numberOfAdded == expectedNumberOfAdded &&
-                                           numberOfModified == expectedNumberOfModified &&
-                                           numberOfDeleted == expectedNumberOfDeleted)
-                                           .FailWith(getFailText());
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine("Expected ChangeSet to contain: ");
+            stringBuilder.AppendLine($" - Added = {expectedNumberOfAdded}");
+            stringBuilder.AppendLine($" - Modified = {expectedNumberOfModified}");
+            stringBuilder.AppendLine($" - Deleted = {expectedNumberOfDeleted}");
+            stringBuilder.AppendLine();
+            stringBuilder.AppendLine("but found:");
+            stringBuilder.AppendLine($" - Added = {numberOfAdded}");
+            stringBuilder.AppendLine($" - Modified = {numberOfModified}");
+            stringBuilder.AppendLine($" - Deleted = {numberOfDeleted}");
+
+            throw new XunitException(stringBuilder.ToString());
         }
     }
 }
