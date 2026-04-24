@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
+		<TargetFrameworks>net9.0;net10.0</TargetFrameworks>
 		<OutputType>Library</OutputType>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<LangVersion>latest</LangVersion>
@@ -44,8 +44,13 @@
 	</PropertyGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="[9.0.0,)" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="[9.0.0,)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="[9.0.0,10.0.0)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="[9.0.0,10.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="[10.0.0,11.0.0)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="[10.0.0,11.0.0)" />
   </ItemGroup>
 
 	<ItemGroup>

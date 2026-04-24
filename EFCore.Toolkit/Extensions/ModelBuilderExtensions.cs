@@ -124,7 +124,7 @@ namespace EFCore.Toolkit.Extensions
                         p.IsKey() ||
                         p.IsForeignKey() ||
                          p.IsShadowProperty() ||
-                         (p.DeclaringType is IMutableEntityType et && et.GetDiscriminatorPropertyName() == p.Name))
+                         (p.DeclaringType is IMutableEntityType et && et.FindDiscriminatorProperty()?.Name == p.Name))
                     {
                         continue;
                     }
