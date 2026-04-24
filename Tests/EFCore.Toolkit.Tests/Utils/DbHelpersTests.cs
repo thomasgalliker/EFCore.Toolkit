@@ -6,6 +6,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests.Utils
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class DbHelpersTests
     {
         [Fact]

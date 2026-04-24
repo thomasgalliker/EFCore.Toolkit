@@ -5,6 +5,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests
 {
+    [Trait(Traits.Category, Traits.IntegrationTests)]
     [Collection("DbContextTests")]
     public class ContextTestBaseTests_DbContextOptionsOnly : ContextTestBase<ContextTestBaseTests_DbContextOptionsOnly.TestContext>
     {

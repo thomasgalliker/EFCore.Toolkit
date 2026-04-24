@@ -12,6 +12,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Auditing
 {
+    [Trait(Traits.Category, Traits.IntegrationTests)]
     [Collection("DbContextTests")]
     public class AuditDbContextBaseTests : ContextTestBase<TestAuditDbContext>
     {

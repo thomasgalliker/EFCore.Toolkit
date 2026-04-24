@@ -14,6 +14,7 @@ namespace EFCore.Toolkit.Tests.Repositories
     /// <summary>
     /// Repository tests using <see cref="EmployeeContextTestDbConnection" /> as database connection.
     /// </summary>
+    [Trait(Traits.Category, Traits.IntegrationTests)]
     [Collection("DbContextTests")]
     public class SoftDeleteInterceptorTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {

@@ -8,6 +8,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Repositories
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class InMemoryRepositoryTests
     {
         private readonly ITestOutputHelper testOutputHelper;

@@ -7,6 +7,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests.Extensions
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class TypeExtensionsTests
     {
         [Fact]

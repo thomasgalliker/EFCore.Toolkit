@@ -10,6 +10,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests.Modularity
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class DataAccessModuleTests
     {
         public DataAccessModuleTests()

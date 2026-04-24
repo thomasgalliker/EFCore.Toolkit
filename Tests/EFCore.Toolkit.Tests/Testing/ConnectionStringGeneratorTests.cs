@@ -5,6 +5,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests.Testing
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class ConnectionStringGeneratorTests
     {
         [Fact]

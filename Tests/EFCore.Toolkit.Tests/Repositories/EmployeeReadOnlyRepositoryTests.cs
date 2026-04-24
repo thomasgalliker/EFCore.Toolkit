@@ -13,6 +13,7 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Repositories
 {
+    [Trait(Traits.Category, Traits.IntegrationTests)]
     [Collection("DbContextTests")]
     public class EmployeeReadOnlyRepositoryTests : ContextTestBase<EmployeeContext>
     {

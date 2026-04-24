@@ -7,6 +7,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests.Auditing
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class AuditTypeInfoTests
     {
         [Fact]

@@ -12,6 +12,7 @@ using static EFCore.Toolkit.Tests.Stubs.Testdata;
 
 namespace EFCore.Toolkit.Tests.Extensions
 {
+    [Trait(Traits.Category, Traits.IntegrationTests)]
     [Collection("DbContextTests")]
     public class DbContextExtensionsTests : ContextTestBase<EmployeeContext>
     {

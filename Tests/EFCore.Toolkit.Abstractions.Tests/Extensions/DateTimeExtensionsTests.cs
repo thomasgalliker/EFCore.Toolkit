@@ -5,6 +5,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Abstractions.Tests.Extensions
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class DateTimeExtensionsTests
     {
         [Fact]

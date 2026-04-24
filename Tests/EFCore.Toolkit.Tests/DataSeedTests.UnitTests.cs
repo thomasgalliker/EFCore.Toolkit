@@ -6,6 +6,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class DataSeedUnitTests
     {
         [Fact]
