@@ -1,9 +1,9 @@
-﻿using System.Reflection;
-
-using Autofac;
 using FluentAssertions;
 
+using Microsoft.Extensions.DependencyInjection;
+
 using ToolkitSample.DataAccess.Contracts.Repository;
+using ToolkitSample.DataAccess.Modularity;
 using ToolkitSample.DataAccess.Repository;
 
 using Xunit;
@@ -13,30 +13,25 @@ namespace EFCore.Toolkit.Tests.Modularity
     [Trait(Traits.Category, Traits.UnitTests)]
     public class DataAccessModuleTests
     {
-        public DataAccessModuleTests()
-        {
-        }
-
         [Fact]
         public void ShouldBuildAndResolveDependencies()
         {
             // Arrange
-            var container = GetContainer();
+            var provider = GetServiceProvider();
 
             // Act
-            var employeeRepository = container.Resolve<IEmployeeRepository>();
+            var employeeRepository = provider.GetRequiredService<IEmployeeRepository>();
 
             // Assert
             employeeRepository.Should().NotBeNull();
             employeeRepository.Should().BeOfType<EmployeeRepository>();
         }
 
-        private static IContainer GetContainer()
+        private static IServiceProvider GetServiceProvider()
         {
-            var container = new Autofac.ContainerBuilder();
-            container.RegisterAssemblyModules(Assembly.Load("ToolkitSample.DataAccess"));
-            return container.Build();
+            var services = new ServiceCollection();
+            services.AddDataAccess();
+            return services.BuildServiceProvider();
         }
-
     }
 }

@@ -10,13 +10,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="9.0.0" />
-    <PackageReference Include="coverlet.msbuild" Version="6.0.4">
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
+    <PackageReference Include="coverlet.msbuild" Version="10.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FluentAssertions" Version="6.1.0" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
     <PackageReference Include="Moq" Version="4.16.1" />
     <PackageReference Include="ObjectDumper.NET" Version="4.3.2" />
     <PackageReference Include="xunit" Version="2.9.3" />

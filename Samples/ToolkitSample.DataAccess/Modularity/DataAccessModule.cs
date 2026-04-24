@@ -1,6 +1,6 @@
-﻿using Autofac;
 using EFCore.Toolkit;
 using EFCore.Toolkit.Abstractions;
+using Microsoft.Extensions.DependencyInjection;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.DataAccess.Repository;
@@ -9,29 +9,28 @@ using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Modularity
 {
-    public class DataAccessModule : Module
+    public static class DataAccessServiceCollectionExtensions
     {
-        protected override void Load(ContainerBuilder builder)
+        public static IServiceCollection AddDataAccess(this IServiceCollection services)
         {
-            // Register all data seeds:
-            builder.RegisterType<ApplicationSettingDataSeed>().As<IDataSeed>().SingleInstance();
-            builder.RegisterType<DepartmentDataSeed>().As<IDataSeed>().SingleInstance();
-            builder.RegisterType<CountryDataSeed>().As<IDataSeed>().SingleInstance();
+            services.AddSingleton<IDataSeed, ApplicationSettingDataSeed>();
+            services.AddSingleton<IDataSeed, DepartmentDataSeed>();
+            services.AddSingleton<IDataSeed, CountryDataSeed>();
 
-            // Register an IDbConnection and an IDatabaseInitializer which are used to be injected into EmployeeContext
-            builder.RegisterType<EmployeeContextDatabaseInitializer>().As<IDatabaseInitializer>().SingleInstance();
+            services.AddSingleton<IDatabaseInitializer, EmployeeContextDatabaseInitializer>();
 
-            // Finally, register the context all the repositories as InstancePerDependency
-            builder.RegisterType<EmployeeContext>()
-                .As<IDbContext>()
-                .As<IEmployeeContext>()
-                .AsSelf()
-                .WithParameter("dbContextOptions", EmployeeContextDbContextOptions.Create<EmployeeContext>())
-                .InstancePerDependency();
+            services.AddTransient<EmployeeContext>(sp =>
+                new EmployeeContext(
+                    EmployeeContextDbContextOptions.Create<EmployeeContext>(),
+                    sp.GetRequiredService<IDatabaseInitializer>()));
+            services.AddTransient<IDbContext>(sp => sp.GetRequiredService<EmployeeContext>());
+            services.AddTransient<IEmployeeContext>(sp => sp.GetRequiredService<EmployeeContext>());
 
-            builder.RegisterType<EmployeeRepository>().As<IEmployeeRepository>().InstancePerDependency();
-            builder.RegisterType<GenericRepository<Country>>().As<IGenericRepository<Country>>().InstancePerDependency();
-            builder.RegisterType<GenericRepository<Department>>().As<IGenericRepository<Department>>().InstancePerDependency();
+            services.AddTransient<IEmployeeRepository, EmployeeRepository>();
+            services.AddTransient<IGenericRepository<Country>, GenericRepository<Country>>();
+            services.AddTransient<IGenericRepository<Department>, GenericRepository<Department>>();
+
+            return services;
         }
     }
 }
