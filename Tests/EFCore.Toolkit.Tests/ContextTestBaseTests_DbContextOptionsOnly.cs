@@ -1,5 +1,5 @@
 ﻿using EFCore.Toolkit.Testing;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 

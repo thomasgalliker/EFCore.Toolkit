@@ -1,6 +1,6 @@
 ﻿using System.Linq.Expressions;
 using EFCore.Toolkit.Utils;
-using FluentAssertions;
+using AwesomeAssertions;
 using ToolkitSample.Model;
 using Xunit;
 

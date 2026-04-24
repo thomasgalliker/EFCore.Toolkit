@@ -1,6 +1,6 @@
 ﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 using Moq;
 

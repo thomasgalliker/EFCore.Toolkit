@@ -1,5 +1,5 @@
 ﻿using EFCore.Toolkit.Extensions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 using Xunit;
 

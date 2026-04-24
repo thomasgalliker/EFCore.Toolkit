@@ -5,7 +5,7 @@ using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Extensions;
 using EFCore.Toolkit.Tests.Stubs;
-using FluentAssertions;
+using AwesomeAssertions;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.DataAccess.Repository;

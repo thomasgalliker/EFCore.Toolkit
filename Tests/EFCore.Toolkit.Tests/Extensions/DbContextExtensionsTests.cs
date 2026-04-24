@@ -2,7 +2,7 @@
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
 
-using FluentAssertions;
+using AwesomeAssertions;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
 

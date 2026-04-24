@@ -1,6 +1,6 @@
 ﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
-using FluentAssertions;
+using AwesomeAssertions;
 
 using ToolkitSample.DataAccess;
 using ToolkitSample.DataAccess.Context;

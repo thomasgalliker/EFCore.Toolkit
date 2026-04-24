@@ -1,5 +1,5 @@
 ﻿using EFCore.Toolkit.Auditing;
-using FluentAssertions;
+using AwesomeAssertions;
 
 using ToolkitSample.Model.Auditing;
 

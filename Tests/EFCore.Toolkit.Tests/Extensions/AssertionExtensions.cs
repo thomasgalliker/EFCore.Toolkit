@@ -1,4 +1,4 @@
-using FluentAssertions;
+using AwesomeAssertions;
 using ToolkitSample.Model;
 
 namespace EFCore.Toolkit.Tests.Extensions

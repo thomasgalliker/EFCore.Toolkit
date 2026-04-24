@@ -1,5 +1,5 @@
 ﻿using EFCore.Toolkit.Tests.Stubs;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.Model;

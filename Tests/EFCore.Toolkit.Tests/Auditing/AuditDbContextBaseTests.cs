@@ -2,7 +2,7 @@
 using EFCore.Toolkit.Auditing;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context.Auditing;
 using ToolkitSample.Model;
