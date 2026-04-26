@@ -1,6 +1,4 @@
-﻿using System;
-
-using ToolkitSample.Model;
+﻿using ToolkitSample.Model;
 
 namespace EFCore.Toolkit.Tests.Stubs
 {
@@ -71,30 +69,79 @@ namespace EFCore.Toolkit.Tests.Stubs
         {
             public static Department CreateDepartmentHumanResources()
             {
-                return new Department { Name = "Human Resources", };
+                return new Department
+                {
+                    Name = "Human Resources",
+                };
             }
 
             public static Department CreateFacultyOfTheology()
             {
-                return new Department { Name = "Faculty of Theology", };
+                return new Department
+                {
+                    Name = "Faculty of Theology",
+                };
             }
 
             public static Department CreateFacultyOfLaw()
             {
-                return new Department { Name = "Faculty of Law", };
+                return new Department
+                {
+                    Name = "Faculty of Law",
+                };
             }
 
             public static Department CreateFacultyOfMedicine()
             {
-                return new Department { Name = "Faculty of Medicine", };
+                return new Department
+                {
+                    Name = "Faculty of Medicine",
+                };
+            }
+
+            public static IEnumerable<Department> GetAll()
+            {
+                yield return CreateDepartmentHumanResources();
+                yield return CreateFacultyOfTheology();
+                yield return CreateFacultyOfLaw();
+                yield return CreateFacultyOfMedicine();
             }
         }
 
         public static class Countries
         {
-            public static Country CreateCountrySwitzerland()
+            public static Country Switzerland()
             {
-                return new Country { Id = "CH", Name = "Switzerland" };
+                return new Country
+                {
+                    Id = "ch",
+                    Name = "Switzerland"
+                };
+            }
+
+            public static Country Germany()
+            {
+                return new Country
+                {
+                    Id = "de",
+                    Name = "Germany"
+                };
+            }
+
+            public static Country USA()
+            {
+                return new Country
+                {
+                    Id = "us",
+                    Name = "USA"
+                };
+            }
+
+            public static IEnumerable<Country> GetAll()
+            {
+                yield return Switzerland();
+                yield return Germany();
+                yield return USA();
             }
         }
 

@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Common;
-using System.Linq;
 using System.Reflection;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +9,9 @@ namespace EFCore.Toolkit.Extensions
 {
     internal static class QueryHelper
     {
-        private static string GetColumnName(this MemberInfo info)
+        private static string? GetColumnName(this MemberInfo info)
         {
-            List<ColumnAttribute> list = info.GetCustomAttributes<ColumnAttribute>().ToList();
+            var list = info.GetCustomAttributes<ColumnAttribute>().ToList();
             return list.Count > 0 ? list.Single().Name : info.Name;
         }
         /// <summary>
@@ -43,12 +41,13 @@ namespace EFCore.Toolkit.Extensions
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
                     string name = reader.GetName(i);
-                    PropertyInfo prop = lstColumns.FirstOrDefault(a => a.GetColumnName().Equals(name));
+                    var prop = lstColumns.FirstOrDefault(a => Equals(name, a.GetColumnName()));
                     if (prop == null)
                     {
                         continue;
                     }
-                    object val = await reader.IsDBNullAsync(i) ? null : reader[i];
+
+                    object? val = await reader.IsDBNullAsync(i) ? null : reader[i];
                     prop.SetValue(newObject, val, null);
                 }
                 yield return newObject;

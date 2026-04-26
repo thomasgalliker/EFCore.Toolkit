@@ -1,5 +1,4 @@
-﻿using System;
-using EFCore.Toolkit.Abstractions.Auditing;
+﻿using EFCore.Toolkit.Abstractions.Auditing;
 using Microsoft.EntityFrameworkCore;
 
 namespace EFCore.Toolkit.Auditing.Extensions

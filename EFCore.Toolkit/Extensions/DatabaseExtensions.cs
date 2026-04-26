@@ -1,5 +1,5 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
@@ -33,7 +33,7 @@ namespace EFCore.Toolkit.Extensions
                     command.CommandText = sql;
                     command.CommandType = CommandType.Text;
 
-                    command.Connection.Open();
+                    command.Connection!.Open();
 
                     command.ExecuteNonQuery();
 
@@ -42,9 +42,8 @@ namespace EFCore.Toolkit.Extensions
             }
             catch (Exception ex)
             {
-                Console.WriteLine(ex);
+                Trace.WriteLine(ex);
             }
         }
     }
 }
-

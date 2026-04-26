@@ -1,11 +1,12 @@
 ﻿using EFCore.Toolkit.Testing;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using Xunit;
 
 namespace EFCore.Toolkit.Tests
 {
-
+    [Trait(Traits.Category, Traits.IntegrationTests)]
+    [Collection("DbContextTests")]
     public class ContextTestBaseTests_DbContextOptionsOnly : ContextTestBase<ContextTestBaseTests_DbContextOptionsOnly.TestContext>
     {
         public ContextTestBaseTests_DbContextOptionsOnly()
@@ -23,9 +24,9 @@ namespace EFCore.Toolkit.Tests
             testContext.Should().BeOfType<TestContext>();
         }
 
-        public class TestContext : DbContextBase<TestContext>
+        public class TestContext : DbContextBase
         {
-            public TestContext(DbContextOptions dbContextOptions, IDatabaseInitializer<TestContext> databaseInitializer)
+            public TestContext(DbContextOptions dbContextOptions, IDatabaseInitializer databaseInitializer)
                 : base(dbContextOptions, databaseInitializer)
             {
             }

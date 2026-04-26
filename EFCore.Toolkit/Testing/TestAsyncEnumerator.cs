@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-
-namespace EFCore.Toolkit.Testing
+﻿namespace EFCore.Toolkit.Testing
 {
     public class TestAsyncEnumerator<T> : IAsyncEnumerator<T>
     {
@@ -23,7 +18,7 @@ namespace EFCore.Toolkit.Testing
 
         public ValueTask DisposeAsync()
         {
-            Dispose();
+            this.Dispose();
             return new ValueTask();
         }
 

@@ -1,37 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using EFCore.Toolkit.Abstractions;
 
-namespace EFCore.Toolkit.Abstractions.Extensions
+namespace EFCore.Toolkit.Extensions
 {
     public static class IdentifiableExtensions
     {
-        public static int? FindIdByExternalId<T>(this IQueryable<T> repository, Guid externalId) where T : IExternalIdentifiable, IIdentifiable
+        public static IEnumerable<T> ResetIds<T>(this IEnumerable<T> source) where T : IIdentifiable
         {
-            var id = repository.Select(x => new { x.Id, x.ExternalId }).SingleOrDefault(i => i.ExternalId == externalId)?.Id;
-            return id;
-        }
-
-        public static T FindByExternalId<T>(this IQueryable<T> repository, Guid externalId) where T : IExternalIdentifiable
-        {
-            return repository.SingleOrDefault(i => i.ExternalId == externalId);
-        }
-
-        public static void RemoveByExternalId<T>(this IGenericRepository<T> repository, Guid externalId) where T : IExternalIdentifiable
-        {
-            repository.RemoveAll(i => i.ExternalId == externalId);
-        }
-
-        public static int GetNextId<T>(this IEnumerable<T> items) where T : IIdentifiable
-        {
-            if (items.Any())
+            foreach (var item in source)
             {
-                var lastId = items.Max(t => t.Id);
-                var nextId = lastId + 1;
-                return nextId;
+                item.Id = 0;
+                yield return item;
             }
+        }
 
-            return 1;
+        public static IEnumerable<T> ResetExternalIds<T>(this IEnumerable<T> source) where T : IExternalIdentifiable
+        {
+            foreach (var item in source)
+            {
+                item.ExternalId = Guid.Empty;
+                yield return item;
+            }
+        }
+
+        public static IEnumerable<T> ResetAllIds<T>(this IEnumerable<T> source) where T : IIdentifiable, IExternalIdentifiable
+        {
+            foreach (var item in source)
+            {
+                item.Id = 0;
+                item.ExternalId = Guid.Empty;
+                yield return item;
+            }
         }
     }
 }

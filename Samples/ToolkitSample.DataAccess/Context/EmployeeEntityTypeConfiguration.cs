@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EFCore.Toolkit.Extensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
@@ -10,8 +11,7 @@ namespace ToolkitSample.DataAccess.Context
         {
             entity.HasBaseType<Person>();
 
-            entity.Property(e => e.EmployementDate)
-                .IsRequired(false);
+            entity.Property(e => e.EmployementDate).IsOptional();
 
             entity.HasOne(e => e.Department)
                 .WithMany(d => d.Employees)
@@ -20,8 +20,7 @@ namespace ToolkitSample.DataAccess.Context
 
             entity.Property(e => e.PropertyA);
             entity.Property(e => e.PropertyB);
-
-            //this.Unique(e => e.PropertyA, e => e.PropertyB);
+            entity.Property(e => e.Salary);
         }
     }
 }

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 using EFCore.Toolkit.Abstractions;
-using EFCore.Toolkit.Abstractions.Extensions;
 using EFCore.Toolkit.Exceptions;
+using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
-using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Extensions;
 using EFCore.Toolkit.Tests.Stubs;
-using EFCore.Toolkit.Utils;
-using FluentAssertions;
+using AwesomeAssertions;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.DataAccess.Repository;
@@ -21,22 +16,22 @@ using Xunit.Abstractions;
 
 using static EFCore.Toolkit.Tests.Stubs.Testdata.Employees;
 
-namespace EFCore.Toolkit.Tests.Repository
+namespace EFCore.Toolkit.Tests.Repositories
 {
     /// <summary>
-    ///     Repository tests using <see cref="EmployeeContextTestDbConnection" /> as database connection.
+    /// Repository tests using <see cref="EmployeeContextTestDbConnection" /> as database connection.
     /// </summary>
+    [Trait(Traits.Category, Traits.IntegrationTests)]
+    [Collection("DbContextTests")]
     public class GenericRepositoryTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         private readonly ITestOutputHelper testOutputHelper;
 
         public GenericRepositoryTests(ITestOutputHelper testOutputHelper)
-            : base(databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+            : base(databaseInitializer: new CreateDatabaseIfNotExists(),
                   log: testOutputHelper.WriteLine)
         {
             this.testOutputHelper = testOutputHelper;
-
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
@@ -45,7 +40,7 @@ namespace EFCore.Toolkit.Tests.Repository
             // Arrange
             var employee = CreateEmployee1();
             employee.Department = Testdata.Departments.CreateDepartmentHumanResources();
-            employee.Country = Testdata.Countries.CreateCountrySwitzerland();
+            employee.Country = Testdata.Countries.Switzerland();
 
             ChangeSet committedChangeSet;
 
@@ -61,8 +56,9 @@ namespace EFCore.Toolkit.Tests.Repository
 
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
-                var returnedEmployee = employeeRepository.Get().SingleOrDefault(e => e.FirstName == employee.FirstName);
+                var returnedEmployee = employeeRepository.Get().SingleOrDefault(e => e.FirstName == employee.FirstName)!;
 
+                returnedEmployee.Should().NotBeNull();
                 returnedEmployee.ShouldBeEquivalentTo(CreateEmployee1());
                 returnedEmployee.CreatedDate.Should().BeAfter(DateTime.MinValue);
                 returnedEmployee.UpdatedDate.Should().BeNull();
@@ -95,6 +91,8 @@ namespace EFCore.Toolkit.Tests.Repository
             {
                 var allEmployees = employeeRepository.GetAll().ToList();
                 allEmployees.Should().HaveCount(3);
+                allEmployees.Select(e => e.CreatedDate).All(d => d > DateTime.MinValue).Should().BeTrue();
+                allEmployees.Select(e => e.UpdatedDate).All(d => d == null).Should().BeTrue();
             }
         }
 
@@ -115,7 +113,8 @@ namespace EFCore.Toolkit.Tests.Repository
             ChangeSet committedChangeSet;
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
-                removedEmployee = employeeRepository.Remove(employees.ElementAt(0));
+                var employeeToRemove = employees.ElementAt(0);
+                removedEmployee = employeeRepository.Remove(employeeToRemove);
                 committedChangeSet = employeeRepository.Save();
             }
 
@@ -176,7 +175,12 @@ namespace EFCore.Toolkit.Tests.Repository
         public void ShouldRemoveAllEmployees()
         {
             // Arrange
-            var employees = new List<Employee> { CreateEmployee1(), CreateEmployee2(), CreateEmployee3() };
+            var employees = new List<Employee>
+            {
+                CreateEmployee1(),
+                CreateEmployee2(),
+                CreateEmployee3()
+            };
 
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
@@ -349,7 +353,7 @@ namespace EFCore.Toolkit.Tests.Repository
             // Arrange
             var employee1Update = CreateEmployee1();
             employee1Update.FirstName = "Added " + employee1Update.FirstName;
-            employee1Update.Country = Testdata.Countries.CreateCountrySwitzerland();
+            employee1Update.Country = Testdata.Countries.Switzerland();
 
             // Act
             ChangeSet committedChangeSet;
@@ -364,9 +368,11 @@ namespace EFCore.Toolkit.Tests.Repository
 
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
+                employee1Update.Should().NotBeNull();
+
                 var allEmployees = employeeRepository.GetAll().ToList();
                 allEmployees.Should().HaveCount(1);
-                allEmployees.ElementAt(0).Id.Should().Be(employee1Update.Id);
+                allEmployees.ElementAt(0).Id.Should().Be(employee1Update!.Id);
                 allEmployees.ElementAt(0).FirstName.Should().Contain("Added");
             }
         }
@@ -380,7 +386,7 @@ namespace EFCore.Toolkit.Tests.Repository
             var expectedEmployementDate = new DateTime(2000, 1, 1);
 
             var departmentHr = Testdata.Departments.CreateDepartmentHumanResources();
-            var countryCH = Testdata.Countries.CreateCountrySwitzerland();
+            var countryCH = Testdata.Countries.Switzerland();
 
             Employee employee1;
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
@@ -407,8 +413,8 @@ namespace EFCore.Toolkit.Tests.Repository
             // Assert
             committedChangeSet.Assert(expectedNumberOfAdded: 0, expectedNumberOfModified: 1, expectedNumberOfDeleted: 0);
             var changedProperties = committedChangeSet.Changes.Single().ChangedProperties.ToList();
-            changedProperties.Should().ContainSingle(p => p.PropertyName == "FirstName" && (string)p.CurrentValue == expectedFirstName);
-            changedProperties.Should().ContainSingle(p => p.PropertyName == "LastName" && (string)p.CurrentValue == expectedLastName);
+            changedProperties.Should().ContainSingle(p => p.PropertyName == "FirstName" && (string?)p.CurrentValue == expectedFirstName);
+            changedProperties.Should().ContainSingle(p => p.PropertyName == "LastName" && (string?)p.CurrentValue == expectedLastName);
 
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
@@ -428,7 +434,7 @@ namespace EFCore.Toolkit.Tests.Repository
         {
             // Arrange
             var departmentHr = Testdata.Departments.CreateDepartmentHumanResources();
-            var countryCH = Testdata.Countries.CreateCountrySwitzerland();
+            var countryCH = Testdata.Countries.Switzerland();
 
             Employee employee1;
             Employee employee2;
@@ -507,7 +513,7 @@ namespace EFCore.Toolkit.Tests.Repository
                 employeeRepository.Save();
             }
 
-            int n = 5000;
+            var n = 5000;
             var timespanOffset = new TimeSpan(0, 0, 0, 1);
             var stopwatch = new Stopwatch();
 
@@ -536,7 +542,7 @@ namespace EFCore.Toolkit.Tests.Repository
             using (IGenericRepository<Employee> employeeRepository = new GenericRepository<Employee>(this.CreateContext()))
             {
                 stopwatch.Start();
-                for (int i = 0; i < n; i++)
+                for (var i = 0; i < n; i++)
                 {
                     foreach (var updateEmployee in updatedEmployees)
                     {

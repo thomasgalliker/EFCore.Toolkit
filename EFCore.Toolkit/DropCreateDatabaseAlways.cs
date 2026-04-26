@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace EFCore.Toolkit
+﻿namespace EFCore.Toolkit
 {
-    public class DropCreateDatabaseAlways<T> : IDatabaseInitializer<T>
+    public class DropCreateDatabaseAlways : IDatabaseInitializer
     {
-        public void Initialize(DbContext context, bool force)
+        public void Initialize(DbContextBase context, bool force)
         {
             context.Database.EnsureDeleted();
             context.Database.EnsureCreated();

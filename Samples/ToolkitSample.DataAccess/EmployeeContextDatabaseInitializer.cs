@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Diagnostics;
 using EFCore.Toolkit;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
-using ToolkitSample.DataAccess.Context;
-using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess
 {
-    public class EmployeeContextDatabaseInitializer : IDatabaseInitializer<EmployeeContext>
+    public class EmployeeContextDatabaseInitializer : IDatabaseInitializer
     {
         private readonly IEnumerable<IDataSeed> dataSeeds;
 
@@ -18,17 +15,24 @@ namespace ToolkitSample.DataAccess
             this.dataSeeds = dataSeeds;
         }
 
-        public void Initialize(DbContext context, bool force)
+        public void Initialize(DbContextBase dbContext, bool force)
         {
-            context.Database.EnsureCreated();
-            if (context.AllMigrationsApplied())
+            dbContext.Database.EnsureCreated();
+
+            var connectionString = dbContext.Database.GetConnectionString();
+            Debug.WriteLine($"Initializing database with connectionString={connectionString}");
+
+            if (!dbContext.AllMigrationsApplied())
             {
-                if (!context.Set<Employee>().Any())
-                {
-                    context.Seed(this.dataSeeds);
-                    context.SaveChanges();
-                }
+                dbContext.Database.Migrate();
             }
+
+            foreach (var dataSeed in this.dataSeeds)
+            {
+                dataSeed.Seed(dbContext);
+            }
+
+            dbContext.SaveChanges();
         }
     }
 }

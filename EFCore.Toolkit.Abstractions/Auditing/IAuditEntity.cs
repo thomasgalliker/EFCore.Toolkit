@@ -1,9 +1,7 @@
-﻿using System;
-
-namespace EFCore.Toolkit.Abstractions.Auditing
+﻿namespace EFCore.Toolkit.Abstractions.Auditing
 {
     /// <summary>
-    ///     Any class used for auditing an entity must implement this interface.
+    /// Any class used for auditing an entity must implement this interface.
     /// </summary>
     public interface IAuditEntity<TKey> : IAuditEntity
     {
@@ -16,26 +14,26 @@ namespace EFCore.Toolkit.Abstractions.Auditing
     public interface IAuditEntity
     {
         /// <summary>
-        ///     Gets or sets the DateTime this audit entity was created.
+        /// Gets or sets the DateTime this audit entity was created.
         /// </summary>
         /// <remarks>
-        ///     Will be automatically set by AuditDbContext on SaveChanges.
+        /// Will be automatically set by AuditDbContext on SaveChanges.
         /// </remarks>
         DateTime AuditDate { get; set; }
 
         /// <summary>
-        ///     Gets or sets the user who updated the entity
+        /// Gets or sets the user who updated the entity
         /// </summary>
         /// <remarks>
-        ///     Will be automatically set by AuditDbContext on SaveChanges.
+        /// Will be automatically set by AuditDbContext on SaveChanges.
         /// </remarks>
-        string AuditUser { get; set; }
+        string? AuditUser { get; set; }
 
         /// <summary>
-        ///     Gets or sets the type of audit.
+        /// Gets or sets the type of audit.
         /// </summary>
         /// <remarks>
-        ///     Will be automatically set by AuditDbContext on SaveChanges.
+        /// Will be automatically set by AuditDbContext on SaveChanges.
         /// </remarks>
         AuditEntityState AuditType { get; set; }
     }

@@ -2,6 +2,6 @@
 {
     public interface IUserContext<out TKey>
     {
-        TKey GetCurrentUserId();
+        public TKey UserId { get; }
     }
 }

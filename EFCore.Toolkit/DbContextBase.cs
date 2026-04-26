@@ -1,30 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Concurrency;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Extensions;
+using EFCore.Toolkit.Interceptors;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EFCore.Toolkit
 {
-    public abstract class DbContextBase<TContext> : DbContext, IDbContext
-        where TContext : DbContext
+    public abstract class DbContextBase : DbContext, IDbContext
     {
-        private static readonly IList<TContext> InitializerLock = new List<TContext>();
-        private readonly IDatabaseInitializer<TContext> databaseInitializer;
+        private static readonly IList<DbContext> InitializerLock = new List<DbContext>();
+        private readonly IDatabaseInitializer? databaseInitializer;
+
+        private readonly Action<string> log;
 
         /// <summary>
-        ///     Empty constructor is used for 'update-database' command-line command.
+        /// Empty constructor is used for 'update-database' command-line command.
         /// </summary>
         protected DbContextBase()
+            : this(dbContextOptions: new DbContextOptions<DbContext>(), databaseInitializer: null, log: null)
         {
-            //TryInitializeDatabase(this, null);
         }
 
         protected DbContextBase(DbContextOptions dbContextOptions)
@@ -32,7 +30,7 @@ namespace EFCore.Toolkit
         {
         }
 
-        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer)
+        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer databaseInitializer)
             : this(dbContextOptions, databaseInitializer, log: null)
         {
         }
@@ -42,10 +40,12 @@ namespace EFCore.Toolkit
         {
         }
 
-        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
+        protected DbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer? databaseInitializer, Action<string>? log)
             : base(dbContextOptions)
         {
-            this.EnsureLog(log);
+            this.log = log ?? (s => Debug.WriteLine(s));
+
+            this.Name = this.GetType().GetFormattedName();
 
             this.log($"Initializing DbContext '{this.Name}' with NameOrConnectionString = \"{this.GetConnectionString()}\" and IDatabaseInitializer =\"{databaseInitializer?.GetType().GetFormattedName()}\"");
 
@@ -62,41 +62,18 @@ namespace EFCore.Toolkit
         {
             this.log($"{this.Name}.OnConfiguring");
 
-            //if (this.GetConnectionString() is string connectionString && connectionString != null)
-            //{
-            //    optionsBuilder.UseSqlServer(connectionString);
-            //}
-
-            //if (!optionsBuilder.Options.Extensions.Any(extension => extension.GetType().Name == "InMemoryOptionsExtension"))
-            //{
-            //    optionsBuilder.UseSqlServer(connectionString);
-            //}
-
-            //optionsBuilder.UseLoggerFactory(new Consol)
+            optionsBuilder.AddInterceptors(new UpdateAuditableInterceptor());
+            optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
         }
 
         /// <inheritdoc />
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             this.log($"{this.Name}.OnModelCreating");
-
-            ////modelBuilder.Remove<PluralizingTableNameConvention>();
         }
-
-        private void EnsureLog(Action<string> log = null)
-        {
-            if (log == null)
-            {
-                log = s => Debug.WriteLine(s);
-            }
-
-            this.log = message => log(message);
-        }
-
-        private Action<string> log;
 
         /// <inheritdoc />
-        public string Name { get; } = typeof(TContext).GetFormattedName();
+        public string Name { get; private set; }
 
         private void TryInitializeDatabase(bool force = false)
         {
@@ -220,9 +197,16 @@ namespace EFCore.Toolkit
         /// <inheritdoc />
         public new virtual ChangeSet SaveChanges()
         {
+            return this.SaveChanges(acceptAllChangesOnSuccess: true);
+        }
+
+        /// <inheritdoc />
+        public new virtual ChangeSet SaveChanges(bool acceptAllChangesOnSuccess)
+        {
             //this.ApplyCreatedBy(() => this.userContext.GetCurrentUserId());
 
             var changeSet = this.GetChangeSet();
+
             try
             {
                 base.SaveChanges();
@@ -242,7 +226,13 @@ namespace EFCore.Toolkit
         public IConcurrencyResolveStrategy ConcurrencyResolveStrategy { get; set; } = new RethrowConcurrencyResolveStrategy();
 
         /// <inheritdoc />
-        public virtual async Task<ChangeSet> SaveChangesAsync()
+        public virtual Task<ChangeSet> SaveChangesAsync()
+        {
+            return this.SaveChangesAsync(acceptAllChangesOnSuccess: true);
+        }
+
+        /// <inheritdoc />
+        public virtual async Task<ChangeSet> SaveChangesAsync(bool acceptAllChangesOnSuccess)
         {
             var changeSet = this.GetChangeSet();
             try
@@ -300,11 +290,11 @@ namespace EFCore.Toolkit
             // Update the original values with the database values and 
             // the current values with whatever the user choose. 
             entry.OriginalValues.SetValues(databaseValues);
-            entry.CurrentValues.SetValues(resolvedValuesAsObject);
+            entry.CurrentValues.SetValues(resolvedValuesAsObject!);
         }
 
         /// <summary>
-        ///     Determines the changes that are transferred to the persistence layer.
+        /// Determines the changes that are transferred to the persistence layer.
         /// </summary>
         /// <returns>ChangeSet.</returns>
         private ChangeSet GetChangeSet()
@@ -342,11 +332,12 @@ namespace EFCore.Toolkit
                 .Where(e => e.State == EntityState.Deleted && e.Entity != null)
                 .Select(n => Change.CreateDeleteChange(n.Entity));
 
-            var allChanges = new List<IChange>(addChanges);
-            allChanges.AddRange(deleteChanges);
-            allChanges.AddRange(updateChanges);
+            var allChanges = addChanges
+                .Concat(updateChanges)
+                .Concat(deleteChanges)
+                .ToArray();
 
-            return new ChangeSet(typeof(TContext), allChanges);
+            return new ChangeSet(this.GetType(), allChanges);
         }
 
         /// <inheritdoc />

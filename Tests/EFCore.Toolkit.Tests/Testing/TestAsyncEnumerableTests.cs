@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EFCore.Toolkit.Testing;
+﻿using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
-using FluentAssertions;
+using AwesomeAssertions;
 using Moq;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.Model;
@@ -13,6 +8,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests.Testing
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class TestAsyncEnumerableTests
     {
         [Fact]

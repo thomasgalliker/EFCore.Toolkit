@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace ToolkitSample.Model
 {
@@ -8,13 +7,15 @@ namespace ToolkitSample.Model
     {
         public int? DepartmentId { get; set; }
 
-        public virtual Department Department { get; set; }
+        public Department? Department { get; set; }
 
         public DateTime? EmployementDate { get; set; }
 
-        public string PropertyA { get; set; }
+        public string? PropertyA { get; set; }
 
-        public string PropertyB { get; set; }
+        public string? PropertyB { get; set; }
+
+        public decimal? Salary { get; set; }
     }
 
     // Hint: https://msdn.microsoft.com/en-us/library/bb399739(v=vs.100).aspx

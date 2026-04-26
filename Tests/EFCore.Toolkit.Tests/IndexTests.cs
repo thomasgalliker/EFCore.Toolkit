@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EFCore.Toolkit.Abstractions;
+﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
-using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Extensions;
-using EFCore.Toolkit.Utils;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
@@ -16,13 +11,14 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests
 {
+    [Trait(Traits.Category, Traits.IntegrationTests)]
+    [Collection("DbContextTests")]
     public class IndexTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
         public IndexTests(ITestOutputHelper testOutputHelper)
-            : base(databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+            : base(databaseInitializer: new CreateDatabaseIfNotExists(),
                   log: testOutputHelper.WriteLine)
         {
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
@@ -76,7 +72,7 @@ namespace EFCore.Toolkit.Tests
 
                 // Assert
                 var ex = action.Should().Throw<DbUpdateException>();
-                ex.Which.InnerException.Message.Should()
+                ex.Which.InnerException!.Message.Should()
                     .Contain("Cannot insert duplicate key row in object 'dbo.Room' with unique index 'IX_Room_Level_Sector'. The duplicate key value is (1, A).");
             }
         }

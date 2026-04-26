@@ -2,10 +2,10 @@
 
 namespace EFCore.Toolkit.Extensions
 {
-    [DebuggerDisplay("TableRowCounts: {this.TableName}, Count={this.TableRowCount}")]
+    [DebuggerDisplay("{this.TableName}, Count={this.TableRowCount}", Type = "TableRowCounts")]
     public class TableRowCounts
     {
-        public string TableName { get; set; }
+        public string TableName { get; set; } = null!;
 
         public int TableRowCount { get; set; }
     }

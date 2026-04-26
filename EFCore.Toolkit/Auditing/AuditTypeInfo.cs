@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 using System.Reflection;
 using EFCore.Toolkit.Abstractions.Auditing;
 
@@ -9,9 +7,9 @@ namespace EFCore.Toolkit.Auditing
     public class AuditTypeInfo
     {
         /// <summary>
-        ///     Initializes a new instance of the AuditTypeInfo class.
-        ///     <param name="auditableEntityType">Type to audit, must implement IAuditableEntity.</param>
-        ///     <param name="auditEntityType">Type of audit entity, must implement IAuditEntity.</param>
+        /// Initializes a new instance of the AuditTypeInfo class.
+        /// <param name="auditableEntityType">Type to audit, must implement IAuditableEntity.</param>
+        /// <param name="auditEntityType">Type of audit entity, must implement IAuditEntity.</param>
         /// </summary>
         public AuditTypeInfo(Type auditableEntityType, Type auditEntityType)
         {

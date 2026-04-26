@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using EFCore.Toolkit.Abstractions;
+﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
-using FluentAssertions;
+using AwesomeAssertions;
 
 using Moq;
 
@@ -12,6 +10,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class UnitOfWorkUnitTests
     {
         [Fact]
@@ -76,7 +75,7 @@ namespace EFCore.Toolkit.Tests
             var ex = action.Should().Throw<UnitOfWorkException>();
             ex.Which.Message.Should().Contain("failed to commit.");
             ex.WithInnerException<InvalidOperationException>();
-            ex.Which.InnerException.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
+            ex.Which.InnerException!.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
 
             sampleContextOneMock.Verify(x => x.SaveChanges(), Times.Once);
             sampleContextTwoMock.Verify(x => x.SaveChanges(), Times.Once);
@@ -106,7 +105,7 @@ namespace EFCore.Toolkit.Tests
             var transactionMock = new Mock<ITransaction>();
             var contextMock = new Mock<IContext>();
             contextMock.Setup(c => c.BeginTransaction()).Returns(transactionMock.Object);
-            var changeSet = new ChangeSet(contextMock.GetType(), new List<IChange> { Change.CreateAddedChange(new object()) });
+            var changeSet = new ChangeSet(contextMock.GetType(), new[] { Change.CreateAddedChange(new object()) });
             contextMock.Setup(c => c.SaveChanges()).Returns(changeSet);
 
             unitOfWork.RegisterContext(contextMock.Object);
@@ -173,7 +172,7 @@ namespace EFCore.Toolkit.Tests
         }
 
         [Fact]
-        public async void ShouldCommitAsync()
+        public async Task ShouldCommitAsync()
         {
             // Arrange
             var transactionMock = new Mock<ITransaction>();

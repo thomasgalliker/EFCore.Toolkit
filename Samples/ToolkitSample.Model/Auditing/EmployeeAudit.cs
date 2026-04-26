@@ -6,8 +6,8 @@ namespace ToolkitSample.Model.Auditing
     {
         public int Id { get; set; }
 
-        public virtual string FirstName { get; set; }
+        public string? FirstName { get; set; }
 
-        public virtual string LastName { get; set; }
+        public string? LastName { get; set; }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System;
-using EFCore.Toolkit.Abstractions.Extensions;
-using FluentAssertions;
+﻿using EFCore.Toolkit.Extensions;
+using AwesomeAssertions;
 
 using Xunit;
 
 namespace EFCore.Toolkit.Abstractions.Tests.Extensions
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class DateTimeExtensionsTests
     {
         [Fact]

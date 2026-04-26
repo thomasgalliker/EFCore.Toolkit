@@ -1,58 +1,86 @@
 ﻿using System.Linq.Expressions;
-using EFCore.Toolkit.Extensions;
 
 namespace EFCore.Toolkit.Utils
 {
     internal static class DbHelpers
     {
-        internal static bool TryParsePath(Expression expression, out string path)
+        /// <summary>
+        /// Attempts to convert a lambda expression representing a navigation property
+        /// into a dot-separated string path suitable for EF Core string-based Include.
+        /// Supports nested collections using Select.
+        /// </summary>
+        internal static bool TryParsePath(Expression? expression, out string? path)
         {
             path = null;
-            Expression expression1 = expression.RemoveConvert();
-            if (expression1 is MemberExpression memberExpression)
-            {
-                var name = memberExpression.Member.Name;
-                if (!TryParsePath(memberExpression.Expression, out var path1))
-                {
-                    return false;
-                }
-                path = path1 == null ? name : path1 + "." + name;
-            }
-            else if (expression1 is MethodCallExpression methodCallExpression)
-            {
 
-                if (methodCallExpression.Method.Name == "Select" &&
-                    methodCallExpression.Arguments.Count == 2 &&
-                    TryParsePath(methodCallExpression.Arguments[0], out var path1)
-                    && path1 != null)
-                {
-                    if (methodCallExpression.Arguments[1] is LambdaExpression lambdaExpression &&
-                        TryParsePath(lambdaExpression.Body, out var path2) && path2 != null)
-                    {
-                        path = path1 + "." + path2;
-                        return true;
-                    }
-                }
-                //if (methodCallExpression.Method.Name == "As" &&
-                //    methodCallExpression.Arguments.Count == 1)
-                //{
-                //    var asType = methodCallExpression.Type;
-                //    if (asType != null)
-                //    {
-                //        path = asType.Name;
-                //        return true;
-                //    }
-
-                //    string path2;
-                //    if (TryParsePath(methodCallExpression, out path2) && path2 != null)
-                //    {
-                //        path = path2;
-                //        return true;
-                //    }
-                //}
+            if (expression == null)
+            {
                 return false;
             }
-            return true;
+
+            expression = RemoveConvert(expression);
+
+            switch (expression)
+            {
+                case MemberExpression memberExpression:
+                    if (!TryParsePath(memberExpression.Expression, out var parentPath))
+                    {
+                        return false;
+                    }
+
+                    path = string.IsNullOrEmpty(parentPath) ? memberExpression.Member.Name : $"{parentPath}.{memberExpression.Member.Name}";
+                    return true;
+
+                case MethodCallExpression methodCallExpression:
+                    if (methodCallExpression.Method.Name == "Select" &&
+                        methodCallExpression.Arguments.Count == 2)
+                    {
+                        if (!TryParsePath(methodCallExpression.Arguments[0], out var collectionPath))
+                        {
+                            return false;
+                        }
+
+                        if (methodCallExpression.Arguments[1] is LambdaExpression lambda &&
+                            TryParsePath(lambda.Body, out var memberPath))
+                        {
+                            path = string.IsNullOrEmpty(collectionPath)
+                                ? memberPath
+                                : $"{collectionPath}.{memberPath}";
+                            return true;
+                        }
+
+                        return false;
+                    }
+
+                    // Unsupported method
+                    return false;
+
+                case ParameterExpression:
+                    path = null;
+                    return true;
+
+                case ConstantExpression:
+                    path = null;
+                    return true;
+
+                default:
+                    // Unsupported expression type
+                    return false;
+            }
+        }
+
+        /// <summary>
+        /// Removes any Convert / UnaryExpression wrappers from an expression.
+        /// </summary>
+        private static Expression RemoveConvert(Expression expression)
+        {
+            while (expression is UnaryExpression unary &&
+                   (unary.NodeType == ExpressionType.Convert || unary.NodeType == ExpressionType.ConvertChecked))
+            {
+                expression = unary.Operand;
+            }
+
+            return expression;
         }
     }
 }
