@@ -1,23 +1,20 @@
-﻿
-using System;
-using System.Collections.Generic;
-
-namespace EFCore.Toolkit.Auditing
+﻿namespace EFCore.Toolkit.Auditing
 {
     public class AuditDbContextConfiguration
     {
-        public AuditDbContextConfiguration(bool auditEnabled, DateTimeKind auditDateTimeKind = DateTimeKind.Utc, params AuditTypeInfo[] auditTypeInfos)
+        public AuditDbContextConfiguration(AuditTypeInfo[] auditTypeInfos)
+            : this(auditTypeInfos, DateTimeKind.Utc)
         {
-            this.AuditEnabled = auditEnabled;
+        }
+
+        public AuditDbContextConfiguration(AuditTypeInfo[] auditTypeInfos, DateTimeKind auditDateTimeKind = DateTimeKind.Utc)
+        {
             this.AuditDateTimeKind = auditDateTimeKind;
             this.AuditTypeInfos = auditTypeInfos;
         }
 
-        public bool AuditEnabled { get; }
+        public AuditTypeInfo[] AuditTypeInfos { get; }
 
         public DateTimeKind AuditDateTimeKind { get; }
-
-        public IEnumerable<AuditTypeInfo> AuditTypeInfos { get; }
-
     }
 }

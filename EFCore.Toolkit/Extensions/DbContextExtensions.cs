@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 using EFCore.Toolkit.Abstractions;
-using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
@@ -27,114 +22,40 @@ namespace EFCore.Toolkit.Extensions
             return !total.Except(applied).Any();
         }
 
-        public static void Seed(this DbContext context, IEnumerable<IDataSeed> dataSeeds)
+        public static TEntity[] AddOrUpdate<TEntity>(this DbContext context, params TEntity[] entities) where TEntity : class
         {
-            foreach (var dataSeed in dataSeeds)
-            {
-                var predicate = dataSeed.GetAddOrUpdateExpression();
-
-                ReflectionHelper.InvokeGenericMethod(
-                    null,
-                    () => DbContextExtensions.AddOrUpdate<object>(null, null, null),
-                    dataSeed.EntityType,
-                    new object[] { context, predicate, dataSeed.GetAllObjects() });
-            }
+            return DbSetExtensions.AddOrUpdateInternal(context, context.Set<TEntity>(), entities, null);
         }
 
-        public static void AddOrUpdate<TEntity>(this DbContext context, Expression<Func<object, object>> propertyExpression, params object[] entities) where TEntity : class
+        public static TEntity[] AddOrUpdate<TEntity>(this DbContext context, TEntity[] entities, Expression<Func<TEntity, object?>> keySelector) where TEntity : class
         {
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
-
-            if (propertyExpression == null)
-            {
-                throw new ArgumentNullException(nameof(propertyExpression));
-            }
-
-            var set = context.Set<TEntity>();
-            var parameter = Expression.Parameter(typeof(TEntity));
-            var propertyName = propertyExpression.GetPropertyInfo().Name;
-            var property = Expression.Property(parameter, propertyName);
-            foreach (var entity in entities)
-            {
-                var propertyValue = entity.GetPropertyValue(propertyName);
-                var equalExpression = Expression.Equal(property, Expression.Constant(propertyValue));
-                var lambdaExpression = Expression.Lambda<Func<TEntity, bool>>(equalExpression, parameter);
-                var existingEntity = set.SingleOrDefault(lambdaExpression);
-                if (existingEntity != null)
-                {
-                    context.Entry(existingEntity).CurrentValues.SetValues(entity);
-                }
-                else
-                {
-                    context.Entry(entity).State = EntityState.Added;
-                }
-            }
+            return DbSetExtensions.AddOrUpdateInternal(context, context.Set<TEntity>(), entities, keySelector);
         }
 
-        /// <summary>
-        ///     Adds an entity (if newly created) or update (if has non-default Id).
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="context">The db context.</param>
-        /// <param name="entity">The entity.</param>
-        /// <returns></returns>
-        /// <remarks>
-        ///     Will not work for HasDatabaseGeneratedOption(DatabaseGeneratedOption.None).
-        ///     Will not work for composite keys.
-        /// </remarks>
-        public static T AddOrUpdate<T>(this DbContext context, T entity) where T : class
+        public static TEntity[] AddOrUpdate<TEntity>(this IContext context, TEntity[] entities, Expression<Func<TEntity, object?>> keySelector) where TEntity : class
         {
-            // Source: https://stackoverflow.com/questions/36208580/what-happened-to-addorupdate-in-ef-7-core
+            var dbContext = (DbContext)context;
+            return DbSetExtensions.AddOrUpdateInternal(dbContext, dbContext.Set<TEntity>(), entities, keySelector);
+        }
 
-            if (context == null)
-            {
-                throw new ArgumentNullException(nameof(context));
-            }
+        public static TEntity[] AddOrUpdate<TEntity>(this IDbContext context, TEntity[] entities) where TEntity : class
+        {
+            var dbContext = (DbContext)context;
+            return DbSetExtensions.AddOrUpdateInternal(dbContext, dbContext.Set<TEntity>(), entities, null);
+        }
 
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
-
-            var entityEntry = context.Entry(entity);
-
-            var primaryKeyName = entityEntry.Context.Model.FindEntityType(typeof(T)).FindPrimaryKey().Properties
-                .Select(x => x.Name).Single();
-
-            var primaryKeyField = entity.GetType().GetRuntimeProperty(primaryKeyName);
-
-            var t = typeof(T);
-            if (primaryKeyField == null)
-            {
-                throw new Exception($"{t.FullName} does not have a primary key specified. Unable to exec AddOrUpdate call.");
-            }
-            var keyVal = primaryKeyField.GetValue(entity);
-            var dbVal = context.Set<T>().Find(keyVal);
-
-            if (dbVal != null)
-            {
-                context.Entry(dbVal).CurrentValues.SetValues(entity);
-                context.Set<T>().Update(dbVal);
-
-                entity = dbVal;
-            }
-            else
-            {
-                context.Set<T>().Add(entity);
-            }
-
-            return entity;
+        public static TEntity[] AddOrUpdate<TEntity>(this IDbContext context, TEntity[] entities, Expression<Func<TEntity, object?>> keySelector) where TEntity : class
+        {
+            var dbContext = (DbContext)context;
+            return DbSetExtensions.AddOrUpdateInternal(dbContext, dbContext.Set<TEntity>(), entities, keySelector);
         }
 
         /// <summary>
         /// Returns the number of table rows per database table.
         /// </summary>
-        public static async Task<List<TableRowCounts>> GetTableRowCountsAsync<T>(this DbContextBase<T> c) where T : DbContext
+        public static async Task<List<TableRowCounts>> GetTableRowCountsAsync(this DbContextBase context)
         {
-            var rawSqlQuery = c.ExecuteQuery<TableRowCounts>(
+            var rawSqlQuery = context.ExecuteQuery<TableRowCounts>(
                 @"CREATE TABLE #counts
                     (
                         TableName varchar(255),
@@ -151,24 +72,18 @@ namespace EFCore.Toolkit.Extensions
 
         public static IQueryable Set(this DbContext context, Type entityType)
         {
-            // Get the generic type definition
-            MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), new Type[] { });
-
-            // Build a method with the specific type argument you're interested in
+            var method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), new Type[] { })!;
             method = method.MakeGenericMethod(entityType);
 
-            return method.Invoke(context, null) as IQueryable;
+            return (IQueryable)method.Invoke(context, null)!;
         }
 
         public static IQueryable<T> Set<T>(this DbContext context)
         {
-            // Get the generic type definition 
-            MethodInfo method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), null);
-
-            // Build a method with the specific type argument you're interested in 
+            var method = typeof(DbContext).GetRuntimeMethod(nameof(DbContext.Set), null!)!;
             method = method.MakeGenericMethod(typeof(T));
 
-            return method.Invoke(context, null) as IQueryable<T>;
+            return (IQueryable<T>)method.Invoke(context, null)!;
         }
     }
 }

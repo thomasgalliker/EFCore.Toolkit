@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Transactions;
+﻿using System.Collections.ObjectModel;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Extensions;
-using System.Threading.Tasks;
 
 namespace EFCore.Toolkit
 {
@@ -44,7 +39,7 @@ namespace EFCore.Toolkit
         public ICollection<ChangeSet> Commit()
         {
             var changeSets = new Collection<ChangeSet>();
-            Type lastContextType = null;
+            Type? lastContextType = null;
             try
             {
                 var firstContext = this.contexts.FirstOrDefault();
@@ -80,7 +75,7 @@ namespace EFCore.Toolkit
         public async Task<ICollection<ChangeSet>> CommitAsync()
         {
             var changeSets = new Collection<ChangeSet>();
-            Type lastContextType = null;
+            Type? lastContextType = null;
             try
             {
                 var firstContext = this.contexts.FirstOrDefault();

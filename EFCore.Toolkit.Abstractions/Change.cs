@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace EFCore.Toolkit.Abstractions
 {
@@ -8,26 +6,10 @@ namespace EFCore.Toolkit.Abstractions
     public class Change : IChange
     {
         private Change(object changedEntity, ChangeState state)
-            : this(changedEntity, state, null)
+            : this(changedEntity, state, null!)
         {
         }
 
-        /// <summary>
-        ///     Initializes a new instance of the <see cref="Change" /> class.
-        /// </summary>
-        /// <param name="changedEntity">
-        ///     The changed object.
-        /// </param>
-        /// <param name="changedProperties">
-        ///     The List of the properties that have been changed.
-        /// </param>
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if the specified <paramref name="changedEntity" /> is null.
-        /// </exception>
-        /// .
-        /// <exception cref="ArgumentNullException">
-        ///     Thrown if the specified <paramref name="changedProperties" /> is null.
-        /// </exception>
         private Change(object changedEntity, ChangeState state, IEnumerable<PropertyChangeInfo> changedProperties)
         {
             if (changedEntity == null)

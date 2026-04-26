@@ -1,37 +1,31 @@
-﻿using System;
+﻿using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Context
 {
-    public class PersonEntityConfiguration : IEntityTypeConfiguration<Person>
+    public class PersonEntityTypeConfiguration : IEntityTypeConfiguration<Person>
     {
         public void Configure(EntityTypeBuilder<Person> entity)
         {
-            entity.HasKey(d => d.Id);
+            entity.HasId();
 
             entity.Property(e => e.LastName).IsRequired().HasMaxLength(255);
-
             entity.Property(e => e.FirstName).IsRequired().HasMaxLength(255);
-
             entity.Property(e => e.Birthdate).IsRequired();
-
             entity.Property(e => e.CreatedDate).IsRequired();
             entity.Property(e => e.UpdatedDate).IsRequired(false);
 
-            entity.HasOne(t => t.Country)
+            entity.HasOne(e => e.Country)
                 .WithMany()
-                .HasForeignKey(d => d.CountryId)
+                .HasForeignKey(e => e.CountryId)
                 .IsRequired(false);
 
             entity.Property(e => e.RowVersion)
-                .ValueGeneratedOnAddOrUpdate()
-                .HasMaxLength(8)
-                .IsRowVersion()
-                .IsRequired();
+                .IsRowVersion();
 
-            entity.HasBaseType((Type)null);
+            entity.HasBaseType((Type?)null);
         }
     }
 }

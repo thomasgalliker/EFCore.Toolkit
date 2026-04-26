@@ -1,6 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
@@ -9,27 +7,26 @@ namespace EFCore.Toolkit.Extensions
     internal static class TypeExtensions
     {
         /// <summary>
-        ///     Gets the raw entity type without dynamic proxy type.
+        /// Gets the raw entity type without dynamic proxy type.
         /// </summary>
         public static Type GetEntityType(this EntityEntry entry)
         {
             var entityType = entry.Entity.GetType();
             if (entityType.Namespace == "System.Data.Entity.DynamicProxies")
             {
-                entityType = entityType.GetTypeInfo().BaseType;
+                entityType = entityType.GetTypeInfo().BaseType!;
             }
 
             return entityType;
         }
 
         /// <summary>
-        ///     Safely casts the specified object to the type specified through <typeparamref name="TTo" />.
+        /// Safely casts the specified object to the type specified through <typeparamref name="TTo" />.
         /// </summary>
         /// <remarks>
-        ///     Has been introduced to allow casting objects without breaking the fluent API.
+        /// Has been introduced to allow casting objects without breaking the fluent API.
         /// </remarks>
-        /// <typeparam name="TTo"></typeparam>
-        public static TTo As<TTo>(this object subject)
+        public static TTo? As<TTo>(this object subject)
         {
             if (subject is TTo to)
             {
@@ -70,7 +67,7 @@ namespace EFCore.Toolkit.Extensions
         }
 
         /// <summary>
-        ///     Finds the best matching constructor for given type <paramref name="type" />.
+        /// Finds the best matching constructor for given type <paramref name="type" />.
         /// </summary>
         internal static ConstructorInfoAndParameters GetMatchingConstructor(this Type type, params object[] args)
         {
@@ -92,7 +89,7 @@ namespace EFCore.Toolkit.Extensions
                         if (ctorParameterIndex >= args.Length)
                         {
                             var argsList = args.ToList();
-                            argsList.Add(ctorParameter.DefaultValue);
+                            argsList.Add(ctorParameter.DefaultValue!);
                             args = argsList.ToArray();
                         }
 

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 
 namespace EFCore.Toolkit
 {
@@ -15,7 +11,7 @@ namespace EFCore.Toolkit
         private readonly IUserContext<TUserKey> userContext;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="GenericRepository{TEntity, TUserKey}" /> class.
+        /// Initializes a new instance of the <see cref="GenericRepository{TEntity, TUserKey}" /> class.
         /// </summary>
         public GenericRepository(IDbContext context, IUserContext<TUserKey> userContext) : base(context)
         {
@@ -34,12 +30,12 @@ namespace EFCore.Toolkit
         /// Returns <see cref="IQueryable{TEntity}"/> which allows to control whether or not to filter entities by current user.
         /// </summary>
         /// <param name="filterByCurrentUser">Returns current user's entities if <c>true</c>. No filter applied if <c>false</c>.</param>
-        public IQueryable<TEntity> Get(bool filterByCurrentUser)
+        public virtual IQueryable<TEntity> Get(bool filterByCurrentUser)
         {
             if (filterByCurrentUser)
             {
-                var currentUserId = this.userContext.GetCurrentUserId();
-                return base.Get().Where(i => Equals(i.CreatedBy, currentUserId));
+                var currentUserId = this.userContext.UserId;
+                return base.Get().WhereCreatedBy(currentUserId);
             }
 
             return base.Get();
@@ -47,9 +43,8 @@ namespace EFCore.Toolkit
     }
 
     /// <summary>
-    ///     Implementation of a generic repository.
+    /// Implementation of a generic repository.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
     public class GenericRepository<T> : IGenericRepository<T>
         where T : class
     {
@@ -59,7 +54,7 @@ namespace EFCore.Toolkit
         private bool isDisposed;
 
         /// <summary>
-        ///     Initializes a new instance of the <see cref="GenericRepository{T}" /> class.
+        /// Initializes a new instance of the <see cref="GenericRepository{T}" /> class.
         /// </summary>
         public GenericRepository(IDbContext context)
         {
@@ -84,7 +79,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public T FindById(params object[] ids)
+        public T? FindById(params object[] ids)
         {
             return this.DbSet.Find(ids);
         }
@@ -103,9 +98,9 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public virtual T AddOrUpdate(T entity)
+        public virtual T? AddOrUpdate(T entity)
         {
-            return ((DbContext)this.context).AddOrUpdate(entity);
+            return ((DbContext)this.context).AddOrUpdate(entity).SingleOrDefault();
         }
 
         /// <inheritdoc />
@@ -138,7 +133,7 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public virtual T UpdateProperty<TValue>(T entity, Expression<Func<T, TValue>> propertyExpression, TValue value)
+        public virtual T UpdateProperty<TValue>(T entity, Expression<Func<T, TValue>> propertyExpression, TValue? value)
         {
             entity = this.UpdateProperties(entity, propertyExpression);
 

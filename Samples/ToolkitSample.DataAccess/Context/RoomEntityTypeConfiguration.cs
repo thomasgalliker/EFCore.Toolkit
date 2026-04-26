@@ -1,4 +1,4 @@
-﻿using EFCore.Toolkit;
+﻿using EFCore.Toolkit.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using ToolkitSample.Model;
@@ -11,8 +11,8 @@ namespace ToolkitSample.DataAccess.Context
         {
             entity.HasKey(e => e.Id);
 
-            entity.Property(e => e.Description).IsRequired(false)
-                // TODO PropertyBuilderExtensions with .IsOptional()
+            entity.Property(e => e.Description)
+                .IsOptional()
                 .HasMaxLength(255);
 
             entity.Property(e => e.Level);

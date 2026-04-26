@@ -1,24 +1,37 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace EFCore.Toolkit.Abstractions
 {
+    /// <summary>
+    /// Abstraction for a data seed.
+    /// </summary>
+    /// <remarks>There is a generic version of this interface available: <see cref="IDataSeed{TEntity}"/></remarks>
     public interface IDataSeed
     {
         /// <summary>
-        /// Gets the expression which checks if there are existing seed entries.
-        /// Depending on the result, the seed entry is added or updated.
+        /// Populates the specified <paramref name="context"/> with initial data required for application startup or testing.
         /// </summary>
-        Expression<Func<object, object>> GetAddOrUpdateExpression();
+        void Seed(IContext context);
+
+        bool AutoSave { get; set; }
+    }
+
+    /// <summary>
+    /// Abstraction for a data seed for entities of type <typeparamref name="TEntity"/>.
+    /// </summary>
+    public interface IDataSeed<TEntity> : IDataSeed where TEntity : class
+    {
+        /// <summary>
+        /// Gets the expression used to identify whether an entity should be added or updated in the data store.
+        /// </summary>
+        /// <remarks>The returned expression typically specifies the property or properties that uniquely
+        /// identify an entity instance, such as a primary key. This expression is used in upsert operations to match
+        /// entities in the data store.</remarks>
+        public abstract Expression<Func<TEntity, object?>> AddOrUpdateExpression { get; }
 
         /// <summary>
-        /// The type of the entity for which this seed is used.
+        /// Returns all entities of type <typeparamref name="TEntity"/> which are used to seed the database.
         /// </summary>
-        Type EntityType { get; }
-
-        /// <summary>
-        /// The seed data as a list of objects.
-        /// </summary>
-        object[] GetAllObjects();
+        public IEnumerable<TEntity> GetAll();
     }
 }

@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
+﻿using System.Diagnostics;
 
 namespace EFCore.Toolkit.Abstractions
 {
-    [DebuggerDisplay("ChangeSet: Context='{this.Context.Name}', Changes={this.Changes.Count()}", Type = "Change")]
+    [DebuggerDisplay("Context='{this.Context.Name}', Changes={this.Changes.Length}", Type = "ChangeSet")]
     public class ChangeSet
     {
-        public static readonly ChangeSet Empty = new ChangeSet(null, new List<IChange>());
-
-        public ChangeSet(Type contextType, IList<IChange> changes)
+        public ChangeSet(Type contextType, IChange[] changes)
         {
             this.Context = contextType;
-            this.Changes = changes ?? Enumerable.Empty<IChange>();
+            this.Changes = changes ?? Array.Empty<IChange>();
         }
 
         public Type Context { get; private set; }
 
-        public IEnumerable<IChange> Changes { get; private set; }
+        public IChange[] Changes { get; private set; }
     }
 }

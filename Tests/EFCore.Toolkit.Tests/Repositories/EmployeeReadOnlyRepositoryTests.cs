@@ -1,13 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using EFCore.Toolkit;
-using EFCore.Toolkit.Abstractions;
-using EFCore.Toolkit.Abstractions.Extensions;
+﻿using EFCore.Toolkit.Abstractions;
+using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Testing;
-using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Stubs;
-using EFCore.Toolkit.Utils;
-using FluentAssertions;
+using AwesomeAssertions;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.DataAccess.Repository;
@@ -16,16 +11,17 @@ using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EFCore.Toolkit.Tests.Repository
+namespace EFCore.Toolkit.Tests.Repositories
 {
+    [Trait(Traits.Category, Traits.IntegrationTests)]
+    [Collection("DbContextTests")]
     public class EmployeeReadOnlyRepositoryTests : ContextTestBase<EmployeeContext>
     {
         public EmployeeReadOnlyRepositoryTests(ITestOutputHelper testOutputHelper)
             : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
-                  databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+                  databaseInitializer: new CreateDatabaseIfNotExists(),
                   log: testOutputHelper.WriteLine)
         {
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
@@ -124,7 +120,7 @@ namespace EFCore.Toolkit.Tests.Repository
             var expectedId = employees[0].Id;
 
             // Act
-            Employee foundEmployee;
+            Employee? foundEmployee;
             using (IEmployeeReadOnlyRepository employeeRepository = new EmployeeReadOnlyRepository(this.CreateContext()))
             {
                 foundEmployee = employeeRepository.FindById(expectedId);
@@ -132,14 +128,14 @@ namespace EFCore.Toolkit.Tests.Repository
 
             // Assert
             foundEmployee.Should().NotBeNull();
-            foundEmployee.Id.Should().Be(expectedId);
+            foundEmployee!.Id.Should().Be(expectedId);
         }
 
         [Fact]
         public void ShouldFindByFirstName()
         {
             // Arrange
-            string expectedFirstName = "Thomas";
+            var expectedFirstName = "Thomas";
 
             var employees = new List<Employee> { Testdata.Employees.CreateEmployee1(), Testdata.Employees.CreateEmployee2(), Testdata.Employees.CreateEmployee3() };
 

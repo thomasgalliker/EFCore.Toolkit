@@ -1,6 +1,4 @@
-﻿using System.Linq;
-
-namespace EFCore.Toolkit.Abstractions
+﻿namespace EFCore.Toolkit.Abstractions
 {
     public interface IUserContextAwareRepository<T>
     {

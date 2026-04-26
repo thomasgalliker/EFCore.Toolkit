@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EFCore.Toolkit.Abstractions.Auditing
+﻿namespace EFCore.Toolkit.Abstractions.Auditing
 {
     public interface ICreatedDate
     {

@@ -1,12 +1,8 @@
-﻿using System;
-using System.Linq;
-using EFCore.Toolkit.Abstractions;
+﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Concurrency;
 using EFCore.Toolkit.Testing;
-using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Stubs;
-using EFCore.Toolkit.Utils;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
@@ -15,20 +11,21 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests
 {
+    [Trait(Traits.Category, Traits.IntegrationTests)]
+    [Collection("DbContextTests")]
     public class DbContextBaseTests : ContextTestBase<EmployeeContext>
     {
         public DbContextBaseTests()
             : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>())
         {
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
-        public async void ShouldSaveChangesAsync()
+        public async Task ShouldSaveChangesAsync()
         {
             // Arrange
             var initialEmployee = Testdata.Employees.CreateEmployee1();
-            ChangeSet changeSet = null;
+            ChangeSet? changeSet = null;
 
             // Act
             using (var employeeContext = this.CreateContext())
@@ -47,7 +44,7 @@ namespace EFCore.Toolkit.Tests
         public void ShouldRethrowConcurrencyUpdateExceptionAsDefault()
         {
             // Arrange
-            var databaseInitializer = new CreateDatabaseIfNotExists<EmployeeContext>();
+            var databaseInitializer = new CreateDatabaseIfNotExists();
             var initialEmployee = Testdata.Employees.CreateEmployee1();
 
             string firstNameChange1 = initialEmployee.FirstName + " from employeeContext1";
@@ -86,7 +83,7 @@ namespace EFCore.Toolkit.Tests
         public void ShouldResolveConcurrencyExceptionWithDatabaseWinsStrategy()
         {
             // Arrange
-            var databaseInitializer = new CreateDatabaseIfNotExists<EmployeeContext>();
+            var databaseInitializer = new CreateDatabaseIfNotExists();
             IConcurrencyResolveStrategy concurrencyResolveStrategy = new DatabaseWinsConcurrencyResolveStrategy();
             var initialEmployee = Testdata.Employees.CreateEmployee1();
 
@@ -131,8 +128,8 @@ namespace EFCore.Toolkit.Tests
         [Fact]
         public void ShouldResolveConcurrencyExceptionWithClientWinsStrategy()
         {
-            // Arrange
-            var databaseInitializer = new CreateDatabaseIfNotExists<EmployeeContext>();
+            // Arrange  
+            var databaseInitializer = new CreateDatabaseIfNotExists();
             IConcurrencyResolveStrategy concurrencyResolveStrategy = new ClientWinsConcurrencyResolveStrategy();
             var initialEmployee = Testdata.Employees.CreateEmployee1();
 

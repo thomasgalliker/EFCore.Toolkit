@@ -1,12 +1,11 @@
-﻿using System;
+﻿using EFCore.Toolkit.Testing;
+using AwesomeAssertions;
 using Microsoft.Data.SqlClient;
-using EFCore.Toolkit.Testing;
-using FluentAssertions;
-
 using Xunit;
 
 namespace EFCore.Toolkit.Tests.Testing
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class ConnectionStringGeneratorTests
     {
         [Fact]

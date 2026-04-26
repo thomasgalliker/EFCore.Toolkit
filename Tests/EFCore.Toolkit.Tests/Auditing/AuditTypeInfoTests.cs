@@ -1,6 +1,5 @@
-﻿using System;
-using EFCore.Toolkit.Auditing;
-using FluentAssertions;
+﻿using EFCore.Toolkit.Auditing;
+using AwesomeAssertions;
 
 using ToolkitSample.Model.Auditing;
 
@@ -8,6 +7,7 @@ using Xunit;
 
 namespace EFCore.Toolkit.Tests.Auditing
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class AuditTypeInfoTests
     {
         [Fact]

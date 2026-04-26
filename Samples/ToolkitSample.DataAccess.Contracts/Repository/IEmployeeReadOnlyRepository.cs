@@ -1,5 +1,4 @@
-﻿using EFCore.Toolkit;
-using EFCore.Toolkit.Abstractions;
+﻿using EFCore.Toolkit.Abstractions;
 using ToolkitSample.Model;
 
 namespace ToolkitSample.DataAccess.Contracts.Repository

@@ -1,43 +1,58 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+
 	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
-		<Title>EFCore.Toolkit</Title>
+		<TargetFrameworks>net9.0;net10.0</TargetFrameworks>
+		<OutputType>Library</OutputType>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<LangVersion>latest</LangVersion>
+		<Nullable>enable</Nullable>
+		<IsPackable>true</IsPackable>
+	</PropertyGroup>
+
+	<!--NuGet package-->
+	<PropertyGroup>
 		<Product>EFCore.Toolkit</Product>
-		<AssemblyTitle>EFCore.Toolkit</AssemblyTitle>
-		<RootNamespace>EFCore.Toolkit</RootNamespace>
-		<Version>1.0.0</Version>
-		<Company>superdev GmbH</Company>
-		<Authors>Thomas Galliker</Authors>
 		<Description>EFCore.Toolkit is a library which provides implementations for EntityFrameworkCore best practices, patterns, utilities and extensions.</Description>
+		<Version>1.0.0</Version>
+		<Authors>Thomas Galliker</Authors>
 		<PackageId>EFCore.Toolkit</PackageId>
+		<PackageTags>EntityFrameworkCore;Entity;Framework;Core;EFCore;EF;Core;Bulk;Batch;Extensions;Insert;Update;Delete;Read</PackageTags>
+		<PackageIcon>logo.png</PackageIcon>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageProjectUrl>https://github.com/thomasgalliker/EFCore.Toolkit</PackageProjectUrl>
-		<PackageIconUrl>https://raw.githubusercontent.com/thomasgalliker/EFCore.Toolkit/develop/logo.png</PackageIconUrl>
-		<PackageLicenseUrl>http://opensource.org/licenses/Apache-2.0</PackageLicenseUrl>
-		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<PackageTags>EntityFrameworkCore Entity Framework Core EFCore EF Core Bulk Batch Extensions Insert Update Delete Read</PackageTags>
 		<RepositoryType>git</RepositoryType>
 		<RepositoryUrl>https://github.com/thomasgalliker/EFCore.Toolkit</RepositoryUrl>
-		<OutputType>Library</OutputType>
-		<AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
-		<SignAssembly>True</SignAssembly>
+		<Company>superdev GmbH</Company>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-		<LangVersion>latest</LangVersion>
-		<PackageReleaseNotes>5.0.0
-- Update to Entity Framework Core 5.x
-- Support for .NET Standard 2.1 and .NET 5
-
-3.0.0
-- Initial release for EntityFrameworkCore 3.x</PackageReleaseNotes>
-		<Copyright>Copyright 2021</Copyright>
+		<Copyright>Copyright $([System.DateTime]::Now.ToString(`yyyy`)) © Thomas Galliker</Copyright>
+		<PackageReleaseNotes>$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/../ReleaseNotes.txt"))</PackageReleaseNotes>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EmbedAllSources>true</EmbedAllSources>
+		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="[5.0.9,)" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="[5.0.9,)" />
-		<PackageReference Include="System.Configuration.ConfigurationManager" Version="[5.0.0,)" />
-		<PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+		<None Include="..\README.md" Pack="True" PackagePath="\" />
+		<None Include="..\LICENSE" Pack="True" PackagePath="\" />
+		<None Include="..\logo.png" Pack="True" PackagePath="\" />
 	</ItemGroup>
-	
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	</PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net9.0'">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="[9.0.0,10.0.0)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="[9.0.0,10.0.0)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="[10.0.0,11.0.0)" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="[10.0.0,11.0.0)" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<ProjectReference Include="..\EFCore.Toolkit.Abstractions\EFCore.Toolkit.Abstractions.csproj" />
 	</ItemGroup>

@@ -1,12 +1,11 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 
 namespace EFCore.Toolkit.Extensions
 {
     internal static class ExpressionExtensions
     {
-        private static MemberExpression GetMemberExpression(this LambdaExpression lambdaExpression)
+        private static MemberExpression? GetMemberExpression(this LambdaExpression lambdaExpression)
         {
             if (lambdaExpression.Body is MemberExpression memberExpression)
             {
@@ -30,7 +29,7 @@ namespace EFCore.Toolkit.Extensions
         {
             var memberExpression = GetMemberExpression(lambdaExpression);
 
-            var propertyInfo = memberExpression.Member as PropertyInfo;
+            var propertyInfo = memberExpression?.Member as PropertyInfo;
             if (propertyInfo == null)
             {
                 throw new ArgumentException("'lambdaExpression' should be a property");

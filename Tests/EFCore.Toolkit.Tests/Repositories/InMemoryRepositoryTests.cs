@@ -1,15 +1,14 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using EFCore.Toolkit.Tests.Stubs;
-using FluentAssertions;
+﻿using EFCore.Toolkit.Tests.Stubs;
+using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Contracts.Repository;
 using ToolkitSample.Model;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace EFCore.Toolkit.Tests.Repository
+namespace EFCore.Toolkit.Tests.Repositories
 {
+    [Trait(Traits.Category, Traits.UnitTests)]
     public class InMemoryRepositoryTests
     {
         private readonly ITestOutputHelper testOutputHelper;

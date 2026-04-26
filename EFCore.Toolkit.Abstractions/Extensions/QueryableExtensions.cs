@@ -1,0 +1,82 @@
+﻿using EFCore.Toolkit.Abstractions;
+
+namespace EFCore.Toolkit.Extensions
+{
+    public static class QueryableExtensions
+    {
+        /// <summary>
+        /// Filters entities which implement <seealso cref="ICreatedBy{TKey}"/> and match the specified
+        /// <paramref name="createdBy"/> value with <c>CreatedBy</c> property of <c>ICreatedBy</c>.
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type.</typeparam>
+        /// <typeparam name="TKey">Type of user ID which relates to the entity.</typeparam>
+        /// <param name="queryable">The queryable to be filtered.</param>
+        /// <param name="createdBy">The user ID for which queryable is filtered.</param>
+        /// <returns>Queryable which contains only those entities which belong to user with ID <paramref name="createdBy"/>.</returns>
+        public static IQueryable<TEntity> WhereCreatedBy<TEntity, TKey>(this IQueryable<TEntity> queryable, TKey createdBy) where TEntity : class, ICreatedBy<TKey>
+        {
+            return queryable.Where(i => Equals(i.CreatedBy, createdBy));
+        }
+
+        public static IQueryable<TEntity> WhereCreatedByCurrentUser<TEntity, TKey>(this IQueryable<TEntity> query, IUserContext<TKey> userContext) where TEntity : class, ICreatedBy<TKey>
+        {
+            if (Equals(userContext.UserId, default(TKey)))
+            {
+                return query;
+            }
+
+            return query.WhereCreatedBy(userContext.UserId);
+        }
+
+        public static int? FindIdByExternalId<TEntity>(this IQueryable<TEntity> queryable, Guid externalId) where TEntity : IExternalIdentifiable, IIdentifiable
+        {
+            var entity = queryable
+                .Select(x => new { x.Id, x.ExternalId })
+                .SingleOrDefault(i => i.ExternalId == externalId);
+
+            return entity?.Id;
+        }
+
+        public static TEntity FindById<TEntity>(this IQueryable<TEntity> queryable, int id) where TEntity : IIdentifiable
+        {
+            return queryable.SingleOrDefault(i => i.Id == id);
+        }
+
+        public static IQueryable<TEntity> FindByIds<TEntity>(IQueryable<TEntity> query, IEnumerable<int> ids) where TEntity : IIdentifiable
+        {
+            if (ids == null || !ids.Any())
+            {
+                return query.Where(t => false);
+            }
+
+            return query.Where(t => ids.Contains(t.Id));
+        }
+
+        public static TEntity FindByExternalId<TEntity>(this IQueryable<TEntity> queryable, Guid externalId) where TEntity : IExternalIdentifiable
+        {
+            return queryable.SingleOrDefault(i => i.ExternalId == externalId);
+        }
+
+        public static IQueryable<TEntity> FindByExternalIds<TEntity>(IQueryable<TEntity> query, IEnumerable<Guid> externalIds) where TEntity : IExternalIdentifiable
+        {
+            if (externalIds == null || !externalIds.Any())
+            {
+                return query.Where(t => false);
+            }
+
+            return query.Where(t => externalIds.Contains(t.ExternalId));
+        }
+
+        public static int GetNextId<TEntity>(this ICollection<TEntity> items) where TEntity : IIdentifiable
+        {
+            if (items.Any())
+            {
+                var lastId = items.Max(t => t.Id);
+                var nextId = lastId + 1;
+                return nextId;
+            }
+
+            return 1;
+        }
+    }
+}

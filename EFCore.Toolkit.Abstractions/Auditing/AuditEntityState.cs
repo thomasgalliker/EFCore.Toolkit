@@ -1,9 +1,7 @@
-using System;
-
 namespace EFCore.Toolkit.Abstractions.Auditing
 {
     /// <summary>
-    ///     Describes the state of an audit entity.
+    /// Describes the state of an audit entity.
     /// </summary>
     [Flags]
     public enum AuditEntityState

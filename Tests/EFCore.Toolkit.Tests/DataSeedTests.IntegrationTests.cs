@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using EFCore.Toolkit.Abstractions;
+﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Testing;
-using FluentAssertions;
+using AwesomeAssertions;
 
 using ToolkitSample.DataAccess;
 using ToolkitSample.DataAccess.Context;
@@ -14,6 +12,8 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests
 {
+    [Trait(Traits.Category, Traits.IntegrationTests)]
+    [Collection("DbContextTests")]
     public class DataSeedIntegrationTests : ContextTestBase<EmployeeContext>
     {
         public DataSeedIntegrationTests(ITestOutputHelper testOutputHelper)

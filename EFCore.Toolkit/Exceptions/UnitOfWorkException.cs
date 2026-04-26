@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace EFCore.Toolkit.Exceptions
+﻿namespace EFCore.Toolkit.Exceptions
 {
     public class UnitOfWorkException : Exception
     {

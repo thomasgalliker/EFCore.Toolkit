@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Abstractions.Auditing;
-using EFCore.Toolkit.Abstractions.Extensions;
 using EFCore.Toolkit.Auditing.Extensions;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Utils;
@@ -15,30 +10,21 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 namespace EFCore.Toolkit.Auditing
 {
     /// <summary>
-    ///     AuditDbContextBase adds auditing capabilities to the DbContextBase.
-    ///     Auditing is enabled by default but may be disabled (AuditEnabled=false) if needed.
+    /// AuditDbContextBase adds auditing capabilities to the DbContextBase.
+    /// Auditing is enabled by default but may be disabled (AuditEnabled=false) if needed.
     /// </summary>
-    public abstract class AuditDbContextBase<TContext> : DbContextBase<TContext>, IAuditContext where TContext : DbContext
+    public abstract class AuditDbContextBase : DbContextBase, IAuditContext
     {
         private const string AuditUpdatedColumnName = nameof(IAuditEntity.AuditDate);
         private const string AuditUserColumnName = nameof(IAuditEntity.AuditUser);
         private const string AuditTypeColumnName = nameof(IAuditEntity.AuditType);
 
-        private static readonly IList<TContext> ConfigFileLock = new List<TContext>();
-        private static readonly AuditDbContextConfiguration AuditDbContextConfiguration;
+        private static readonly IList<DbContext> ConfigFileLock = new List<DbContext>();
 
         private readonly Dictionary<Type, AuditTypeInfo> auditTypes = new Dictionary<Type, AuditTypeInfo>();
 
-        static AuditDbContextBase()
-        {
-            lock (ConfigFileLock)
-            {
-                AuditDbContextConfiguration = AuditDbContextConfigurationManager.GetAuditDbContextConfigurationFromXml();
-            }
-        }
-
         /// <summary>
-        ///     Empty constructor is used for 'update-database' command-line command.
+        /// Empty constructor is used for 'update-database' command-line command.
         /// </summary>
         protected AuditDbContextBase()
         {
@@ -54,61 +40,36 @@ namespace EFCore.Toolkit.Auditing
         {
         }
 
-        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer)
+        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer? databaseInitializer)
             : this(dbContextOptions, databaseInitializer, log: null)
         {
         }
 
-        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer<TContext> databaseInitializer, Action<string> log)
+        protected AuditDbContextBase(DbContextOptions dbContextOptions, IDatabaseInitializer? databaseInitializer, Action<string>? log)
             : base(dbContextOptions, databaseInitializer, log)
         {
         }
 
-        /// <summary>
-        ///     Initializes static members of the AuditDbContext class.
-        /// </summary>
-        protected void ConfigureAuditingFromAppConfig()
-        {
-            this.ConfigureAuditing(AuditDbContextConfiguration);
-        }
-
         protected void ConfigureAuditing(AuditDbContextConfiguration configuration)
         {
-            this.AuditEnabled = configuration.AuditEnabled;
             this.AuditDateTimeKind = configuration.AuditDateTimeKind;
 
             foreach (var auditTypeInfo in configuration.AuditTypeInfos)
             {
                 this.RegisterAuditType(auditTypeInfo);
             }
+
+            this.AuditEnabled = configuration.AuditTypeInfos.Any();
         }
 
         /// <inheritdoc />
-        public bool AuditEnabled { get; protected set; } = true;
+        public bool AuditEnabled { get; protected set; }
 
         /// <inheritdoc />
         public DateTimeKind AuditDateTimeKind { get; protected set; }
 
         /// <summary>
-        ///     Gets a value indicating whether this context is using proxies.
-        /// </summary>
-        ////public bool Proxies
-        ////{
-        ////    get
-        ////    {
-        ////        if (this.auditTypes.Count > 0)
-        ////        {
-        ////            var f = this.auditTypes.First();
-        ////            var e = this.Set(f.Value.AuditableEntityType).Create();
-        ////            return e.GetType().Namespace != f.Value.AuditableEntityType.Namespace;
-        ////        }
-
-        ////        return this.Database.Configuration.ProxyCreationEnabled;
-        ////    }
-        ////}
-
-        /// <summary>
-        ///     Registers and type for auditing.
+        /// Registers and type for auditing.
         /// </summary>
         /// <param name="auditTypeInfo"></param>
         public void RegisterAuditType(AuditTypeInfo auditTypeInfo)
@@ -148,8 +109,8 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <summary>
-        ///     Reloads the entity from the database overwriting any property values with values from the database.
-        ///     The entity will be in the Unchanged state after calling this method.
+        /// Reloads the entity from the database overwriting any property values with values from the database.
+        /// The entity will be in the Unchanged state after calling this method.
         /// </summary>
         /// <param name="entity">The entity object to reload.</param>
         public void Reload(object entity)
@@ -158,8 +119,8 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <summary>
-        ///     Saves all changes made in this context to the underlying database
-        ///     using the current windows user for auditing.
+        /// Saves all changes made in this context to the underlying database
+        /// using the current windows user for auditing.
         /// </summary>
         /// <returns>The number of objects written to the underlying database.</returns>
         public override ChangeSet SaveChanges()
@@ -171,8 +132,8 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <summary>
-        ///     Saves all changes made in this context to the underlying database
-        ///     using the user parameter passed for auditing.
+        /// Saves all changes made in this context to the underlying database
+        /// using the user parameter passed for auditing.
         /// </summary>
         /// <param name="username">User name for auditing.</param>
         /// <returns>The number of objects written to the underlying database.</returns>
@@ -209,8 +170,8 @@ namespace EFCore.Toolkit.Auditing
         }
 
         /// <summary>
-        ///     Saves all changes made in this context to the underlying database
-        ///     using the user parameter passed for auditing.
+        /// Saves all changes made in this context to the underlying database
+        /// using the user parameter passed for auditing.
         /// </summary>
         /// <param name="username">User name for auditing.</param>
         /// <returns>The number of objects written to the underlying database.</returns>
@@ -258,52 +219,26 @@ namespace EFCore.Toolkit.Auditing
         private IEnumerable<AuditedEntity> AuditChanges(string username)
         {
             // Use the same datetime for all updates in this transaction, retrieved from server when first used.
-            DateTime? dateTimeNow = null;
+            var date = DateTime.UtcNow.ToKind(this.AuditDateTimeKind);
 
             // Process any auditable objects.
-            var trackedEntries = this.ChangeTracker.Entries().ToList();
-            foreach (var entry in trackedEntries)
+            var auditableEntries = this.ChangeTracker.Entries()
+                .Where(e => e.Entity is not IAuditEntity && e.State != EntityState.Detached && e.State != EntityState.Unchanged)
+                .ToList();
+
+            foreach (var entry in auditableEntries)
             {
-                if (entry.Entity is IAuditEntity || entry.State == EntityState.Detached || entry.State == EntityState.Unchanged)
-                {
-                    continue;
-                }
-
-                if (dateTimeNow.HasValue == false)
-                {
-                    dateTimeNow = DateTime.UtcNow.ToKind(this.AuditDateTimeKind);
-                }
-
-                var creatableEntity = entry.Entity as ICreatedDate;
-                if (entry.State == EntityState.Added && creatableEntity != null)
-                {
-                    creatableEntity.CreatedDate = dateTimeNow.Value;
-                }
-
-                if (entry.State == EntityState.Modified)
-                {
-                    if (creatableEntity != null)
-                    {
-                        entry.Property(nameof(ICreatedDate.CreatedDate)).IsModified = false;
-                    }
-
-                    if (entry.Entity is IUpdatedDate updateableEntity)
-                    {
-                        updateableEntity.UpdatedDate = dateTimeNow.Value;
-                    }
-                }
-
                 var entityType = entry.GetEntityType();
                 var auditTypeInfo = this.GetAuditTypeInfo(entityType);
                 if (auditTypeInfo != null)
                 {
-                    var auditEntity = this.AuditEntity(entry, auditTypeInfo, dateTimeNow.Value, username);
+                    var auditEntity = this.AuditEntity(entry, auditTypeInfo, date, username);
                     yield return auditEntity;
                 }
             }
         }
 
-        private AuditTypeInfo GetAuditTypeInfo(Type entityType)
+        private AuditTypeInfo? GetAuditTypeInfo(Type entityType)
         {
             lock (this.auditTypes)
             {
@@ -320,7 +255,7 @@ namespace EFCore.Toolkit.Auditing
         {
             // Create audit entity.
             dynamic dbSet = this.Set(auditTypeInfo.AuditEntityType);
-            dynamic auditEntity = (IAuditEntity)Activator.CreateInstance(auditTypeInfo.AuditEntityType);
+            dynamic auditEntity = (IAuditEntity)Activator.CreateInstance(auditTypeInfo.AuditEntityType)!;
             dbSet.Add(auditEntity);
 
             // Store all temporary values (e.g. not-yet generated primary keys) for later update

@@ -1,25 +1,28 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using EFCore.Toolkit.Abstractions;
 
 namespace ToolkitSample.Model
 {
     [DebuggerDisplay("Department: Id={Id}, Name={Name}, Employees={this.Employees.Count}")]
-    public class Department
+    public class Department : IIdentifiable
     {
         public Department()
         {
             this.Employees = new HashSet<Employee>();
+            this.RowVersion = Array.Empty<byte>();
         }
 
         public int Id { get; set; }
 
-        public string Name { get; set; }
+        public string? Name { get; set; }
+
+        public string? Description { get; set; }
 
         public int? LeaderId { get; set; }
 
-        public virtual Person Leader { get; set; }
+        public Person? Leader { get; set; }
 
-        public virtual ICollection<Employee> Employees { get; set; }
+        public ICollection<Employee> Employees { get; set; }
 
         public byte[] RowVersion { get; set; }
     }

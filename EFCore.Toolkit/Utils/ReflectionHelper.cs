@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 using System.Reflection;
 
 namespace EFCore.Toolkit.Utils
@@ -20,7 +19,7 @@ namespace EFCore.Toolkit.Utils
             return methodDefinition;
         }
 
-        internal static object InvokeGenericMethod(object target, Expression<Action> expression, Type genericType, object[] parameters = null)
+        internal static object? InvokeGenericMethod(object? target, Expression<Action> expression, Type genericType, object[]? parameters = null)
         {
             if (parameters == null)
             {
@@ -32,7 +31,7 @@ namespace EFCore.Toolkit.Utils
             return result;
         }
 
-        internal static object InvokeGenericMethod<T>(object target, Expression<Func<T>> expression, Type genericType, object[] parameters = null)
+        internal static object? InvokeGenericMethod<T>(object? target, Expression<Func<T>> expression, Type genericType, object[]? parameters = null)
         {
             if (parameters == null)
             {
@@ -56,14 +55,16 @@ namespace EFCore.Toolkit.Utils
             return callExpression.Method;
         }
 
-        internal static object GetPropertyValue(this object sourceObject, string propertyName)
+        internal static object? GetPropertyValue(this object sourceObject, string propertyName)
         {
-            return sourceObject.GetType().GetTypeInfo().GetDeclaredProperty(propertyName).GetValue(sourceObject, null);
+            var propertyInfo = sourceObject.GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
+            return propertyInfo?.GetValue(sourceObject, null);
         }
 
-        internal static void SetPropertyValue(this object sourceObject, string propertyName, object value)
+        internal static void SetPropertyValue(this object sourceObject, string propertyName, object? value)
         {
-            sourceObject.GetType().GetTypeInfo().GetDeclaredProperty(propertyName).SetValue(sourceObject, value);
+            var propertyInfo = sourceObject.GetType().GetTypeInfo().GetDeclaredProperty(propertyName);
+            propertyInfo?.SetValue(sourceObject, value);
         }
 
         internal static string GetMemberName<T>(Expression<Func<T, object>> expression)

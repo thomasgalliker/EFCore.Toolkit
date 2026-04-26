@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using EFCore.Toolkit.Abstractions;
+﻿using EFCore.Toolkit.Abstractions;
 
 namespace EFCore.Toolkit.Extensions
 {

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 using EFCore.Toolkit;
 
@@ -9,20 +8,14 @@ namespace ToolkitSample.DataAccess.Seed
 {
     internal sealed class ApplicationSettingDataSeed : DataSeedBase<ApplicationSetting>
     {
-        public override Expression<Func<ApplicationSetting, object>> AddOrUpdateExpression
+        public override Expression<Func<ApplicationSetting, object?>> AddOrUpdateExpression
         {
-            get
-            {
-                return applicationSetting => applicationSetting.Id;
-            }
+            get => applicationSetting => applicationSetting.Id;
         }
 
-        public override ApplicationSetting[] GetAll()
+        public override IEnumerable<ApplicationSetting> GetAll()
         {
-            return new[]
-            {
-                new ApplicationSetting { Path = "/../../TestForSeed" }
-            };
+            yield return new ApplicationSetting { Path = "/../../TestForSeed" };
         }
     }
 }

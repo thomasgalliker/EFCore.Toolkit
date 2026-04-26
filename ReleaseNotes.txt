@@ -1,0 +1,11 @@
+5.1
+- Maintenance updates.
+- Add new build configuration.
+- Add support for net10.0
+
+5.0
+- Update to Entity Framework Core 5.x.
+- Support for netstandard2.1 and net5.0.
+
+3.0
+- Initial release for EntityFrameworkCore 3.x.

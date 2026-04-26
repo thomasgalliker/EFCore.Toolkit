@@ -1,17 +1,15 @@
-﻿using System;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 
 namespace EFCore.Toolkit.Testing
 {
     public static class ConnectionStringGenerator
     {
         /// <summary>
-        /// Adds a random number to the given <param name="connectionString">connectionString</param> parameter.
+        /// Adds a random number to the given <paramref name="connectionString"/>.
         /// </summary>
         /// <param name="connectionString">The original connection string.</param>
         /// <param name="randomTokenLength">The length of the generated random number.</param>
         /// <param name="prefix">A prefix attach between database name and random token.</param>
-        /// <returns></returns>
         public static string RandomizeDatabaseName(this string connectionString, int randomTokenLength = 5, string prefix = "_")
         {
             var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
@@ -37,10 +35,8 @@ namespace EFCore.Toolkit.Testing
         }
 
         /// <summary>
-        /// Generates a random upper-invariant string of <paramref name="randomTokenLength"/>.
+        /// Generates a random upper-invariant string of length specified in <paramref name="randomTokenLength"/>.
         /// </summary>
-        /// <param name="randomTokenLength"></param>
-        /// <returns></returns>
         private static string GetRandomToken(int randomTokenLength)
         {
             if (randomTokenLength > 32)
@@ -48,7 +44,7 @@ namespace EFCore.Toolkit.Testing
                 throw new ArgumentException($"{nameof(randomTokenLength)} must not be greater than 32", nameof(randomTokenLength));
             }
 
-            string randomString = Guid.NewGuid().ToString()
+            var randomString = Guid.NewGuid().ToString()
                 .Replace("-", "")
                 .Substring(0, randomTokenLength)
                 .ToUpperInvariant();

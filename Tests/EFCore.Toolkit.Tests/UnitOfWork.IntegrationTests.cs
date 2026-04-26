@@ -1,38 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using EFCore.Toolkit.Abstractions;
+﻿using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Testing;
-using EFCore.Toolkit.Tests.Auditing;
 using EFCore.Toolkit.Tests.Stubs;
-using EFCore.Toolkit.Utils;
-using FluentAssertions;
-
+using AwesomeAssertions;
 using Moq;
-
 using ToolkitSample.DataAccess.Context;
 using ToolkitSample.Model;
-
 using Xunit;
 using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests
 {
+    [Trait(Traits.Category, Traits.IntegrationTests)]
+    [Collection("DbContextTests")]
     public class UnitOfWorkIntegrationTests : ContextTestBase<EmployeeContext, EmployeeContextTestDbConnection<EmployeeContext>>
     {
-        //public UnitOfWorkIntegrationTests(ITestOutputHelper testOutputHelper)
-        //    : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<EmployeeContext>(),
-        //           log: testOutputHelper.WriteLine)
-        //{
-        //    AssemblyLoader.Current = new TestAssemblyLoader();
-        //}
-
         public UnitOfWorkIntegrationTests(ITestOutputHelper testOutputHelper)
-            : base(databaseInitializer: new CreateDatabaseIfNotExists<EmployeeContext>(),
+            : base(databaseInitializer: new CreateDatabaseIfNotExists(),
                 log: testOutputHelper.WriteLine)
         {
-            AssemblyLoader.Current = new TestAssemblyLoader();
         }
 
         [Fact]
@@ -44,7 +30,7 @@ namespace EFCore.Toolkit.Tests
             {
                 var context1 = this.CreateContext();
                 var contextMock2 = new Mock<ISampleContextTwo>();
-                contextMock2.Setup(m => m.SaveChanges()).Returns(new ChangeSet(typeof(ISampleContextTwo), new List<IChange> { Change.CreateAddedChange(new Person()) }));
+                contextMock2.Setup(m => m.SaveChanges()).Returns(new ChangeSet(typeof(ISampleContextTwo), new[] { Change.CreateAddedChange(new Person()) }));
                 var context2 = contextMock2.Object;
 
                 context1.Set<Employee>().Add(Testdata.Employees.CreateEmployee1());
@@ -67,7 +53,7 @@ namespace EFCore.Toolkit.Tests
         public void ShouldFailToCommitMultipleContexts()
         {
             // Arrange
-            var databaseInitializer = new DropCreateDatabaseAlways<EmployeeContext>();
+            var databaseInitializer = new DropCreateDatabaseAlways();
             IUnitOfWork unitOfWork = new UnitOfWork();
 
             var context1 = this.CreateContext(databaseInitializer);
@@ -86,7 +72,7 @@ namespace EFCore.Toolkit.Tests
             var ex = action.Should().Throw<UnitOfWorkException>();
             ex.Which.Message.Should().Contain("failed to commit.");
             ex.WithInnerException<InvalidOperationException>();
-            ex.Which.InnerException.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
+            ex.Which.InnerException!.Message.Should().Contain("SampleContextTwo failed to SaveChanges.");
 
             var context = this.CreateContext(databaseInitializer);
             context.Set<Employee>().ToList().Should().HaveCount(0);

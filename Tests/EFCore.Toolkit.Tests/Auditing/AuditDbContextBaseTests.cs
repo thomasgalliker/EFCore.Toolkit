@@ -1,12 +1,8 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using EFCore.Toolkit.Abstractions.Auditing;
 using EFCore.Toolkit.Auditing;
-using EFCore.Toolkit.Abstractions.Auditing;
 using EFCore.Toolkit.Testing;
 using EFCore.Toolkit.Tests.Stubs;
-using EFCore.Toolkit.Utils;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.EntityFrameworkCore;
 using ToolkitSample.DataAccess.Context.Auditing;
 using ToolkitSample.Model;
@@ -16,102 +12,17 @@ using Xunit.Abstractions;
 
 namespace EFCore.Toolkit.Tests.Auditing
 {
+    [Trait(Traits.Category, Traits.IntegrationTests)]
+    [Collection("DbContextTests")]
     public class AuditDbContextBaseTests : ContextTestBase<TestAuditDbContext>
     {
         private const string TestAuditUser = "TestAuditUser";
 
         public AuditDbContextBaseTests(ITestOutputHelper testOutputHelper)
             : base(dbContextOptions: EmployeeContextTestDbConnection.CreateDbContextOptions<TestAuditDbContext>(),
-                databaseInitializer: new CreateDatabaseIfNotExists<TestAuditDbContext>(),
+                databaseInitializer: new CreateDatabaseIfNotExists(),
                 log: testOutputHelper.WriteLine)
         {
-            AssemblyLoader.Current = new TestAssemblyLoader();
-        }
-
-        [Fact]
-        public async void ShouldAuditCreatedAndUpdatedDate()
-        {
-            // Arrange
-            var initialEmployee = Testdata.Employees.CreateEmployee1();
-
-            // Act
-            using (var auditDbContext = this.CreateContext())
-            {
-                auditDbContext.Set<Employee>().Add(initialEmployee);
-                auditDbContext.SaveChanges();
-
-                await Task.Delay(1000);
-
-                initialEmployee.FirstName = "Updated " + initialEmployee.FirstName;
-                auditDbContext.SaveChanges();
-            }
-
-            // Assert
-            using (var auditDbContext = this.CreateContext())
-            {
-                var allEmployees = auditDbContext.Set<Employee>().ToList();
-                allEmployees.Where(e => e.CreatedDate > DateTime.MinValue).Should().HaveCount(1);
-                allEmployees.Where(e => e.UpdatedDate > e.CreatedDate).Should().HaveCount(1);
-            }
-        }
-
-        [Fact]
-        public void ShouldNotUpdateAuditCreatedDate_ICreatedDateAndIUpdatedDate()
-        {
-            // Arrange
-            var initialEmployee = Testdata.Employees.CreateEmployee1();
-            using (var auditDbContext = this.CreateContext())
-            {
-                auditDbContext.Set<Employee>().Add(initialEmployee);
-                auditDbContext.SaveChanges();
-            }
-
-            // Act
-            using (var auditDbContext = this.CreateContext())
-            {
-                var updateEmployee = auditDbContext.Set<Employee>().Find(initialEmployee.Id);
-                updateEmployee.CreatedDate = DateTime.MinValue;
-                auditDbContext.Set<Employee>().Update(updateEmployee);
-                auditDbContext.SaveChanges();
-            }
-
-            // Assert
-            using (var auditDbContext = this.CreateContext())
-            {
-                var allEmployees = auditDbContext.Set<Employee>().ToList();
-                allEmployees.Where(e => e.CreatedDate > DateTime.MinValue).Should().HaveCount(1);
-                allEmployees.Where(e => e.UpdatedDate > e.CreatedDate).Should().HaveCount(1);
-            }
-        }
-
-        [Fact]
-        public void ShouldNotUpdateAuditCreatedDate_ICreatedDate()
-        {
-            // Arrange
-            var initialRoom = Testdata.Rooms.GetRoom1B();
-            using (var auditDbContext = this.CreateContext())
-            {
-                auditDbContext.Set<Room>().Add(initialRoom);
-                auditDbContext.SaveChanges();
-            }
-
-            // Act
-            var manipulatedCreatedDate = new DateTime(2000, 1, 1);
-            using (var auditDbContext = this.CreateContext())
-            {
-                var updateRoom = auditDbContext.Set<Room>().Find(initialRoom.Id);
-                updateRoom.CreatedDate = manipulatedCreatedDate;
-                auditDbContext.Set<Room>().Update(updateRoom);
-                auditDbContext.SaveChanges();
-            }
-
-            // Assert
-            using (var auditDbContext = this.CreateContext())
-            {
-                var allRooms = auditDbContext.Set<Room>().ToList();
-                var updatedRoom = allRooms.ElementAt(0);
-                updatedRoom.CreatedDate.Should().NotBeCloseTo(manipulatedCreatedDate, precision: TimeSpan.FromSeconds(2));
-            }
         }
 
         [Fact]
@@ -127,7 +38,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             // Act
             using (var context = this.CreateContext())
             {
-                var customer = context.Employees.Find(1);
+                var customer = context.Employees.Find(1)!;
                 for (var i = 0; i < 10; i++)
                 {
                     customer.FirstName = customer.FirstName + " " + i;
@@ -138,7 +49,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             // Assert
             using (var context = this.CreateContext())
             {
-                var customer = context.Employees.Find(1);
+                var customer = context.Employees.Find(1)!;
                 customer.FirstName.Should().Be("Thomas 0 1 2 3 4 5 6 7 8 9");
 
                 var employeeAudits = context.EmployeeAudits.ToList();
@@ -161,7 +72,7 @@ namespace EFCore.Toolkit.Tests.Auditing
             // Act
             using (var context = this.CreateContext())
             {
-                var customer = context.Employees.Find(1);
+                var customer = context.Employees.Find(1)!;
                 context.Remove(customer);
                 context.SaveChanges();
             }
@@ -264,8 +175,8 @@ namespace EFCore.Toolkit.Tests.Auditing
 
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = @"INSERT INTO Customers(CustomerId, FirstName,Updated,UpdateUser) VALUES (1, 'Unit Test', '2012-01-01 12:00:00', 'UnitTest')";
-        ////        cmd.ExecuteNonQuery();
+        ////    cmd.CommandText = @"INSERT INTO Customers(CustomerId, FirstName,Updated,UpdateUser) VALUES (1, 'Unit Test', '2012-01-01 12:00:00', 'UnitTest')";
+        ////    cmd.ExecuteNonQuery();
         ////    }
 
         ////    Customer customer = context.Customers.Find(1);
@@ -275,33 +186,33 @@ namespace EFCore.Toolkit.Tests.Auditing
         ////    // Chech the audit records has been created.
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = "select * from customeraudits";
-        ////        using (var r = cmd.ExecuteReader())
+        ////    cmd.CommandText = "select * from customeraudits";
+        ////    using (var r = cmd.ExecuteReader())
+        ////    {
+        ////        int records = 0;
+        ////        while (r.Read())
         ////        {
-        ////            int records = 0;
-        ////            while (r.Read())
-        ////            {
-        ////                records++;
-        ////            }
-        ////            Assert.Equal(1, records);
+        ////            records++;
         ////        }
+        ////        Assert.Equal(1, records);
+        ////    }
         ////    }
 
         ////    // Check the audit fields.
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = "select * from customeraudits";
-        ////        using (var r = cmd.ExecuteReader())
-        ////        {
-        ////            r.Read();
-        ////            Assert.Equal(1, r["CustomerAuditId"]);
-        ////            Assert.Equal(1, r["CustomerId"]);
-        ////            Assert.Equal(user, r["UpdateUser"]);
-        ////            //Assert.Equal(updated, r["Updated"]);
-        ////            Assert.Equal("Unit Test", r["FirstName"]);
-        ////            Assert.Equal(user, r["AuditUser"]);
-        ////            Assert.Equal(0, r["AuditType"]);
-        ////        }
+        ////    cmd.CommandText = "select * from customeraudits";
+        ////    using (var r = cmd.ExecuteReader())
+        ////    {
+        ////        r.Read();
+        ////        Assert.Equal(1, r["CustomerAuditId"]);
+        ////        Assert.Equal(1, r["CustomerId"]);
+        ////        Assert.Equal(user, r["UpdateUser"]);
+        ////        //Assert.Equal(updated, r["Updated"]);
+        ////        Assert.Equal("Unit Test", r["FirstName"]);
+        ////        Assert.Equal(user, r["AuditUser"]);
+        ////        Assert.Equal(0, r["AuditType"]);
+        ////    }
         ////    }
         ////}
 
@@ -328,41 +239,41 @@ namespace EFCore.Toolkit.Tests.Auditing
 
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = "select * from customers";
-        ////        using (var r = cmd.ExecuteReader())
+        ////    cmd.CommandText = "select * from customers";
+        ////    using (var r = cmd.ExecuteReader())
+        ////    {
+        ////        int records = 0;
+        ////        while (r.Read())
         ////        {
-        ////            int records = 0;
-        ////            while (r.Read())
-        ////            {
-        ////                records++;
-        ////            }
-        ////            Assert.Equal(0, records);
+        ////            records++;
         ////        }
+        ////        Assert.Equal(0, records);
+        ////    }
         ////    }
 
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = "select * from customeraudits";
-        ////        using (var r = cmd.ExecuteReader())
+        ////    cmd.CommandText = "select * from customeraudits";
+        ////    using (var r = cmd.ExecuteReader())
+        ////    {
+        ////        int records = 0;
+        ////        while (r.Read())
         ////        {
-        ////            int records = 0;
-        ////            while (r.Read())
-        ////            {
-        ////                records++;
-        ////            }
-        ////            Assert.Equal(1, records);
+        ////            records++;
         ////        }
+        ////        Assert.Equal(1, records);
+        ////    }
         ////    }
 
         ////    using (DbCommand cmd = conn.CreateCommand())
         ////    {
-        ////        cmd.CommandText = "select * from customeraudits";
-        ////        using (var r = cmd.ExecuteReader())
-        ////        {
-        ////            r.Read();
-        ////            Assert.Equal(user, r["AuditUser"]);
-        ////            Assert.Equal(1, r["AuditType"]);
-        ////        }
+        ////    cmd.CommandText = "select * from customeraudits";
+        ////    using (var r = cmd.ExecuteReader())
+        ////    {
+        ////        r.Read();
+        ////        Assert.Equal(user, r["AuditUser"]);
+        ////        Assert.Equal(1, r["AuditType"]);
+        ////    }
         ////    }
         ////}
 

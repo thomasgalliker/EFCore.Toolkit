@@ -1,9 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace EFCore.Toolkit
+﻿namespace EFCore.Toolkit
 {
-    public interface IDatabaseInitializer<T>
+    public interface IDatabaseInitializer
     {
-        void Initialize(DbContext context, bool force);
+        void Initialize(DbContextBase context, bool force);
     }
 }
