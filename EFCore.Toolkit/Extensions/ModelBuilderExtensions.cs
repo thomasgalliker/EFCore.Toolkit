@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace EFCore.Toolkit.Extensions
 {
@@ -29,6 +31,52 @@ namespace EFCore.Toolkit.Extensions
                     .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade)
                     .ToList()
                     .ForEach(fk => fk.DeleteBehavior = DeleteBehavior.Restrict);
+            }
+        }
+
+        /// <summary>
+        /// Applies a query filter to all entity types implementing the specified interface.
+        /// </summary>
+        /// <typeparam name="TInterface">The interface implemented by the target entity types.</typeparam>
+        /// <param name="modelBuilder">The model builder to configure.</param>
+        /// <param name="filter">The query filter expression to apply.</param>
+        public static void ApplyQueryFilter<TInterface>(this ModelBuilder modelBuilder, Expression<Func<TInterface, bool>> filter)
+        {
+#if NET10_0_OR_GREATER
+            var filterKey = typeof(TInterface).FullName ?? typeof(TInterface).Name;
+#endif
+            var entityTypes = modelBuilder.Model.GetEntityTypes()
+                .Where(et => typeof(TInterface).IsAssignableFrom(et.ClrType))
+                .ToList();
+
+            foreach (var entityType in entityTypes)
+            {
+                var entityParam = Expression.Parameter(entityType.ClrType, "e");
+                var filterBody = ReplacingExpressionVisitor.Replace(filter.Parameters[0], entityParam, filter.Body);
+
+#if NET10_0_OR_GREATER
+                var queryFilter = entityType.GetDeclaredQueryFilters()
+                    .SingleOrDefault(queryFilter => queryFilter.Key == filterKey)
+                    ?.Expression;
+#else
+                var queryFilter = entityType.GetQueryFilter();
+#endif
+                if (queryFilter != null)
+                {
+                    filterBody = ReplacingExpressionVisitor.Replace(entityParam, queryFilter.Parameters[0], filterBody);
+                    filterBody = Expression.AndAlso(queryFilter.Body, filterBody);
+                    queryFilter = Expression.Lambda(filterBody, queryFilter.Parameters);
+                }
+                else
+                {
+                    queryFilter = Expression.Lambda(filterBody, entityParam);
+                }
+
+#if NET10_0_OR_GREATER
+                entityType.SetQueryFilter(filterKey, queryFilter);
+#else
+                entityType.SetQueryFilter(queryFilter);
+#endif
             }
         }
 
