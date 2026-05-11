@@ -38,6 +38,21 @@ Define an audit entity which implements ```IAuditEntity``` resp. inherits from t
 #### Generic Data Seed with IDataSeed
 Providing databases with predefined data is an essential feature. IDataSeed is the interface which abstracts the data seed of one particular entity type. Use the abstract base class ```DataSeedBase<T>``` to have the least possible effort to provide a data seed. ```DataSeedBase<T>``` allows you to define an AddOrUpdateExpression which is evaluated in order to check whether a certain entity of type T is already in the database or if it needs to be added. 
 
+#### Query Filters
+Use `ApplyQueryFilter<TInterface>` to apply a global query filter to every entity type which implements a specific interface. This is useful for cross-cutting filters such as soft delete, tenant isolation, or user-specific data access.
+
+```C#
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    base.OnModelCreating(modelBuilder);
+
+    modelBuilder.ApplyQueryFilter<IDeletable>(entity => !entity.IsDeleted);
+    modelBuilder.ApplyQueryFilter<ICreatedBy>(entity => entity.UserId == this.currentUserId);
+}
+```
+
+The filter expression is automatically rewritten for each matching entity CLR type. When targeting EF Core 10 or later, filters are stored as named query filters using the interface full name as the filter key. Applying another filter for the same interface combines it with the existing filter using `AndAlso`; applying filters for different interfaces stores them separately and EF Core applies them together.
+
 ### EFCore.Toolkit and IoC
 EFCore.Toolkit is ready to be used with an IoC framework. You may intend to create a data access module which contains your EF context, the repositories, the entity type configurations, etc. On top of that, you want to promote the CRUD-style repositories to whoever want to consume your data access layer. So, simply create a seperate data access abstraction assembly which contains an interface definition for your repositories. Have a look at the ToolkitSample provided in this project. This sample project wires up modularity using `Microsoft.Extensions.DependencyInjection`. Have a look at the `AddDataAccess` extension method to get an impression of how to set-up the dependencies.
 
