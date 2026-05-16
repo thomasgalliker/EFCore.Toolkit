@@ -2,6 +2,7 @@
 - Maintenance updates.
 - Add ApplyQueryFilter for combined query filters.
 - Add RemoveWhereAsync extension for efficient server-side bulk delete.
+- Add optional filterKey parameter to ApplyQueryFilter.
 
 5.1
 - Maintenance updates.
