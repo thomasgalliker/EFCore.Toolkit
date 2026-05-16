@@ -1,5 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Linq.Expressions;
+using System.Reflection;
+using EFCore.Toolkit.Abstractions;
 using EFCore.Toolkit.Utils;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +9,48 @@ namespace EFCore.Toolkit.Extensions
 {
     public static class QueryableExtensions
     {
+        private static readonly MethodInfo SoftDeleteAsyncMethod = typeof(QueryableExtensions).GetMethod(nameof(SoftDeleteAsync), BindingFlags.NonPublic | BindingFlags.Static)!;
+
+        /// <summary>
+        /// Deletes all entities matching the given <paramref name="predicate"/> directly in the database
+        /// using EF Core's <c>ExecuteDeleteAsync</c>. Entities are not loaded into the change tracker.
+        /// <para>
+        /// If <typeparamref name="TEntity"/> implements <see cref="IDeletable"/>, a soft delete is performed
+        /// instead by issuing a single <c>UPDATE ... SET IsDeleted = 1</c> via <c>ExecuteUpdateAsync</c>.
+        /// </para>
+        /// </summary>
+        /// <typeparam name="TEntity">The entity type.</typeparam>
+        /// <param name="queryable">The source queryable (typically from <c>repository.Get()</c> or a <see cref="DbSet{TEntity}"/>).</param>
+        /// <param name="predicate">A predicate selecting the entities to delete.</param>
+        /// <param name="cancellationToken">A cancellation token.</param>
+        /// <returns>The number of rows affected on the server.</returns>
+        public static Task<int> RemoveWhereAsync<TEntity>(
+            [NotNull] this IQueryable<TEntity> queryable,
+            [NotNull] Expression<Func<TEntity, bool>> predicate,
+            CancellationToken cancellationToken = default)
+            where TEntity : class
+        {
+            ArgumentNullException.ThrowIfNull(queryable);
+            ArgumentNullException.ThrowIfNull(predicate);
+
+            var queryableFiltered = queryable.Where(predicate);
+
+            if (typeof(IDeletable).IsAssignableFrom(typeof(TEntity)))
+            {
+                return (Task<int>)SoftDeleteAsyncMethod
+                    .MakeGenericMethod(typeof(TEntity))
+                    .Invoke(null, new object[] { queryableFiltered, cancellationToken })!;
+            }
+
+            return queryableFiltered.ExecuteDeleteAsync(cancellationToken);
+        }
+
+        private static Task<int> SoftDeleteAsync<TEntity>(IQueryable<TEntity> queryable, CancellationToken cancellationToken)
+            where TEntity : class, IDeletable
+        {
+            return queryable.ExecuteUpdateAsync(s => s.SetProperty(e => e.IsDeleted, true), cancellationToken);
+        }
+
         /// <summary>
         /// Filters the elements of an System.Linq.IQueryable based on a specified <paramref name="type"/>.
         /// </summary>

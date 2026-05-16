@@ -1,6 +1,7 @@
 5.2
 - Maintenance updates.
 - Add ApplyQueryFilter for combined query filters.
+- Add RemoveWhereAsync extension for efficient server-side bulk delete.
 
 5.1
 - Maintenance updates.
