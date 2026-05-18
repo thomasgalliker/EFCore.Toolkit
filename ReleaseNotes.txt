@@ -1,7 +1,7 @@
 5.2
 - Maintenance updates.
 - Add ApplyQueryFilter for combined query filters.
-- Add RemoveWhereAsync extension for efficient server-side bulk delete.
+- Add SequentialMigrationsIdGenerator for generating sequential migration IDs.
 - Add optional filterKey parameter to ApplyQueryFilter.
 
 5.1
