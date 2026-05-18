@@ -40,10 +40,14 @@ namespace EFCore.Toolkit.Extensions
         /// <typeparam name="TInterface">The interface implemented by the target entity types.</typeparam>
         /// <param name="modelBuilder">The model builder to configure.</param>
         /// <param name="filter">The query filter expression to apply.</param>
-        public static void ApplyQueryFilter<TInterface>(this ModelBuilder modelBuilder, Expression<Func<TInterface, bool>> filter)
+        /// <param name="filterKey">
+        /// Optional named key for the query filter (net10.0+). Defaults to the full name of <typeparamref name="TInterface"/>.
+        /// Use this key with <c>IgnoreQueryFilter(key)</c> to selectively bypass the filter on a query.
+        /// </param>
+        public static void ApplyQueryFilter<TInterface>(this ModelBuilder modelBuilder, Expression<Func<TInterface, bool>> filter, string? filterKey = null)
         {
 #if NET10_0_OR_GREATER
-            var filterKey = typeof(TInterface).FullName ?? typeof(TInterface).Name;
+            filterKey ??= typeof(TInterface).FullName ?? typeof(TInterface).Name;
 #endif
             var entityTypes = modelBuilder.Model.GetEntityTypes()
                 .Where(et => typeof(TInterface).IsAssignableFrom(et.ClrType))
