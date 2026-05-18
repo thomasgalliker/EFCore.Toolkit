@@ -1,6 +1,7 @@
 5.2
 - Maintenance updates.
 - Add ApplyQueryFilter for combined query filters.
+- Add SequentialMigrationsIdGenerator for generating sequential migration IDs.
 
 5.1
 - Maintenance updates.
