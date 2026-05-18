@@ -6,7 +6,6 @@ using EFCore.Toolkit.Exceptions;
 using EFCore.Toolkit.Extensions;
 using EFCore.Toolkit.Interceptors;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace EFCore.Toolkit
