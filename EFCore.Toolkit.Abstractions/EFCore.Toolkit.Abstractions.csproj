@@ -39,6 +39,10 @@
 		<None Include="..\logo.png" Pack="True" PackagePath="\" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.6.3" />
+	</ItemGroup>
+
 	<PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 	</PropertyGroup>
