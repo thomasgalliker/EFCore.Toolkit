@@ -70,6 +70,66 @@ namespace EFCore.Toolkit.Tests.Repositories
             // Assert
             persons.Should().HaveCount(3);
         }
+
+        [Fact]
+        public void ShouldFindPersonById()
+        {
+            // Arrange
+            var personRepository = new InMemoryPersonRepository();
+            var person1 = personRepository.Add(Testdata.Employees.CreateEmployee1());
+            personRepository.Add(Testdata.Employees.CreateEmployee2());
+
+            // Act
+            var person = personRepository.FindById(person1.Id);
+
+            // Assert
+            person.Should().BeSameAs(person1);
+        }
+
+        [Fact]
+        public async Task ShouldFindPersonByIdAsync()
+        {
+            // Arrange
+            var personRepository = new InMemoryPersonRepository();
+            var person1 = personRepository.Add(Testdata.Employees.CreateEmployee1());
+            personRepository.Add(Testdata.Employees.CreateEmployee2());
+
+            // Act
+            var person = await personRepository.FindByIdAsync(person1.Id);
+
+            // Assert
+            person.Should().BeSameAs(person1);
+        }
+
+        [Fact]
+        public void ShouldThrowWhenFindingPersonByMultipleIds()
+        {
+            // Arrange
+            var personRepository = new InMemoryPersonRepository();
+            var person1 = personRepository.Add(Testdata.Employees.CreateEmployee1());
+            var person2 = personRepository.Add(Testdata.Employees.CreateEmployee2());
+
+            // Act
+            var action = () => personRepository.FindById(person1.Id, person2.Id);
+
+            // Assert
+            action.Should().Throw<ArgumentException>();
+        }
+
+        [Fact]
+        public async Task ShouldThrowWhenFindingPersonByMultipleIdsAsync()
+        {
+            // Arrange
+            var personRepository = new InMemoryPersonRepository();
+            var person1 = personRepository.Add(Testdata.Employees.CreateEmployee1());
+            var person2 = personRepository.Add(Testdata.Employees.CreateEmployee2());
+
+            // Act
+            var action = async () => await personRepository.FindByIdAsync(person1.Id, person2.Id);
+
+            // Assert
+            await action.Should().ThrowAsync<ArgumentException>();
+        }
     }
 
     public class InMemoryPersonRepository : InMemoryRepository<Person>, IPersonRepository

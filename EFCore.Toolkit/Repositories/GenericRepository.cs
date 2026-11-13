@@ -79,9 +79,15 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public T? FindById(params object[] ids)
+        public virtual T? FindById(params object[] keyValues)
         {
-            return this.DbSet.Find(ids);
+            return this.DbSet.Find(keyValues);
+        }
+
+        /// <inheritdoc />
+        public virtual ValueTask<T?> FindByIdAsync(params object[] keyValues)
+        {
+            return this.DbSet.FindAsync(keyValues);
         }
 
         /// <inheritdoc />
