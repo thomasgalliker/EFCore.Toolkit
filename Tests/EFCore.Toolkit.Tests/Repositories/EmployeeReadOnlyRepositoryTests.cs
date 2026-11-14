@@ -128,7 +128,33 @@ namespace EFCore.Toolkit.Tests.Repositories
 
             // Assert
             foundEmployee.Should().NotBeNull();
-            foundEmployee!.Id.Should().Be(expectedId);
+            foundEmployee.Id.Should().Be(expectedId);
+        }
+
+        [Fact]
+        public async Task ShouldFindEmployeeByIdAsync()
+        {
+            // Arrange
+            var employees = new List<Employee> { Testdata.Employees.CreateEmployee1(), Testdata.Employees.CreateEmployee2(), Testdata.Employees.CreateEmployee3() };
+
+            using (IEmployeeRepository employeeRepository = new EmployeeRepository(this.CreateContext()))
+            {
+                employeeRepository.AddRange(employees);
+                employeeRepository.Save();
+            }
+
+            var expectedId = employees[0].Id;
+
+            // Act
+            Employee? foundEmployee;
+            using (IEmployeeReadOnlyRepository employeeRepository = new EmployeeReadOnlyRepository(this.CreateContext()))
+            {
+                foundEmployee = await employeeRepository.FindByIdAsync(expectedId);
+            }
+
+            // Assert
+            foundEmployee.Should().NotBeNull();
+            foundEmployee.Id.Should().Be(expectedId);
         }
 
         [Fact]

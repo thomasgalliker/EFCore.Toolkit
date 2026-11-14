@@ -63,14 +63,39 @@ namespace EFCore.Toolkit
         }
 
         /// <inheritdoc />
-        public TEntity? FindById(params object[] ids)
+        public TEntity? FindById(params object[] keyValues)
         {
-            var intIds = ids.Select(i => int.Parse($"{i}"));
+            var id = GetId(keyValues);
 
             lock (this.items)
             {
-                return this.items.SingleOrDefault(i => intIds.Contains(i.Id)); // TODO Test this implementation
+                return this.items.SingleOrDefault(i => i.Id == id);
             }
+        }
+
+        public ValueTask<TEntity?> FindByIdAsync(params object[] keyValues)
+        {
+            return new ValueTask<TEntity?>(this.FindById(keyValues));
+        }
+
+        private static int GetId(object[] keyValues)
+        {
+            if (keyValues == null)
+            {
+                throw new ArgumentNullException(nameof(keyValues));
+            }
+
+            if (keyValues.Length != 1)
+            {
+                throw new ArgumentException("Exactly one key value is required.", nameof(keyValues));
+            }
+
+            if (keyValues[0] == null)
+            {
+                throw new ArgumentNullException(nameof(keyValues));
+            }
+
+            return Convert.ToInt32(keyValues[0], System.Globalization.CultureInfo.InvariantCulture);
         }
 
         /// <inheritdoc />
